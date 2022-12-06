@@ -19,7 +19,13 @@ public class DialogManager : MonoBehaviour
 
     public int currentLine;
     private Animator anim;
+
+    public float dialogDownPosition;
+    public float dialogUpPosition;
+
+    public bool isUp;
     
+        
     // Start is called before the first frame update
     void Start()
     {
@@ -40,7 +46,13 @@ public class DialogManager : MonoBehaviour
 
         // get animator component and initialize
         anim = GetComponent<Animator>();
-        anim.SetBool("dialogBoxClose", true);        
+        anim.SetBool("dialogBoxClose", true);
+
+        // down position is default position for message window
+        dialogDownPosition = 150.8516f;
+        
+        // up position
+        dialogUpPosition = 690f;
     }
 
     // Update is called once per frame
@@ -51,6 +63,17 @@ public class DialogManager : MonoBehaviour
         {
             displayLineFull = true;
         }
+        
+        // position dialog box high or low
+        if (!isUp)
+        {
+            dialogBox.transform.position = new Vector2(dialogBox.transform.position.x, dialogDownPosition);
+        }
+        else
+        {
+            dialogBox.transform.position = new Vector2(dialogBox.transform.position.x, dialogUpPosition);
+        }
+        
     }
 
     public void showDialog(string[] newLines, bool showName = true)
