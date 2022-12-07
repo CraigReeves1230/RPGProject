@@ -11,21 +11,24 @@ public class DialogManager : MonoBehaviour
     public Text nameText;
     public GameObject dialogBox;
     public GameObject nameBox;
-    public bool typing;
+    private bool typing;
     private float waitTime;
     private bool displayLineFull;
 
     public string[] dialogLines;
 
-    public int currentLine;
+    private int currentLine;
     private Animator anim;
 
-    public float dialogDownPosition;
-    public float dialogUpPosition;
+    // dialog box positions
+    private float dialogDownPosition;
+    private float dialogUpPosition;
+    private float nameBoxUpPosition;
+    private float nameBoxDownPosition;
 
-    public bool isUp;
+    // determines if dialog boxes is on top or down
+    private bool isUp;
     
-        
     // Start is called before the first frame update
     void Start()
     {
@@ -39,6 +42,7 @@ public class DialogManager : MonoBehaviour
             Destroy(gameObject);
         }
 
+        // typing speed
         waitTime = 0.02f;
         
         // have inactive by default
@@ -49,10 +53,12 @@ public class DialogManager : MonoBehaviour
         anim.SetBool("dialogBoxClose", true);
 
         // down position is default position for message window
-        dialogDownPosition = 150.8516f;
+        dialogDownPosition = dialogBox.transform.position.y;
+        nameBoxDownPosition = nameBox.transform.position.y;
         
         // up position
-        dialogUpPosition = 690f;
+        dialogUpPosition = dialogDownPosition * 4.57f;
+        nameBoxUpPosition = nameBoxDownPosition * 3.14f;
     }
 
     // Update is called once per frame
@@ -68,10 +74,12 @@ public class DialogManager : MonoBehaviour
         if (!isUp)
         {
             dialogBox.transform.position = new Vector2(dialogBox.transform.position.x, dialogDownPosition);
+            nameBox.transform.position = new Vector2(nameBox.transform.position.x, nameBoxDownPosition);
         }
         else
         {
             dialogBox.transform.position = new Vector2(dialogBox.transform.position.x, dialogUpPosition);
+            nameBox.transform.position = new Vector2(nameBox.transform.position.x, nameBoxUpPosition);
         }
         
     }
@@ -100,7 +108,8 @@ public class DialogManager : MonoBehaviour
             else
             {
                 // continue writing with dialog box still open
-                CheckIfName();
+                CheckSpecialCommands();
+                
                 dialogText.text = dialogLines[currentLine];
                 
                 StopAllCoroutines();
@@ -116,7 +125,9 @@ public class DialogManager : MonoBehaviour
             GameManager.instance.getControlTarget().setCanMove(false);
             dialogLines = newLines;
             currentLine = 0;
-            CheckIfName();
+
+            // check for special commands
+            CheckSpecialCommands();
             dialogText.text = dialogLines[currentLine]; 
             
             anim.SetBool("dialogBoxOpen", true);
@@ -148,12 +159,31 @@ public class DialogManager : MonoBehaviour
         Input.ResetInputAxes();
     }
 
-    public void CheckIfName()
+    public void CheckSpecialCommands()
     {
         if (dialogLines[currentLine].StartsWith("n-"))
         {
             nameText.text = dialogLines[currentLine].Replace("n-", "");
             currentLine++;
+            
+            // check for up or down
+            if (dialogLines[currentLine] == ":up" || dialogLines[currentLine] == ":down")
+            {
+                isUp = dialogLines[currentLine] == ":up";
+                currentLine++;
+            }
+            
+        } else if (dialogLines[currentLine].StartsWith(":up"))
+        {
+            isUp = true;
+            currentLine++;
+        } else if (dialogLines[currentLine].StartsWith(":down"))
+        {
+            isUp = false;
+            currentLine++;
         }
     }
+
+    // getting and setters
+    public bool getIsTyping() => typing;
 }
