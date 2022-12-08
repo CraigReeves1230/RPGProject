@@ -11,7 +11,8 @@ public class CamController : MonoBehaviour
     private float height;
     private float width;
 
-    public bool stillCamera;
+    public bool lockXPosition;
+    public bool lockYPosition;
 
     
     // Start is called before the first frame update
@@ -34,19 +35,23 @@ public class CamController : MonoBehaviour
             target = GameManager.instance.getControlTarget().gameObject.transform;
         }
 
-        if (!stillCamera)
-        {
-            float x = target.transform.position.x;
-            float y = target.transform.position.y;
-            float z = transform.position.z;
-            
-            // control camera
-            transform.position = new Vector3(x, y, z);
+        float x = lockXPosition ? transform.position.x : target.transform.position.x;
+        float y = lockYPosition ? transform.position.y : target.transform.position.y;
+        float z = transform.position.z;
         
-            // keep in bounds
-            transform.position = new Vector3(Mathf.Clamp(transform.position.x, (GameManager.instance.bottomLeftLimit.x + (width / 2)), GameManager.instance.topRightLimit.x - (width / 2)),
-                Mathf.Clamp(transform.position.y, GameManager.instance.bottomLeftLimit.y + (height / 2) , GameManager.instance.topRightLimit.y - (height / 2)), z);
-        }
+        // control camera
+        transform.position = new Vector3(x, y, z);
+    
+        
+        // keep in bounds
+        float boundX = lockXPosition ? x : Mathf.Clamp(transform.position.x, (GameManager.instance.bottomLeftLimit.x + (width / 2)),
+            GameManager.instance.topRightLimit.x - (width / 2));
+        float boundY = lockYPosition ? y : Mathf.Clamp(transform.position.y, GameManager.instance.bottomLeftLimit.y + (height / 2),
+            GameManager.instance.topRightLimit.y - (height / 2));
+        
+        
+        transform.position = new Vector3(boundX, boundY, z);
+    
     }
 
     // getter

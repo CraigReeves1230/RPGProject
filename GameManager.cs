@@ -65,6 +65,9 @@ public class GameManager : MonoBehaviour
         { 
             // make player active
             party[i].gameObject.SetActive(true);
+            
+            // position player to a default location
+            party[i].transform.position = new Vector2(party[0].transform.position.x, party[0].transform.position.y);
 
             if (lastPlayer != null)
             {
