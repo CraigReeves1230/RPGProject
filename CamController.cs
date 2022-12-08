@@ -6,6 +6,7 @@ using UnityEngine.Tilemaps;
 
 public class CamController : MonoBehaviour
 {
+    public static CamController mainCamera;
     private Transform target;
     
     private float height;
@@ -14,17 +15,34 @@ public class CamController : MonoBehaviour
     public bool lockXPosition;
     public bool lockYPosition;
 
+    public bool earthquake;
+    private Animator anim;
+
     
     // Start is called before the first frame update
     void Start()
     {        
+        // main cam should be singleton
+        if (mainCamera == null)
+        {
+            mainCamera = this;
+        }
+        
         height = Camera.main.orthographicSize * 2;
         width = (height) * Camera.main.aspect;
         
         // change background color
         Camera.main.backgroundColor = new Color(0f, 0f, 0f);
+
+        // get animator
+        anim = GetComponent<Animator>();
     }
 
+
+    void Update()
+    {
+        anim.SetBool("CamShake", earthquake);
+    }
 
     // Late Update is called once per frame after Update. Good for cameras.
     void LateUpdate()
@@ -56,4 +74,6 @@ public class CamController : MonoBehaviour
 
     // getter
     public Transform getTarget() => target;
+    public bool getIsEarthquake() => earthquake;
+    public void setEarthquake(bool setting) => earthquake = setting;
 }
