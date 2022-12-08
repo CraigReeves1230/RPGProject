@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -11,9 +12,13 @@ public class DialogManager : MonoBehaviour
     public Text nameText;
     public GameObject dialogBox;
     public GameObject nameBox;
+    public GameObject faceBox;
+    public Image faceBoxImage;
     private bool typing;
     private float waitTime;
     private bool displayLineFull;
+
+    public Sprite[] faces;
 
     public string[] dialogLines;
 
@@ -25,9 +30,13 @@ public class DialogManager : MonoBehaviour
     private float dialogUpPosition;
     private float nameBoxUpPosition;
     private float nameBoxDownPosition;
+    private float faceBoxUpPosition;
+    private float faceBoxDownPosition;
+    
+    
 
     // determines if dialog boxes is on top or down
-    private bool isUp;
+    public bool isUp;
     
     // Start is called before the first frame update
     void Start()
@@ -47,6 +56,7 @@ public class DialogManager : MonoBehaviour
         
         // have inactive by default
         nameBox.SetActive(false);
+        faceBox.SetActive(false);
 
         // get animator component and initialize
         anim = GetComponent<Animator>();
@@ -55,10 +65,12 @@ public class DialogManager : MonoBehaviour
         // down position is default position for message window
         dialogDownPosition = dialogBox.transform.position.y;
         nameBoxDownPosition = nameBox.transform.position.y;
+        faceBoxDownPosition = faceBox.transform.position.y;
         
         // up position
         dialogUpPosition = dialogDownPosition * 4.57f;
         nameBoxUpPosition = nameBoxDownPosition * 3.14f;
+        faceBoxUpPosition = faceBoxDownPosition * 4.67f;
     }
 
     // Update is called once per frame
@@ -75,19 +87,20 @@ public class DialogManager : MonoBehaviour
         {
             dialogBox.transform.position = new Vector2(dialogBox.transform.position.x, dialogDownPosition);
             nameBox.transform.position = new Vector2(nameBox.transform.position.x, nameBoxDownPosition);
+            faceBox.transform.position = new Vector2(faceBox.transform.position.x, faceBoxDownPosition);
         }
         else
         {
             dialogBox.transform.position = new Vector2(dialogBox.transform.position.x, dialogUpPosition);
             nameBox.transform.position = new Vector2(nameBox.transform.position.x, nameBoxUpPosition);
+            faceBox.transform.position = new Vector2(faceBox.transform.position.x, faceBoxUpPosition);
         }
         
     }
 
     public void showDialog(string[] newLines, bool showName = true)
-    {
-        nameBox.SetActive(showName);
-        
+    {        
+        // show face image
         if (dialogBox.activeInHierarchy)
         {
             
@@ -103,11 +116,15 @@ public class DialogManager : MonoBehaviour
                 currentLine = 0;
                 dialogLines = null;
                 nameText.text = null;
+                faceBox.SetActive(false);
                 GameManager.instance.getControlTarget().setCanMove(true);
             }
             else
             {
-                // continue writing with dialog box still open
+                // continue displaying text
+                
+                
+                // check for commands to put up either face box or name box
                 CheckSpecialCommands();
                 
                 dialogText.text = dialogLines[currentLine];
@@ -119,19 +136,24 @@ public class DialogManager : MonoBehaviour
         else
         {
             // dialog box first opens
-            nameBox.SetActive(showName);
             dialogBox.SetActive(true);
+            
+            // by default, name and face boxes are not active
+            nameBox.SetActive(false);
+            faceBox.SetActive(false);
             
             GameManager.instance.getControlTarget().setCanMove(false);
             dialogLines = newLines;
             currentLine = 0;
 
-            // check for special commands
+            // check for commands to put up either face box or name box
             CheckSpecialCommands();
+            
             dialogText.text = dialogLines[currentLine]; 
             
             anim.SetBool("dialogBoxOpen", true);
             anim.SetBool("dialogBoxClose", false);
+            
             
             StopAllCoroutines();
             StartCoroutine(TypeSentence(dialogText.text));
@@ -161,25 +183,50 @@ public class DialogManager : MonoBehaviour
 
     public void CheckSpecialCommands()
     {
-        if (dialogLines[currentLine].StartsWith("n-"))
+        bool specialCommands = dialogLines[currentLine].Contains(":up") 
+            || dialogLines[currentLine].Contains(":down") 
+           || dialogLines[currentLine].Contains(":name")
+            || dialogLines[currentLine].Contains(":face");
+        
+        // if there are special commands, treat as a command line
+        if (specialCommands)
         {
-            nameText.text = dialogLines[currentLine].Replace("n-", "");
-            currentLine++;
-            
-            // check for up or down
-            if (dialogLines[currentLine] == ":up" || dialogLines[currentLine] == ":down")
+            var lineExplode = dialogLines[currentLine].Split(" ");
+            for (int i = 0; i < lineExplode.Length; i++) 
             {
-                isUp = dialogLines[currentLine] == ":up";
-                currentLine++;
+                switch (lineExplode[i])
+                {
+                    case ":up":
+                        isUp = true;
+                        break;
+                    case ":down":
+                        isUp = false;
+                        break;
+                    case ":name":
+                        if (string.Equals(lineExplode[i+1], "none", StringComparison.OrdinalIgnoreCase))
+                        {
+                            nameBox.SetActive(false);
+                        }
+                        else
+                        {
+                            nameBox.SetActive(true);
+                            nameText.text = lineExplode[i + 1];
+                        }           
+                        break;
+                    case ":face":
+                        if (string.Equals(lineExplode[i+1], "none", StringComparison.OrdinalIgnoreCase))
+                        {
+                            faceBox.SetActive(false);
+                        }
+                        else
+                        {
+                            faceBox.SetActive(true);
+                            faceBoxImage.sprite = faces[int.Parse(lineExplode[i + 1])];
+                        }
+                        break;
+                }
             }
-            
-        } else if (dialogLines[currentLine].StartsWith(":up"))
-        {
-            isUp = true;
-            currentLine++;
-        } else if (dialogLines[currentLine].StartsWith(":down"))
-        {
-            isUp = false;
+
             currentLine++;
         }
     }
