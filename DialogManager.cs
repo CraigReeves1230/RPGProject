@@ -1,9 +1,8 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using Image = UnityEngine.UI.Image;
 
 public class DialogManager : MonoBehaviour
 {
@@ -20,10 +19,18 @@ public class DialogManager : MonoBehaviour
 
     public Sprite[] faces;
 
-    public string[] dialogLines;
+    private string[] dialogLines;
 
     private int currentLine;
     private Animator anim;
+
+    public enum DisplayStyleOptions
+    {
+        Modern,
+        Traditional
+    }
+
+    public DisplayStyleOptions displayStyle;
 
     // dialog box positions
     private float dialogDownPosition;
@@ -33,10 +40,10 @@ public class DialogManager : MonoBehaviour
     private float faceBoxUpPosition;
     private float faceBoxDownPosition;
     
-    
 
     // determines if dialog boxes is on top or down
-    public bool isUp;
+    private bool isUp;
+    
     
     // Start is called before the first frame update
     void Start()
@@ -73,14 +80,19 @@ public class DialogManager : MonoBehaviour
         faceBoxUpPosition = faceBoxDownPosition * 4.67f;
     }
 
+    
     // Update is called once per frame
     void Update()
     {
-        // if user hits fire again, quit typing and just show the line
-        if (typing && Input.GetButtonDown("Fire1"))
+        // in classic display mode, if user hits fire again, quit typing and just show the line
+        if (displayStyle == DisplayStyleOptions.Traditional)
         {
-            displayLineFull = true;
+            if (typing && Input.GetButtonDown("Fire1"))
+            {
+                displayLineFull = true;
+            }
         }
+        
         
         // position dialog box high or low
         if (!isUp)
@@ -98,6 +110,7 @@ public class DialogManager : MonoBehaviour
         
     }
 
+    
     public void showDialog(string[] newLines, bool showName = true)
     {        
         // show face image
@@ -129,8 +142,12 @@ public class DialogManager : MonoBehaviour
                 
                 dialogText.text = dialogLines[currentLine];
                 
-                StopAllCoroutines();
-                StartCoroutine(TypeSentence(dialogText.text));
+                // type out text if in classic display mode
+                if (displayStyle == DisplayStyleOptions.Traditional)
+                {
+                    StopAllCoroutines();
+                    StartCoroutine(TypeSentence(dialogText.text));
+                }
             }
         }
         else
@@ -153,13 +170,17 @@ public class DialogManager : MonoBehaviour
             
             anim.SetBool("dialogBoxOpen", true);
             anim.SetBool("dialogBoxClose", false);
-            
-            
-            StopAllCoroutines();
-            StartCoroutine(TypeSentence(dialogText.text));
+
+            if (displayStyle == DisplayStyleOptions.Traditional)
+            {
+                StopAllCoroutines();
+                StartCoroutine(TypeSentence(dialogText.text));
+            }
         }
     }
     
+    
+    // types out text in classic display mode
     private IEnumerator TypeSentence(string sentence)
     {
         typing = true;
@@ -181,6 +202,7 @@ public class DialogManager : MonoBehaviour
         Input.ResetInputAxes();
     }
 
+    
     public void CheckSpecialCommands()
     {
         bool specialCommands = dialogLines[currentLine].Contains(":up") 
