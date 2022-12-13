@@ -36,6 +36,8 @@ public abstract class MovingEntity : MonoBehaviour
     private float catchupRunSpeed;
     private float bumpingMoveSpeed;
     private float bumpingRunSpeed;
+    private float diagMoveSpeed;
+    private float diagRunSpeed;
     
         
     // Start is called before the first frame update
@@ -54,12 +56,14 @@ public abstract class MovingEntity : MonoBehaviour
             runningSpeed = followTarget.runningSpeed;
         }    
         currentMoveSpeed = moveSpeed;
-        catchupMoveSpeed = moveSpeed * 1.415f;
-        catchupRunSpeed = runningSpeed * 1.415f;
+        catchupMoveSpeed = moveSpeed * 0.8f;
+        catchupRunSpeed = runningSpeed * 0.8f;
         
-        bumpingMoveSpeed = moveSpeed * 0.607f;
-        bumpingRunSpeed = runningSpeed * 0.607f;
+        bumpingMoveSpeed = moveSpeed * 0.507f;
+        bumpingRunSpeed = runningSpeed * 0.507f;
 
+        diagMoveSpeed = moveSpeed * 0.8f;
+        diagRunSpeed = runningSpeed * 0.8f;
     }
 
     // Update is called once per frame
@@ -109,6 +113,12 @@ public abstract class MovingEntity : MonoBehaviour
         if (!isFollowing)
         {
             isMovingDiagonal = (horizontalMov != 0 && verticalMov != 0);
+        }
+        
+        // slow player down moving diagonally
+        if (isMovingDiagonal)
+        {
+            currentMoveSpeed = isRunning ? diagRunSpeed : diagMoveSpeed;
         }
         
         
