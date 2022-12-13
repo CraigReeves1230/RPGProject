@@ -21,6 +21,8 @@ public class GameManager : MonoBehaviour
     private bool topRightMarkerDetected;
     
     private ControllableEntity controlTarget;
+
+    private bool inVehicle = false;
     
     // Start is called before the first frame update
     void Start()
@@ -49,10 +51,10 @@ public class GameManager : MonoBehaviour
             party[i].init();
             isParty = true;
             
-            // by default, only party lead appears on screen
+            // by default, only party lead appears on screen (if not in a vehicle)
             if (i == 0)
             {
-                party[i].gameObject.SetActive(true);
+                party[i].gameObject.SetActive(!inVehicle);
             }
             else
             {
@@ -61,23 +63,25 @@ public class GameManager : MonoBehaviour
         } 
         
         // initialize follow the leader
-        ControllableEntity lastPlayer = null;
-        for (int i = 0; i < (followLeaderLimit + 1); i++)
-        { 
-            // make player active
-            party[i].gameObject.SetActive(true);
+        if (!inVehicle)
+        {
+            ControllableEntity lastPlayer = null;
+            for (int i = 0; i < (followLeaderLimit + 1); i++)
+            { 
+                // make player active
+                party[i].gameObject.SetActive(true);
             
-            // position player to a default location
-            party[i].transform.position = new Vector2(party[0].transform.position.x, party[0].transform.position.y);
+                // position player to a default location
+                party[i].transform.position = new Vector2(party[0].transform.position.x, party[0].transform.position.y);
 
-            if (lastPlayer != null)
-            {
-                party[i].FollowTarget(lastPlayer);
-            }
+                if (lastPlayer != null)
+                {
+                    party[i].FollowTarget(lastPlayer);
+                }
             
-            lastPlayer = party[i];
-        }         
-        
+                lastPlayer = party[i];
+            }
+        }
     }
 
     // Update is called once per frame
@@ -107,8 +111,8 @@ public class GameManager : MonoBehaviour
                 Application.Quit();
             }
         
-            // assign control by default to party leader
-            if (controlTarget == null)
+            // assign control by default to party leader if not in vehicle
+            if (controlTarget == null && !inVehicle)
             {
                 controlTarget = partyLead();
             }   
@@ -133,10 +137,10 @@ public class GameManager : MonoBehaviour
     public bool isControlTarget(GameObject entityObj) => entityObj == controlTarget.gameObject;
     
     
-    // gets party leader
+    // getters and setters
     public PlayableCharacterEntity partyLead() => party[0];
-
     public void setBottomLeftMarkerDetected(bool setting) => bottomLeftMarkerDetected = setting;
     public void setTopRightMarkerDetected(bool setting) => topRightMarkerDetected = setting;
-    
+    public bool isInVehicle() => inVehicle;
+    public void setInVehicle(bool setting) => inVehicle = setting;
 }

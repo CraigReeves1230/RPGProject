@@ -28,12 +28,29 @@ public class AreaEntrance : MonoBehaviour
     {
         if (GameManager.instance.nextAreaEntrance == inEntranceName)
         {
-            // new entity positions
             var newX = !ignoreX ? gameObject.transform.position.x : GameManager.instance.getControlTarget().gameObject.transform.position.x;
             var newY = !ignoreY ? gameObject.transform.position.y : GameManager.instance.getControlTarget().gameObject.transform.position.y;
             
+          
             GameManager.instance.exitsEnabled = false;
-            GameManager.instance.getControlTarget().gameObject.transform.position = new Vector2(newX, newY);
+            
+            // new entity positions
+            var party = GameManager.instance.party;
+            for (int i = 0; i < party.Length; i++)
+            {
+                party[i].gameObject.transform.position = new Vector2(newX, newY);
+                
+                // get facing position of player in front and turn player
+                if (i > 0)
+                {
+                    var lastMoveX = party[i - 1].GetComponent<Animator>().GetBool("lastMoveX");
+                    var lastMoveY = party[i - 1].GetComponent<Animator>().GetBool("lastMoveY");
+                    
+                    party[i].GetComponent<Animator>().SetBool("lastMoveX", lastMoveX);
+                    party[i].GetComponent<Animator>().SetBool("lastMoveY", lastMoveY);
+                }
+            }
+            
             GameManager.instance.nextAreaEntrance = null;
 
             GameManager.instance.getControlTarget().setCanMove(true);
