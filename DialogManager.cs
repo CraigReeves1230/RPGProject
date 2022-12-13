@@ -68,6 +68,7 @@ public class DialogManager : MonoBehaviour
         // get animator component and initialize
         anim = GetComponent<Animator>();
         anim.SetBool("dialogBoxClose", true);
+        
 
         // down position is default position for message window
         dialogDownPosition = dialogBox.transform.position.y;
@@ -93,6 +94,11 @@ public class DialogManager : MonoBehaviour
             }
         }
         
+        // facebox image is required
+        if (faceBoxImage == null)
+        {
+            GameManager.instance.errorMsg("FaceBox Image is missing from the Dialog Manager. Go to FaceBoxImage game object under the Facebox object and add it in the Dialog Manager.");
+        }
         
         // position dialog box high or low
         if (!isUp)
@@ -111,7 +117,7 @@ public class DialogManager : MonoBehaviour
     }
 
     
-    public void showDialog(string[] newLines, bool showName = true)
+    public void showDialog(string[] newLines)
     {        
         // show face image
         if (dialogBox.activeInHierarchy)
@@ -236,14 +242,15 @@ public class DialogManager : MonoBehaviour
                         }           
                         break;
                     case ":face":
-                        if (string.Equals(lineExplode[i+1], "none", StringComparison.OrdinalIgnoreCase))
+                        var next=  int.Parse(lineExplode[i + 1]);
+                        if (faces.Length < 1 || faces[next] == null)
                         {
-                            faceBox.SetActive(false);
+                            GameManager.instance.errorMsg("Face image not found. Make sure face is added to the Dialog Manager or that it is accessible.");
                         }
                         else
                         {
                             faceBox.SetActive(true);
-                            faceBoxImage.sprite = faces[int.Parse(lineExplode[i + 1])];
+                            faceBoxImage.sprite = faces[next];
                         }
                         break;
                 }

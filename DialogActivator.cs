@@ -19,7 +19,7 @@ public class DialogActivator : MonoBehaviour
     {
         if (canActivate && !DialogManager.instance.getIsTyping() && Input.GetButtonUp("Fire1"))
         {
-            DialogManager.instance.showDialog(lines, showName);
+            DialogManager.instance.showDialog(lines);
         } 
     }
 

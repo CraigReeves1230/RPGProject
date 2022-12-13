@@ -1,8 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -14,10 +10,15 @@ public class GameManager : MonoBehaviour
     public Vector2 topRightLimit;
 
     public int maxLevel = 99;
+    public bool mapScene = true;
 
     public PlayableCharacterEntity[] party;
     
     public int followLeaderLimit = 2;
+    private bool isParty;
+
+    private bool bottomLeftMarkerDetected;
+    private bool topRightMarkerDetected;
     
     private ControllableEntity controlTarget;
     
@@ -40,12 +41,13 @@ public class GameManager : MonoBehaviour
         // initialize game variables
         exitsEnabled = true;
         nextAreaEntrance = null;
-       
-     
+        
+        
         // initialize party 
         for (int i = 0; i < party.Length; i++)
         {
             party[i].init();
+            isParty = true;
             
             // by default, only party lead appears on screen
             if (i == 0)
@@ -59,7 +61,6 @@ public class GameManager : MonoBehaviour
         } 
         
         // initialize follow the leader
-        var followerCount = 0;
         ControllableEntity lastPlayer = null;
         for (int i = 0; i < (followLeaderLimit + 1); i++)
         { 
@@ -76,22 +77,49 @@ public class GameManager : MonoBehaviour
             
             lastPlayer = party[i];
         }         
+        
     }
 
     // Update is called once per frame
     void Update()
-    {
-        // allow user to quit game for now
-        if (Input.GetKeyUp(KeyCode.Escape))
+    {          
+        // look for bounds
+        if (mapScene)
         {
-            Application.Quit();
-        }
+            if (bottomLeftMarkerDetected == false)
+            {
+                errorMsg("Error: Bottom left marker is missing.");
+            }
         
-        // assign control by default to party leader
-        if (controlTarget == null)
-        {
-            controlTarget = partyLead();
-        }
+            if (topRightMarkerDetected == false)
+            {
+                errorMsg("Error: Top right marker is missing.");
+            }
+
+            if (!isParty)
+            {
+                errorMsg("Error: No party leader. Add party members in Game Manager.");
+            }
+        
+            // allow user to quit game for now
+            if (Input.GetKeyUp(KeyCode.Escape))
+            {
+                Application.Quit();
+            }
+        
+            // assign control by default to party leader
+            if (controlTarget == null)
+            {
+                controlTarget = partyLead();
+            }   
+        }     
+    }
+
+    // Error message
+    public void errorMsg(string message)
+    {
+        Debug.Log("ERROR: " + message);
+        Debug.LogError("ERROR: " + message);
     }
     
     // assigns control of an entity
@@ -107,4 +135,8 @@ public class GameManager : MonoBehaviour
     
     // gets party leader
     public PlayableCharacterEntity partyLead() => party[0];
+
+    public void setBottomLeftMarkerDetected(bool setting) => bottomLeftMarkerDetected = setting;
+    public void setTopRightMarkerDetected(bool setting) => topRightMarkerDetected = setting;
+    
 }

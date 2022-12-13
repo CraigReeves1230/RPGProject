@@ -6,36 +6,36 @@ using UnityEngine;
 
 public abstract class MovingEntity : MonoBehaviour
 {       
-    protected bool canMove = true;    
-    protected bool stayInBounds = true;    
-    protected Animator anim;
-    protected Rigidbody2D rigidBody;
-    protected SpriteRenderer spriteRenderer;
-    protected float height;
-    protected float width;
+    private bool canMove = true;    
+    private bool stayInBounds = true;    
+    private Animator anim;
+    private Rigidbody2D rigidBody;
+    private SpriteRenderer spriteRenderer;
+    private float height;
+    private float width;
     protected float horizontalMov;
     protected float verticalMov;
-    protected bool isMovingDiagonal;
-    protected bool bumping;
-    protected bool sliding;
+    private bool isMovingDiagonal;
+    private bool bumping;
+    private bool sliding;
     
     // for player following 
     protected bool isFollowing;
-    protected MovingEntity followTarget;
+    private MovingEntity followTarget;
     public float followingDistance = 1.25f;
-    protected double angle;
-    protected Vector2 followerPos;
-    protected Vector2 targetPos;
+    private double angle;
+    private Vector2 followerPos;
+    private Vector2 targetPos;
     
     // moving speeds
     public float moveSpeed;
     public float runningSpeed; 
     protected bool isRunning;
-    protected float currentMoveSpeed;
-    protected float catchupMoveSpeed;
-    protected float catchupRunSpeed;
-    public float bumpingMoveSpeed;
-    public float bumpingRunSpeed;
+    private float currentMoveSpeed;
+    private float catchupMoveSpeed;
+    private float catchupRunSpeed;
+    private float bumpingMoveSpeed;
+    private float bumpingRunSpeed;
     
         
     // Start is called before the first frame update

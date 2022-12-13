@@ -15,7 +15,6 @@ public class CamController : MonoBehaviour
     public bool lockXPosition;
     public bool lockYPosition;
 
-    public bool earthquake;
     private Animator anim;
 
     
@@ -41,7 +40,6 @@ public class CamController : MonoBehaviour
 
     void Update()
     {
-        anim.SetBool("CamShake", earthquake);
     }
 
     // Late Update is called once per frame after Update. Good for cameras.
@@ -58,22 +56,22 @@ public class CamController : MonoBehaviour
         float z = transform.position.z;
         
         // control camera
-        transform.position = new Vector3(x, y, z);
-    
         
+        transform.position = new Vector3(x, y, z);
+
+    
         // keep in bounds
         float boundX = lockXPosition ? x : Mathf.Clamp(transform.position.x, (GameManager.instance.bottomLeftLimit.x + (width / 2)),
             GameManager.instance.topRightLimit.x - (width / 2));
         float boundY = lockYPosition ? y : Mathf.Clamp(transform.position.y, GameManager.instance.bottomLeftLimit.y + (height / 2),
             GameManager.instance.topRightLimit.y - (height / 2));
-        
-        
-        transform.position = new Vector3(boundX, boundY, z);
     
+    
+        transform.position = new Vector3(boundX, boundY, z);
+        
+        
     }
 
     // getter
     public Transform getTarget() => target;
-    public bool getIsEarthquake() => earthquake;
-    public void setEarthquake(bool setting) => earthquake = setting;
 }
