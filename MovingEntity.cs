@@ -134,10 +134,10 @@ public abstract class MovingEntity : MonoBehaviour
         }
         
         // deal with followers sliding and jittering on map borders
-        if ((transform.position.y <= GameManager.instance.bottomLeftLimit.y + height * 0.875f) ||
-            (transform.position.y >= GameManager.instance.topRightLimit.y - height * 0.875f) || 
-            (transform.position.x <= GameManager.instance.bottomLeftLimit.x + width * 0.875f) ||
-            (transform.position.x >= GameManager.instance.topRightLimit.x - height * 0.875f))
+        if ((transform.position.y <= GameManager.instance.getBottomLeftLimit().y + height * 0.875f) ||
+            (transform.position.y >= GameManager.instance.getTopRightLimit().y - height * 0.875f) || 
+            (transform.position.x <= GameManager.instance.getBottomLeftLimit().x + width * 0.875f) ||
+            (transform.position.x >= GameManager.instance.getTopRightLimit().x - height * 0.875f))
         {
             if (!isFollowing)
             {
@@ -322,8 +322,8 @@ public abstract class MovingEntity : MonoBehaviour
     // keep entity within bounds of map
     void keepEntityInBounds()
     {
-        transform.position = new Vector2(Mathf.Clamp(transform.position.x, GameManager.instance.bottomLeftLimit.x + (width / 2), GameManager.instance.topRightLimit.x - (width / 2)),
-            Mathf.Clamp(transform.position.y, GameManager.instance.bottomLeftLimit.y + (height / 2), GameManager.instance.topRightLimit.y - (height / 2)));
+        transform.position = new Vector2(Mathf.Clamp(transform.position.x, GameManager.instance.getBottomLeftLimit().x + (width / 2), GameManager.instance.getTopRightLimit().x - (width / 2)),
+            Mathf.Clamp(transform.position.y, GameManager.instance.getBottomLeftLimit().y + (height / 2), GameManager.instance.getTopRightLimit().y - (height / 2)));
     }
     
     

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Build.Reporting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -15,7 +16,12 @@ public class CamController : MonoBehaviour
     public bool lockXPosition;
     public bool lockYPosition;
 
-    private Animator anim;
+    public bool ignoreMapBoundsX;
+    public bool ignoreMapBoundsY;
+    private float boundX;
+    private float boundY;
+
+    public bool usingCamBounds;
 
     
     // Start is called before the first frame update
@@ -33,8 +39,6 @@ public class CamController : MonoBehaviour
         // change background color
         Camera.main.backgroundColor = new Color(0f, 0f, 0f);
 
-        // get animator
-        anim = GetComponent<Animator>();
     }
 
 
@@ -59,12 +63,47 @@ public class CamController : MonoBehaviour
         
         transform.position = new Vector3(x, y, z);
 
-    
+        
         // keep in bounds
-        float boundX = lockXPosition ? x : Mathf.Clamp(transform.position.x, (GameManager.instance.bottomLeftLimit.x + (width / 2)),
-            GameManager.instance.topRightLimit.x - (width / 2));
-        float boundY = lockYPosition ? y : Mathf.Clamp(transform.position.y, GameManager.instance.bottomLeftLimit.y + (height / 2),
-            GameManager.instance.topRightLimit.y - (height / 2));
+        if (!ignoreMapBoundsX)
+        {
+            if (!usingCamBounds)
+            {
+                boundX = lockXPosition ? x : Mathf.Clamp(transform.position.x, (GameManager.instance.getBottomLeftLimit().x + (width / 2)),
+                    GameManager.instance.getTopRightLimit().x - (width / 2));
+            }
+            else
+            {
+                boundX = lockXPosition ? x : Mathf.Clamp(transform.position.x, (GameManager.instance.getCamBottomLeftLimit().x + (width / 2)),
+                    GameManager.instance.getCamTopRightLimit().x - (width / 2));
+            }
+            
+        }
+        else
+        {
+            boundX = x;
+        }
+
+
+        if (!ignoreMapBoundsY)
+        {
+            if (!usingCamBounds)
+            {
+                boundY = lockYPosition ? y : Mathf.Clamp(transform.position.y, GameManager.instance.getBottomLeftLimit().y + (height / 2),
+                    GameManager.instance.getTopRightLimit().y - (height / 2));
+            }
+            else
+            {
+                boundY = lockYPosition ? y : Mathf.Clamp(transform.position.y, GameManager.instance.getCamBottomLeftLimit().y + (height / 2),
+                    GameManager.instance.getCamTopRightLimit().y - (height / 2));
+            }
+            
+        }
+        else
+        {
+            boundY = y;
+        }
+        
     
     
         transform.position = new Vector3(boundX, boundY, z);
