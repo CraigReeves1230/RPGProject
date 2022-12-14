@@ -6,8 +6,11 @@ public class GameManager : MonoBehaviour
     public string nextAreaEntrance;
     public bool exitsEnabled;
     
-    public Vector2 bottomLeftLimit;
-    public Vector2 topRightLimit;
+    private Vector2 bottomLeftLimit;
+    private Vector2 topRightLimit;
+
+    public Vector2 camBottomLeftLimit;
+    public Vector2 camTopRightLimit;
 
     public int maxLevel = 99;
     public bool mapScene = true;
@@ -143,4 +146,13 @@ public class GameManager : MonoBehaviour
     public void setTopRightMarkerDetected(bool setting) => topRightMarkerDetected = setting;
     public bool isInVehicle() => inVehicle;
     public void setInVehicle(bool setting) => inVehicle = setting;
+    public Vector2 getBottomLeftLimit() => bottomLeftLimit;
+    public void setBottomLeftLimit(Vector2 pos) => bottomLeftLimit = pos;
+    public Vector2 getTopRightLimit() => topRightLimit;
+    public void setTopRightLimit(Vector2 pos) => topRightLimit = pos;
+    
+    public Vector2 getCamBottomLeftLimit() => camBottomLeftLimit;
+    public void setCamBottomLeftLimit(Vector2 pos) => camBottomLeftLimit = pos;
+    public Vector2 getCamTopRightLimit() => camTopRightLimit;
+    public void setCamTopRightLimit(Vector2 pos) => camTopRightLimit = pos;
 }
