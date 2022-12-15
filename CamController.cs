@@ -112,5 +112,6 @@ public class CamController : MonoBehaviour
     }
 
     // getter
-    public Transform getTarget() => target;
+    public Transform getCameraCamera() => target;
+    public void setCameraTarget(Transform tgt) => target = tgt;
 }

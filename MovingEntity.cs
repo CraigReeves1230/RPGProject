@@ -342,6 +342,12 @@ public abstract class MovingEntity : MonoBehaviour
         isFollowing = false;
         followTarget = null;
     }
+    
+    public void clearDirectionalBuffer()
+    {
+        horizontalMov = 0f;
+        verticalMov = 0f;
+    }
 
     public float getFollowDistance(MovingEntity entity) => followingDistance;
     public MovingEntity getFollowTarget() => followTarget;
@@ -350,4 +356,10 @@ public abstract class MovingEntity : MonoBehaviour
     public bool getIsMovingDiagonal() => isMovingDiagonal;
     public bool getIsFollowing(MovingEntity entity) => entity.isFollowing;
     public bool getIsFollowing(MovingEntity entity, MovingEntity target) => (entity.isFollowing && entity.followTarget == target);
+    public bool getIsRunning(MovingEntity entity) => isRunning;
+    public void setIsRunning(bool setting) => isRunning = setting;
+    public void setHorizontalMov(float val) => horizontalMov = val;
+    public void setVerticalMov(float val) => verticalMov = val;
+    public float getHorizontalMov(MovingEntity entity) => horizontalMov;
+    public float getVerticalMov(MovingEntity entity) => verticalMov;
 }

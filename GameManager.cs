@@ -155,4 +155,9 @@ public class GameManager : MonoBehaviour
     public void setCamBottomLeftLimit(Vector2 pos) => camBottomLeftLimit = pos;
     public Vector2 getCamTopRightLimit() => camTopRightLimit;
     public void setCamTopRightLimit(Vector2 pos) => camTopRightLimit = pos;
+
+    public void revokeControl()
+    {
+        controlTarget = null;
+    }
 }
