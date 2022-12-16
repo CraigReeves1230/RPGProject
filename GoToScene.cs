@@ -21,7 +21,7 @@ public class GoToScene : MonoBehaviour
             
             GameManager.instance.getControlTarget().clearDirectionalBuffer();
             
-            GameManager.instance.setNextDestination(position.x, position.y);         
+            GameManager.instance.setNextDestination(new Vector2(position.x, position.y));         
         }
     }
 
@@ -40,17 +40,24 @@ public class GoToScene : MonoBehaviour
         position = new Vector2(x, y);
     }
 
-    public void fadeInComplete()
+    public void fadeInComplete(ControllableEntity regainControlOf = null)
     {
-        if (gameWorld.getAutoReturnControl())
+        if (GameManager.instance.getAutoReturnControl())
         {
-            gameWorld.partyLeader().setControlOverride(false);  
+            if (regainControlOf == null)
+            {
+                GameManager.instance.assignControl(GameManager.instance.partyLead());
+            }
+            else
+            {
+                GameManager.instance.assignControl(regainControlOf);
+            }
         }
     }
 
     public void loadScene()
     {
-        gameWorld.partyLeader().setControlOverride(true);
+        GameManager.instance.revokeControl();
         SceneManager.LoadScene(levelToLoad.handle);
     }
 }

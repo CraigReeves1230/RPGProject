@@ -9,7 +9,7 @@ using UnityEngine.SceneManagement;
 public abstract class EventSequence : MonoBehaviour
 {    
     // Get NPC objects
-    [SerializeField] protected CharacterMovement[] npcs;
+    [SerializeField] protected MovingEntity[] npcs;
     
     // event worker instance
     private EventWorker eventWorker;
@@ -22,10 +22,7 @@ public abstract class EventSequence : MonoBehaviour
     
     // get dialog manager
     private DialogManager dialogManager;
-    
-    // get game world
-    public GameWorld gameWorld;
-    
+
     // determines if event is activated by hitting return or just stepping onto it
     [SerializeField]
     private bool activatedOnReturn = true;
@@ -60,17 +57,19 @@ public abstract class EventSequence : MonoBehaviour
     public delegate void PromptCallback(int choice);
     
     // gets the player that is under our control
-    protected PlayerMovement player()
+    protected ControllableEntity player()
     {
-        return gameWorld.partyLeader();
+        return GameManager.instance.getControlTarget() == null ? GameManager.instance.partyLead() : GameManager.instance.getControlTarget();
     }
 
-    protected PlayerMovement player(string playerName)
+    protected ControllableEntity player(string playerName)
     {
-        // go through party and find correct player
-        PlayerMovement foundPlayer = player();
+        // go through and find correct player
+        ControllableEntity foundPlayer = player();
+
+        var allControllables = FindObjectsOfType<ControllableEntity>();
         
-        foreach (var player in gameWorld.party)
+        foreach (var player in allControllables)
         {
             if (player.name != playerName) continue;
 
@@ -87,13 +86,7 @@ public abstract class EventSequence : MonoBehaviour
         
         // Find dialog manager
         dialogManager = FindObjectOfType<DialogManager>();
-        
-        // Find Game world if one wasn't assigned
-        if (!gameWorld)
-        {
-            gameWorld = FindObjectOfType<GameWorld>();
-        }
-        
+
         // get trigger collision box of event
         var colliders = GetComponents<Collider2D>();
         foreach (Collider2D collider in colliders)
@@ -148,9 +141,7 @@ public abstract class EventSequence : MonoBehaviour
     // handle collision with entities
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.gameObject.GetComponent<PlayerMovement>() == null) return;
-
-        if (other.GetComponent<PlayerMovement>().isUnderPlayerControl())
+        if (other.GetComponent<ControllableEntity>().CompareTag("Player"))
         {
             withinEventZone = true;
 
@@ -164,10 +155,7 @@ public abstract class EventSequence : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D other)
     {
-        
-        if (other.gameObject.GetComponent<PlayerMovement>() == null) return;
-        
-        if (other.GetComponent<CharacterMovement>().isUnderPlayerControl() && !autoTrigger)
+        if (other.GetComponent<ControllableEntity>().CompareTag("Player") && !autoTrigger)
         {
             withinEventZone = true; 
         }
@@ -175,9 +163,7 @@ public abstract class EventSequence : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (other.gameObject.GetComponent<PlayerMovement>() == null) return;
-        
-        if (other.GetComponent<CharacterMovement>().isUnderPlayerControl())
+        if (other.GetComponent<ControllableEntity>().CompareTag("Player"))
         {
             withinEventZone = false; 
         }
@@ -197,7 +183,7 @@ public abstract class EventSequence : MonoBehaviour
     {
         if (!withinEventZone || workerBusy || autoTrigger) return;
 
-        if (activatedOnReturn && !activatedByEventOnly && Input.GetKeyUp(KeyCode.Return))
+        if (activatedOnReturn && !activatedByEventOnly && Input.GetButtonUp("Fire1"))
         {
             activateEvent();
         }
@@ -231,7 +217,7 @@ public abstract class EventSequence : MonoBehaviour
 
     // facing commands
 
-    protected void faceNorth(CharacterMovement character)
+    protected void faceNorth(MovingEntity character)
     {
         var command = ScriptableObject.CreateInstance<Command>();
         command.setName("faceNorth");
@@ -239,7 +225,7 @@ public abstract class EventSequence : MonoBehaviour
         eventWorker.storeInQueue(command);  
     }
     
-    protected void faceSouth(CharacterMovement character)
+    protected void faceSouth(MovingEntity character)
     {
         var command = ScriptableObject.CreateInstance<Command>();
         command.setName("faceSouth");
@@ -247,7 +233,7 @@ public abstract class EventSequence : MonoBehaviour
         eventWorker.storeInQueue(command);  
     }
     
-    protected void faceEast(CharacterMovement character)
+    protected void faceEast(MovingEntity character)
     {
         var command = ScriptableObject.CreateInstance<Command>();
         command.setName("faceEast");
@@ -255,7 +241,7 @@ public abstract class EventSequence : MonoBehaviour
         eventWorker.storeInQueue(command);  
     }
     
-    protected void faceWest(CharacterMovement character)
+    protected void faceWest(MovingEntity character)
     {
         var command = ScriptableObject.CreateInstance<Command>();
         command.setName("faceWest");
@@ -265,7 +251,7 @@ public abstract class EventSequence : MonoBehaviour
     
     // movement commands
     
-    protected void walkEast(CharacterMovement character, float distance)
+    protected void walkEast(MovingEntity character, float distance)
     {
         var command = ScriptableObject.CreateInstance<Command>();
         command.setName("walkEast");
@@ -274,7 +260,7 @@ public abstract class EventSequence : MonoBehaviour
         eventWorker.storeInQueue(command);
     }
 
-    protected void walkNW(CharacterMovement character, float distance)
+    protected void walkNW(MovingEntity character, float distance)
     {
         var command = ScriptableObject.CreateInstance<Command>();
         command.setName("walkNW");
@@ -283,7 +269,7 @@ public abstract class EventSequence : MonoBehaviour
         eventWorker.storeInQueue(command);
     }
     
-    protected void walkNE(CharacterMovement character, float distance)
+    protected void walkNE(MovingEntity character, float distance)
     {
         var command = ScriptableObject.CreateInstance<Command>();
         command.setName("walkNE");
@@ -292,7 +278,7 @@ public abstract class EventSequence : MonoBehaviour
         eventWorker.storeInQueue(command);
     }
     
-    protected void walkSE(CharacterMovement character, float distance)
+    protected void walkSE(MovingEntity character, float distance)
     {
         var command = ScriptableObject.CreateInstance<Command>();
         command.setName("walkSE");
@@ -301,7 +287,7 @@ public abstract class EventSequence : MonoBehaviour
         eventWorker.storeInQueue(command);
     }
     
-    protected void walkSW(CharacterMovement character, float distance)
+    protected void walkSW(MovingEntity character, float distance)
     {
         var command = ScriptableObject.CreateInstance<Command>();
         command.setName("walkSW");
@@ -310,7 +296,7 @@ public abstract class EventSequence : MonoBehaviour
         eventWorker.storeInQueue(command);
     }
     
-    protected void runNW(CharacterMovement character, float distance)
+    protected void runNW(MovingEntity character, float distance)
     {
         var command = ScriptableObject.CreateInstance<Command>();
         command.setName("runNW");
@@ -319,7 +305,7 @@ public abstract class EventSequence : MonoBehaviour
         eventWorker.storeInQueue(command);
     }
     
-    protected void runNE(CharacterMovement character, float distance)
+    protected void runNE(MovingEntity character, float distance)
     {
         var command = ScriptableObject.CreateInstance<Command>();
         command.setName("runNE");
@@ -328,7 +314,7 @@ public abstract class EventSequence : MonoBehaviour
         eventWorker.storeInQueue(command);
     }
     
-    protected void runSE(CharacterMovement character, float distance)
+    protected void runSE(MovingEntity character, float distance)
     {
         var command = ScriptableObject.CreateInstance<Command>();
         command.setName("runSE");
@@ -337,7 +323,7 @@ public abstract class EventSequence : MonoBehaviour
         eventWorker.storeInQueue(command);
     }
     
-    protected void runSW(CharacterMovement character, float distance)
+    protected void runSW(MovingEntity character, float distance)
     {
         var command = ScriptableObject.CreateInstance<Command>();
         command.setName("runSW");
@@ -346,7 +332,7 @@ public abstract class EventSequence : MonoBehaviour
         eventWorker.storeInQueue(command);
     }
     
-    protected void walkNorth(CharacterMovement character, float distance)
+    protected void walkNorth(MovingEntity character, float distance)
     {
         var command = ScriptableObject.CreateInstance<Command>();
         command.setName("walkNorth");
@@ -355,7 +341,7 @@ public abstract class EventSequence : MonoBehaviour
         eventWorker.storeInQueue(command);
     }
     
-    protected void walkWest(CharacterMovement character, float distance)
+    protected void walkWest(MovingEntity character, float distance)
     {
         var command = ScriptableObject.CreateInstance<Command>();
         command.setName("walkWest");
@@ -364,7 +350,7 @@ public abstract class EventSequence : MonoBehaviour
         eventWorker.storeInQueue(command);
     }
     
-    protected void walkSouth(CharacterMovement character, float distance)
+    protected void walkSouth(MovingEntity character, float distance)
     {
         var command = ScriptableObject.CreateInstance<Command>();
         command.setName("walkSouth");
@@ -373,7 +359,7 @@ public abstract class EventSequence : MonoBehaviour
         eventWorker.storeInQueue(command);
      }
     
-    protected void runEast(CharacterMovement character, float distance)
+    protected void runEast(MovingEntity character, float distance)
     {
         var command = ScriptableObject.CreateInstance<Command>();
         command.setName("runEast");
@@ -382,7 +368,7 @@ public abstract class EventSequence : MonoBehaviour
         eventWorker.storeInQueue(command);
     }
     
-    protected void runSouth(CharacterMovement character, float distance)
+    protected void runSouth(MovingEntity character, float distance)
     {
         var command = ScriptableObject.CreateInstance<Command>();
         command.setName("runSouth");
@@ -391,7 +377,7 @@ public abstract class EventSequence : MonoBehaviour
         eventWorker.storeInQueue(command);
     }
     
-    protected void runNorth(CharacterMovement character, float distance)
+    protected void runNorth(MovingEntity character, float distance)
     {
         var command = ScriptableObject.CreateInstance<Command>();
         command.setName("runNorth");
@@ -400,7 +386,7 @@ public abstract class EventSequence : MonoBehaviour
         eventWorker.storeInQueue(command);
     }
     
-    protected void runWest(CharacterMovement character, float distance)
+    protected void runWest(MovingEntity character, float distance)
     {
         var command = ScriptableObject.CreateInstance<Command>();
         command.setName("runWest");
@@ -409,7 +395,7 @@ public abstract class EventSequence : MonoBehaviour
         eventWorker.storeInQueue(command);
     }
 
-    protected void stealControl(CharacterMovement character)
+    protected void stealControl(MovingEntity character)
     {
         var command = ScriptableObject.CreateInstance<Command>();
         command.setName("stealControl");
@@ -417,7 +403,7 @@ public abstract class EventSequence : MonoBehaviour
         eventWorker.storeInQueue(command); 
     }
 
-    protected void returnControl(CharacterMovement character)
+    protected void returnControl(MovingEntity character)
     {
         var command = ScriptableObject.CreateInstance<Command>();
         command.setName("returnControl");
@@ -443,16 +429,9 @@ public abstract class EventSequence : MonoBehaviour
         eventWorker.storeInQueue(command);
     }
     
-    // shortcut msg function
-    protected void msgNext()
+    protected void turnToFace(MovingEntity character, MovingEntity reference)
     {
-        wait();
-        msgClose();
-    }
-
-    protected void turnToFace(CharacterMovement character, CharacterMovement reference)
-    {
-        CharacterMovement cm = character.GetComponent<CharacterMovement>();
+        MovingEntity cm = character.GetComponent<MovingEntity>();
         var playerPos = new Vector2(reference.transform.position.x, reference.transform.position.y);
         var npcPos = new Vector2(character.transform.position.x, character.transform.position.y);
         var angle = Math.Abs(Math.Atan2(npcPos.y - playerPos.y, npcPos.x - playerPos.x) * 180f / Math.PI);
@@ -483,7 +462,7 @@ public abstract class EventSequence : MonoBehaviour
         }
     }
 
-    public void positionCharacter(CharacterMovement character, float x, float y)
+    public void positionCharacter(MovingEntity character, float x, float y)
     {
         var command = newCom();
         command.setName("positionCharacter");
@@ -492,7 +471,7 @@ public abstract class EventSequence : MonoBehaviour
         eventWorker.storeInQueue(command);
     }
 
-    public void triggerAnimation(CharacterMovement character, string trigger)
+    public void triggerAnimation(MovingEntity character, string trigger)
     {
         var command = newCom();
         command.setName("triggerAnimation");
@@ -524,11 +503,11 @@ public abstract class EventSequence : MonoBehaviour
     {
         
         // clear directional buffer for all characters involved
-        player().GetComponent<PlayerMovement>().clearDirectionalBuffer();
+        player().GetComponent<MovingEntity>().clearDirectionalBuffer();
         
         foreach (var npc in npcs)
         {
-            npc.GetComponent<NPCMovement>().clearDirectionalBuffer();
+            npc.GetComponent<MovingEntity>().clearDirectionalBuffer();
         }
         
         eventWorker.pauseNow();
@@ -553,12 +532,12 @@ public abstract class EventSequence : MonoBehaviour
     public void cancelSequence()
     {
         // clear directional buffer for all characters involved in script
-        player().GetComponent<PlayerMovement>().clearDirectionalBuffer();
+        player().GetComponent<MovingEntity>().clearDirectionalBuffer();
         
         
         foreach (var npc in npcs)
         {
-            npc.GetComponent<NPCMovement>().clearDirectionalBuffer();
+            npc.GetComponent<MovingEntity>().clearDirectionalBuffer();
         }
         
         eventWorker.cancelEventQueue();
@@ -567,11 +546,11 @@ public abstract class EventSequence : MonoBehaviour
     protected void wait()
     {
         // clear directional buffer for all characters involved in script
-        player().GetComponent<PlayerMovement>().clearDirectionalBuffer();
+        player().GetComponent<MovingEntity>().clearDirectionalBuffer();
         
         foreach (var npc in npcs)
         {
-            npc.GetComponent<NPCMovement>().clearDirectionalBuffer();
+            npc.GetComponent<MovingEntity>().clearDirectionalBuffer();
         }
         
         Command command = newCom();
@@ -583,11 +562,11 @@ public abstract class EventSequence : MonoBehaviour
     protected void waitForPrompt(PromptCallback callback)
     {
         // clear directional buffer for all characters
-        player().GetComponent<PlayerMovement>().clearDirectionalBuffer();
+        player().GetComponent<MovingEntity>().clearDirectionalBuffer();
         
         foreach (var npc in npcs)
         {
-            npc.GetComponent<NPCMovement>().clearDirectionalBuffer();
+            npc.GetComponent<MovingEntity>().clearDirectionalBuffer();
         }
 
         Command command = newCom();
@@ -652,40 +631,9 @@ public abstract class EventSequence : MonoBehaviour
         command.setDialogManagerParam(dialogManager);
         eventWorker.storeInQueue(command);
     }
-    
-    protected void picMsg(string name, string message, CharacterMovement character, int avatarIndex)
-    {
-        Command command = newCom();
-        command.setName("picMsg");
-        command.setStringParams(name, message);
-        command.setDialogManagerParam(dialogManager);
-        command.setGameObjectParam(character.gameObject);
-        command.setIntParams(avatarIndex);
-        eventWorker.storeInQueue(command);
-    }
-    
-    protected void picMsg(string name, string message, float height, CharacterMovement character, int avatarIndex)
-    {
-        Command command = newCom();
-        command.setName("picMsgWithHeight");
-        command.setStringParams(name, message);
-        command.setDialogManagerParam(dialogManager);
-        command.setFloatParams(height);
-        command.setGameObjectParam(character.gameObject);
-        command.setIntParams(avatarIndex);
-        eventWorker.storeInQueue(command);
-    }
 
-    protected void msgClose()
-    {
-        Command command = newCom();
-        command.setName("msgClose");
-        command.setDialogManagerParam(dialogManager);
-        eventWorker.storeInQueue(command);
-    }
-    
     // go to a different scene
-    protected void goToScene(float x, float y, CharacterMovement inPlayer, bool partOfSequence)
+    protected void goToScene(float x, float y, MovingEntity inPlayer, bool partOfSequence)
     {
         Command command = newCom();
         command.setName("goToScene");
@@ -706,7 +654,7 @@ public abstract class EventSequence : MonoBehaviour
     
     // hide and show characters
     
-    protected void showCharacter(CharacterMovement character)
+    protected void showCharacter(MovingEntity character)
     {
         Command command = newCom();
         command.setName("showCharacter");
@@ -714,7 +662,7 @@ public abstract class EventSequence : MonoBehaviour
         eventWorker.storeInQueue(command);
     }
     
-    protected void hideCharacter(CharacterMovement character)
+    protected void hideCharacter(MovingEntity character)
     {
         Command command = newCom();
         command.setName("hideCharacter");

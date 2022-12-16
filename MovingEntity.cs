@@ -354,8 +354,12 @@ public abstract class MovingEntity : MonoBehaviour
     public void setFollowDistance(float distance) => followingDistance = distance;
     public float getCurrentMoveSpeed() => currentMoveSpeed;
     public bool getIsMovingDiagonal() => isMovingDiagonal;
-    public bool getIsFollowing(MovingEntity entity) => entity.isFollowing;
-    public bool getIsFollowing(MovingEntity entity, MovingEntity target) => (entity.isFollowing && entity.followTarget == target);
+    public bool getIsFollowing() => isFollowing;
+    
+    // returns true if the target is being followed
+    public bool getIsFollowing(MovingEntity target) => (isFollowing && followTarget == target);
+
+    public void stopFollowing() => isFollowing = false;
     public bool getIsRunning(MovingEntity entity) => isRunning;
     public void setIsRunning(bool setting) => isRunning = setting;
     public void setHorizontalMov(float val) => horizontalMov = val;

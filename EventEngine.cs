@@ -27,43 +27,42 @@ public class EventEngine : MonoBehaviour
 
         if (commandName == "walkEast")
         {
-            var cm = command.getGameObject().GetComponent<MovingEntity>();
+            var character = command.getGameObject().GetComponent<MovingEntity>();
             var dist = command.getFloatParameters()[0];
-            return autoMove(cm, "east", dist, false);
+            return autoMove(character, "east", dist, false);
         }
         
         if (commandName == "walkWest")
         {
-            var cm = command.getGameObject().GetComponent<MovingEntity>();
+            var character = command.getGameObject().GetComponent<MovingEntity>();
             var dist = command.getFloatParameters()[0];
-            return autoMove(cm, "west", dist, false);
+            return autoMove(character, "west", dist, false);
         }
 
         if (commandName == "walkSouth")
         {
-            var cm = command.getGameObject().GetComponent<CharacterMovement>();
+            var character = command.getGameObject().GetComponent<MovingEntity>();
             var dist = command.getFloatParameters()[0];
-            return autoMove(cm, "south", dist, false);
+            return autoMove(character, "south", dist, false);
         }
         
         if (commandName == "walkNorth")
         {
-            var cm = command.getGameObject().GetComponent<CharacterMovement>();
+            var character = command.getGameObject().GetComponent<MovingEntity>();
             var dist = command.getFloatParameters()[0];
-            return autoMove(cm, "north", dist, false);
+            return autoMove(character, "north", dist, false);
         }
 
         if (commandName == "returnControl")
         {
             var es = command.getEventSequenceParam();
-            var cm = command.getGameObject().GetComponent<CharacterMovement>();
-            return returnControl(cm, es);
+            var character = command.getGameObject().GetComponent<ControllableEntity>();
+            return returnControl(character, es);
         }
 
         if (commandName == "stealControl")
         {
-            var cm = command.getGameObject().GetComponent<CharacterMovement>();
-            return stealControl(cm);
+            return stealControl();
         }
 
         if (commandName == "faceNorth")
@@ -134,43 +133,8 @@ public class EventEngine : MonoBehaviour
             return msg(dialogManager, name, message);
         }
         
-        if (commandName == "msgWithHeight")
-        {
-            var name = command.getStringParameters()[0];
-            var message = command.getStringParameters()[1];
-            var height = command.getFloatParameters()[0];
-            var dialogManager = command.getDialogManagerParam();
-            return msg(dialogManager, name, message, height);
-        }
 
-        if (commandName == "picMsg")
-        {
-            var name = command.getStringParameters()[0];
-            var message = command.getStringParameters()[1];
-            var dialogManager = command.getDialogManagerParam();
-            var character = command.getGameObject();
-            var avatarIndex = command.getIntParameters()[0];
-            return picMsg(dialogManager, name, message, character, avatarIndex);
-        }
-        
-        if (commandName == "picMsgWithHeight")
-        {
-            var name = command.getStringParameters()[0];
-            var message = command.getStringParameters()[1];
-            var dialogManager = command.getDialogManagerParam();
-            var character = command.getGameObject();
-            var avatarIndex = command.getIntParameters()[0];
-            var height = command.getFloatParameters()[0];
-            return picMsg(dialogManager, name, message, height, character, avatarIndex);
-        }
-
-        if (commandName == "msgClose")
-        {
-            var dm = command.getDialogManagerParam();
-            return msgClose(dm);
-        }
-
-        if (commandName == "promptWin")
+        /*if (commandName == "promptWin")
         {
             var dm = command.getDialogManagerParam();
             var headerText = command.getStringParameters()[0];
@@ -189,14 +153,15 @@ public class EventEngine : MonoBehaviour
             {
                 return promptWin(dm, headerText, command.getStringParameters()[1], command.getStringParameters()[2], command.getStringParameters()[3], command.getStringParameters()[4]);
             }
-        }
+        }*/
 
-        if (commandName == "waitForPrompt")
+        /*if (commandName == "waitForPrompt")
         {
             var dm = command.getDialogManagerParam();
             var callback = command.getCallbackParam();
             return waitForPrompt(dm, callback);
         }
+        */
 
         if (commandName == "wait")
         {
@@ -211,35 +176,35 @@ public class EventEngine : MonoBehaviour
             var y = command.getFloatParameters()[1];
             var partOfSequence = command.getBoolParameters()[0];
             var player = command.getGameObject();
-            return goToScene(scene, x, y, player, partOfSequence);
+            return goToScene(scene, x, y,  partOfSequence);
         }
 
         if (commandName == "runEast")
         {
-            var cm = command.getGameObject().GetComponent<CharacterMovement>();
+            var character = command.getGameObject().GetComponent<MovingEntity>();
             var dist = command.getFloatParameters()[0];
-            return autoMove(cm, "east", dist, true);
+            return autoMove(character, "east", dist, true);
         }
         
         if (commandName == "runSouth")
         {
-            var cm = command.getGameObject().GetComponent<CharacterMovement>();
+            var character = command.getGameObject().GetComponent<MovingEntity>();
             var dist = command.getFloatParameters()[0];
-            return autoMove(cm, "south", dist, true);
+            return autoMove(character, "south", dist, true);
         }
         
         if (commandName == "runWest")
         {
-            var cm = command.getGameObject().GetComponent<CharacterMovement>();
+            var character = command.getGameObject().GetComponent<MovingEntity>();
             var dist = command.getFloatParameters()[0];
-            return autoMove(cm, "west", dist, true);
+            return autoMove(character, "west", dist, true);
         }
         
         if (commandName == "runNorth")
         {
-            var cm = command.getGameObject().GetComponent<CharacterMovement>();
+            var character = command.getGameObject().GetComponent<MovingEntity>();
             var dist = command.getFloatParameters()[0];
-            return autoMove(cm, "north", dist, true);
+            return autoMove(character, "north", dist, true);
         }
 
         if (commandName == "showCharacter")
@@ -276,66 +241,66 @@ public class EventEngine : MonoBehaviour
             return changeCameraFollowTarget(newTarget);
         }
         
-        if (commandName == "changeCameraSpeed")
+        /*if (commandName == "changeCameraSpeed")
         {
             var newSpeed = command.getFloatParameters()[0];
             return changeCameraSpeed(newSpeed);
-        }
+        }*/
 
         if (commandName == "walkNW")
         {
-            var cm = command.getGameObject().GetComponent<CharacterMovement>();
+            var character = command.getGameObject().GetComponent<MovingEntity>();
             var distance = command.getFloatParameters()[0];
-            return autoMove(cm, "NW", distance, false);
+            return autoMove(character, "NW", distance, false);
         }
         
         if (commandName == "walkNE")
         {
-            var cm = command.getGameObject().GetComponent<CharacterMovement>();
+            var character = command.getGameObject().GetComponent<MovingEntity>();
             var distance = command.getFloatParameters()[0];
-            return autoMove(cm, "NE", distance, false);
+            return autoMove(character, "NE", distance, false);
         }
         
         if (commandName == "walkSE")
         {
-            var cm = command.getGameObject().GetComponent<CharacterMovement>();
+            var character = command.getGameObject().GetComponent<MovingEntity>();
             var distance = command.getFloatParameters()[0];
-            return autoMove(cm, "SE", distance, false);
+            return autoMove(character, "SE", distance, false);
         }
         
         if (commandName == "walkSW")
         {
-            var cm = command.getGameObject().GetComponent<CharacterMovement>();
+            var character = command.getGameObject().GetComponent<MovingEntity>();
             var distance = command.getFloatParameters()[0];
-            return autoMove(cm, "SW", distance, false);
+            return autoMove(character, "SW", distance, false);
         }
         
         if (commandName == "runNW")
         {
-            var cm = command.getGameObject().GetComponent<CharacterMovement>();
+            var character = command.getGameObject().GetComponent<MovingEntity>();
             var distance = command.getFloatParameters()[0];
-            return autoMove(cm, "NW", distance, true);
+            return autoMove(character, "NW", distance, true);
         }
         
         if (commandName == "runNE")
         {
-            var cm = command.getGameObject().GetComponent<CharacterMovement>();
+            var character = command.getGameObject().GetComponent<MovingEntity>();
             var distance = command.getFloatParameters()[0];
-            return autoMove(cm, "NE", distance, true);
+            return autoMove(character, "NE", distance, true);
         }
         
         if (commandName == "runSE")
         {
-            var cm = command.getGameObject().GetComponent<CharacterMovement>();
+            var character = command.getGameObject().GetComponent<MovingEntity>();
             var distance = command.getFloatParameters()[0];
-            return autoMove(cm, "SE", distance, true);
+            return autoMove(character, "SE", distance, true);
         }
         
         if (commandName == "runSW")
         {
-            var cm = command.getGameObject().GetComponent<CharacterMovement>();
+            var character = command.getGameObject().GetComponent<MovingEntity>();
             var distance = command.getFloatParameters()[0];
-            return autoMove(cm, "SW", distance, true);
+            return autoMove(character, "SW", distance, true);
         }
 
         if (commandName == "setRain")
@@ -366,11 +331,11 @@ public class EventEngine : MonoBehaviour
             return setNextWeather(rain, snow, fog, darkness);
         }
 
-        if (commandName == "giveItem")
+        /*if (commandName == "giveItem")
         {
             var itemName = command.getStringParameters()[0];
             return giveItem(itemName);
-        }
+        }*/
 
         return true;
     }
@@ -385,10 +350,10 @@ public class EventEngine : MonoBehaviour
 
     private bool setNextWeather(bool rain, bool snow, bool fog, bool darkness)
     {
-        gameWorld.nextRain = rain;
-        gameWorld.nextFog = fog;
-        gameWorld.nextSnow = snow;
-        gameWorld.nextDarkness = darkness;
+        GameManager.instance.setNextRain(rain);
+        GameManager.instance.setNextFog(fog);
+        GameManager.instance.setNextSnow(snow);
+        GameManager.instance.setNextDarkness(darkness);
 
         return true;
     }
@@ -405,25 +370,24 @@ public class EventEngine : MonoBehaviour
         return true;
     }
     
-    private bool stealControl(CharacterMovement cm)
+    private bool stealControl()
     {
         // shut off follow for all players
-        foreach (var player in gameWorld.party)
+        GameManager.instance.revokeControl();
+        foreach (var player in GameManager.instance.party)
         {
-            player.setControlOverride(true);
-            player.setIsFollowing(false);
+            player.stopFollowing();
         }
         
-        cm.setControlOverride(true);
-        return !cm.isUnderPlayerControl();
+        return GameManager.instance.getControlTarget() == null;
     }
 
-    private bool returnControl(CharacterMovement cm, EventSequence es)
+    private bool returnControl(ControllableEntity character, EventSequence es)
     {
-        cm.setControlOverride(false);
-        es.updateWithinZone(cm.gameObject);
-        gameWorld.initializeParty();
-        return cm.isUnderPlayerControl();
+        GameManager.instance.assignControl(character);
+        es.updateWithinZone(character.gameObject);
+        GameManager.instance.initializeParty();
+        return GameManager.instance.isControlTarget(character);
     }
     
     private bool autoMove(MovingEntity entity, string direction, float distance, bool running)
@@ -661,7 +625,7 @@ public class EventEngine : MonoBehaviour
         {
             if (!autoMoving)
             {
-                characterDestination = new Vector3(pos.x - distance, pos.y - distance);
+                characterDestination = new Vector2(pos.x - distance, pos.y - distance);
                 autoMoving = true;
             }
             

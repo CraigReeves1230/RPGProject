@@ -17,7 +17,7 @@ public class DialogActivator : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (canActivate && !DialogManager.instance.getIsTyping() && Input.GetButtonUp("Fire1"))
+        if (canActivate && !DialogManager.instance.getIsTyping() && GameManager.instance.getMainFireKeyUp())
         {
             DialogManager.instance.showDialog(lines);
         } 

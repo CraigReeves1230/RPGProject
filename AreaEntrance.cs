@@ -26,7 +26,7 @@ public class AreaEntrance : MonoBehaviour
     // Update player position
     public void UpdatePlayerPosition(string inEntranceName)
     {
-        if (GameManager.instance.nextAreaEntrance == inEntranceName)
+        if (GameManager.instance.getNextAreaEntrance() == inEntranceName)
         {
             var newX = !ignoreX ? gameObject.transform.position.x : GameManager.instance.getControlTarget().gameObject.transform.position.x;
             var newY = !ignoreY ? gameObject.transform.position.y : GameManager.instance.getControlTarget().gameObject.transform.position.y;
@@ -51,7 +51,7 @@ public class AreaEntrance : MonoBehaviour
                 }
             }
             
-            GameManager.instance.nextAreaEntrance = null;
+            GameManager.instance.setNextAreaEntrance(null);
 
             GameManager.instance.getControlTarget().setCanMove(true);
             

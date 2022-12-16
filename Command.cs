@@ -12,7 +12,7 @@ public class Command : ScriptableObject
     private float[] floatParameters;
     private int[] intParameters;
     private bool[] boolParameters;
-    private PlayerMovement[] playerParameters;
+    private MovingEntity[] playerParameters;
     private string name;
     private GameObject gameObjectParameter;
     private EventWorker eventWorkerParam;
@@ -44,16 +44,16 @@ public class Command : ScriptableObject
         }
     }
 
-    public void setPlayerParams(params PlayerMovement[] parameters)
+    public void setPlayerParams(params MovingEntity[] parameters)
     {
-        playerParameters = new PlayerMovement[parameters.Length];
+        playerParameters = new MovingEntity[parameters.Length];
         for (var i = 0; i < parameters.Length; i++)
         {
             playerParameters[i] = parameters[i];
         }
     }
 
-    public PlayerMovement[] getPlayerParams()
+    public MovingEntity[] getPlayerParams()
     {
         return playerParameters;
     }

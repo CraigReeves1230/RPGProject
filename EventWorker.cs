@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.LowLevel.PlayerLoop;
 
 public class EventWorker : MonoBehaviour
 {
@@ -36,7 +35,7 @@ public class EventWorker : MonoBehaviour
 
         if (isWaitingForKey())
         {
-            if (Input.GetKeyUp(KeyCode.Return))
+            if (GameManager.instance.getMainFireKeyUp())
             {
                 waitingForKey = false;
             }

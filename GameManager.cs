@@ -3,8 +3,9 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
-    public string nextAreaEntrance;
+    private string nextAreaEntrance;
     public bool exitsEnabled;
+    
     
     private Vector2 bottomLeftLimit;
     private Vector2 topRightLimit;
@@ -25,7 +26,16 @@ public class GameManager : MonoBehaviour
     
     private ControllableEntity controlTarget;
 
+    private bool autoReturnControl;
+
     private bool inVehicle = false;
+    
+    private bool nextRain;
+    private bool nextSnow;
+    private bool nextFog;
+    private bool nextDarkness;
+
+    public Vector2 nextDestination;
     
     // Start is called before the first frame update
     void Start()
@@ -66,25 +76,7 @@ public class GameManager : MonoBehaviour
         } 
         
         // initialize follow the leader
-        if (!inVehicle)
-        {
-            ControllableEntity lastPlayer = null;
-            for (int i = 0; i < (followLeaderLimit + 1); i++)
-            { 
-                // make player active
-                party[i].gameObject.SetActive(true);
-            
-                // position player to a default location
-                party[i].transform.position = new Vector2(party[0].transform.position.x, party[0].transform.position.y);
-
-                if (lastPlayer != null)
-                {
-                    party[i].FollowTarget(lastPlayer);
-                }
-            
-                lastPlayer = party[i];
-            }
-        }
+        initializeParty();
     }
 
     // Update is called once per frame
@@ -122,6 +114,30 @@ public class GameManager : MonoBehaviour
         }     
     }
 
+    public void initializeParty()
+    {
+        if (!inVehicle)
+        {
+            ControllableEntity lastPlayer = null;
+            for (int i = 0; i < (followLeaderLimit + 1); i++)
+            { 
+                // make player active
+                party[i].gameObject.SetActive(true);
+            
+                // position player to a default location
+                party[i].transform.position = new Vector2(party[0].transform.position.x, party[0].transform.position.y);
+
+                if (lastPlayer != null)
+                {
+                    party[i].FollowTarget(lastPlayer);
+                }
+            
+                lastPlayer = party[i];
+            }
+        }
+    }
+    
+
     // Error message
     public void errorMsg(string message)
     {
@@ -130,7 +146,11 @@ public class GameManager : MonoBehaviour
     }
     
     // assigns control of an entity
-    public void assignControl(ControllableEntity entity) => controlTarget = entity;
+    public void assignControl(ControllableEntity entity)
+    {
+        entity.tag = "Player";
+        controlTarget = entity;
+    }
 
     // gets the current control target
     public ControllableEntity getControlTarget() => controlTarget;
@@ -156,8 +176,44 @@ public class GameManager : MonoBehaviour
     public Vector2 getCamTopRightLimit() => camTopRightLimit;
     public void setCamTopRightLimit(Vector2 pos) => camTopRightLimit = pos;
 
+    public void setNextRain(bool setting) => nextRain = setting; 
+    public void setNextSnow(bool setting) => nextSnow = setting; 
+    public void setNextFog(bool setting) => nextFog = setting; 
+    public void setNextDarkness(bool setting) => nextDarkness = setting;
+    public bool getNextRain() => nextRain;
+    public bool getNextSnow() => nextSnow;
+    public bool getNextFog() => nextFog;
+    public bool getNextDarkness() => nextDarkness;
+    public void setNextAreaEntrance(string ae) => nextAreaEntrance = ae;
+    public string getNextAreaEntrance() => nextAreaEntrance;
     public void revokeControl()
     {
+        controlTarget.tag = "WalkThrough";
         controlTarget = null;
     }
+
+    public bool getMainFireKeyUp()
+    {
+        return Input.GetButtonUp("Fire1");
+    }
+    
+    public bool getMainFireKeyDown()
+    {
+        return Input.GetButtonDown("Fire1");
+    }
+
+    public bool getSecondaryFireKeyDown()
+    {
+        return Input.GetKeyDown(KeyCode.LeftShift);
+    }
+    
+    public bool getSecondaryFireKeyUp()
+    {
+        return Input.GetKeyUp(KeyCode.LeftShift);
+    }
+
+    public bool getAutoReturnControl() => autoReturnControl;
+    public void setAutoReturnControl(bool setting) => autoReturnControl = setting;
+    public Vector2 getNextDestination() => nextDestination;
+    public void setNextDestination(Vector2 dest) => nextDestination = dest;
 }

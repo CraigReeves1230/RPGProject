@@ -51,7 +51,7 @@ public class AreaExit : MonoBehaviour
     {
         if (GameManager.instance.isControlTarget(coll.gameObject) && GameManager.instance.exitsEnabled)
         {
-            GameManager.instance.nextAreaEntrance = theAreaEntranceName;
+            GameManager.instance.setNextAreaEntrance(theAreaEntranceName);
             areaToLoad = theAreaToLoad;
             shouldLoadAfterFade = true;
             GameManager.instance.getControlTarget().setCanMove(false);

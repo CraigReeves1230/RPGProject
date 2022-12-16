@@ -88,7 +88,7 @@ public class DialogManager : MonoBehaviour
         // in classic display mode, if user hits fire again, quit typing and just show the line
         if (displayStyle == DisplayStyleOptions.Traditional)
         {
-            if (typing && Input.GetButtonDown("Fire1"))
+            if (typing && GameManager.instance.getMainFireKeyDown())
             {
                 displayLineFull = true;
             }
