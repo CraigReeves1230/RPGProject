@@ -136,7 +136,7 @@ public class DialogManager : MonoBehaviour
                 dialogLines = null;
                 nameText.text = null;
                 faceBox.SetActive(false);
-                GameManager.instance.getControlTarget().setCanMove(true);
+                GameManager.instance.restoreControl();
             }
             else
             {
@@ -165,9 +165,10 @@ public class DialogManager : MonoBehaviour
             nameBox.SetActive(false);
             faceBox.SetActive(false);
             
-            GameManager.instance.getControlTarget().setCanMove(false);
             dialogLines = newLines;
             currentLine = 0;
+            
+            GameManager.instance.revokeControl();
 
             // check for commands to put up either face box or name box
             CheckSpecialCommands();

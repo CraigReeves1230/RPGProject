@@ -15,7 +15,9 @@ public class EventWorker : MonoBehaviour
     public void storeInQueue(Command command)
     {
         if (enabled)
-        commandList.Add(command);
+        {
+            commandList.Add(command);
+        }
     }
 
     private void Start()
@@ -32,6 +34,7 @@ public class EventWorker : MonoBehaviour
             // work only the oldest queue in the stack
             workCommand(commandList.First());
         }
+                
 
         if (isWaitingForKey())
         {

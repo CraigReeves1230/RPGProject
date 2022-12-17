@@ -22,6 +22,9 @@ public abstract class EventSequence : MonoBehaviour
     
     // get dialog manager
     private DialogManager dialogManager;
+    
+    // get dialog activator
+    private DialogActivator dialogActivator;
 
     // determines if event is activated by hitting return or just stepping onto it
     [SerializeField]
@@ -86,6 +89,9 @@ public abstract class EventSequence : MonoBehaviour
         
         // Find dialog manager
         dialogManager = FindObjectOfType<DialogManager>();
+        
+        // Add dialog Activator
+        dialogActivator = gameObject.AddComponent<DialogActivator>();
 
         // get trigger collision box of event
         var colliders = GetComponents<Collider2D>();
@@ -295,6 +301,20 @@ public abstract class EventSequence : MonoBehaviour
         command.setGameObjectParam(character.gameObject);
         eventWorker.storeInQueue(command);
     }
+
+    protected void stopAllFollowing()
+    {
+        var command = ScriptableObject.CreateInstance<Command>();
+        command.setName("stopAllFollowing");
+        eventWorker.storeInQueue(command);
+    }
+
+    protected void followTheLeader()
+    {
+        var command = ScriptableObject.CreateInstance<Command>();
+        command.setName("followTheLeader");
+        eventWorker.storeInQueue(command);
+    }
     
     protected void runNW(MovingEntity character, float distance)
     {
@@ -395,20 +415,17 @@ public abstract class EventSequence : MonoBehaviour
         eventWorker.storeInQueue(command);
     }
 
-    protected void stealControl(MovingEntity character)
+    protected void stealControl()
     {
         var command = ScriptableObject.CreateInstance<Command>();
         command.setName("stealControl");
-        command.setGameObjectParam(character.gameObject);
         eventWorker.storeInQueue(command); 
     }
 
-    protected void returnControl(MovingEntity character)
+    protected void returnControl()
     {
         var command = ScriptableObject.CreateInstance<Command>();
         command.setName("returnControl");
-        command.setGameObjectParam(character.gameObject);
-        command.setEventSequenceParam(this);
         eventWorker.storeInQueue(command);
     }
 
@@ -417,7 +434,6 @@ public abstract class EventSequence : MonoBehaviour
         var command = newCom();
         command.setName("promptWin");
         command.setStringParams(parameters);
-        command.setDialogManagerParam(dialogManager);
         eventWorker.storeInQueue(command);
     }
 
@@ -572,7 +588,6 @@ public abstract class EventSequence : MonoBehaviour
         Command command = newCom();
         command.setName("waitForPrompt");
         command.setCallbackParam(callback);
-        command.setDialogManagerParam(dialogManager);
         eventWorker.storeInQueue(command);
     }
     
@@ -613,22 +628,13 @@ public abstract class EventSequence : MonoBehaviour
     
     // Message window events
 
-    protected void msg(string name, string message)
+    protected void msg(params string[] lines)
     {
         Command command = newCom();
         command.setName("msg");
-        command.setStringParams(name, message);
-        command.setDialogManagerParam(dialogManager);
-        eventWorker.storeInQueue(command);
-    }
-    
-    protected void msg(string name, string message, float height)
-    {
-        Command command = newCom();
-        command.setName("msgWithHeight");
-        command.setStringParams(name, message);
-        command.setFloatParams(height);
-        command.setDialogManagerParam(dialogManager);
+        command.setStringParams(lines);
+        command.setDialogActivatorParam(dialogActivator);
+        command.setEventWorkerParam(eventWorker);
         eventWorker.storeInQueue(command);
     }
 

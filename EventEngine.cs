@@ -1,3 +1,5 @@
+using Newtonsoft.Json;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -55,9 +57,7 @@ public class EventEngine : MonoBehaviour
 
         if (commandName == "returnControl")
         {
-            var es = command.getEventSequenceParam();
-            var character = command.getGameObject().GetComponent<ControllableEntity>();
-            return returnControl(character, es);
+            return returnControl();
         }
 
         if (commandName == "stealControl")
@@ -65,6 +65,16 @@ public class EventEngine : MonoBehaviour
             return stealControl();
         }
 
+        if (commandName == "stopAllFollowing")
+        {
+            return stopAllFollowing();
+        }
+
+        if (commandName == "followTheLeader")
+        {
+            return followTheLeader();
+        }
+        
         if (commandName == "faceNorth")
         {
             var anim = command.getGameObject().GetComponent<Animator>();
@@ -126,11 +136,11 @@ public class EventEngine : MonoBehaviour
         }
 
         if (commandName == "msg")
-        {
-            var name = command.getStringParameters()[0];
-            var message = command.getStringParameters()[1];
-            var dialogManager = command.getDialogManagerParam();
-            return msg(dialogManager, name, message);
+        {   
+            var lines = command.getStringParameters();
+            var ew = command.getEventWorkerParameter();
+            var dialogActivator = command.getDialogActivatorParam();
+            return msg(dialogActivator, ew, lines);
         }
         
 
@@ -374,20 +384,13 @@ public class EventEngine : MonoBehaviour
     {
         // shut off follow for all players
         GameManager.instance.revokeControl();
-        foreach (var player in GameManager.instance.party)
-        {
-            player.stopFollowing();
-        }
-        
-        return GameManager.instance.getControlTarget() == null;
+        return true;
     }
 
-    private bool returnControl(ControllableEntity character, EventSequence es)
+    private bool returnControl()
     {
-        GameManager.instance.assignControl(character);
-        es.updateWithinZone(character.gameObject);
-        GameManager.instance.initializeParty();
-        return GameManager.instance.isControlTarget(character);
+        GameManager.instance.restoreControl();
+        return true;
     }
     
     private bool autoMove(MovingEntity entity, string direction, float distance, bool running)
@@ -686,6 +689,23 @@ public class EventEngine : MonoBehaviour
         return anim.GetFloat("LastMoveX") <= 1.0f;
     }
 
+    private bool stopAllFollowing()
+    {
+        var party = GameManager.instance.party;
+        foreach (var member in party)
+        {
+            member.stopFollowing();
+        }
+
+        return true;
+    }
+
+    private bool followTheLeader()
+    {
+        GameManager.instance.initializeFollowTheLeader();
+        return true;
+    }
+
     private bool delay(float time)
     {
         
@@ -723,11 +743,10 @@ public class EventEngine : MonoBehaviour
         return true;
     }
 
-    private bool msg(DialogManager dm, params string[] lines)
+    private bool msg(DialogActivator da, EventWorker ew, params string[] lns)
     {
-        dm.showDialog(lines);
-        //return dm.getIsRunning();
-        return dm.gameObject.activeInHierarchy;
+        DialogManager.instance.showDialog(lns);
+        return true;
     }
 
     
@@ -746,7 +765,7 @@ public class EventEngine : MonoBehaviour
         {
             if (assignControlTo == null)
             {
-                GameManager.instance.assignControl(GameManager.instance.partyLead());
+                GameManager.instance.restoreControl();
             }
             else
             {

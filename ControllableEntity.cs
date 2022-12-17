@@ -17,7 +17,7 @@ public abstract class ControllableEntity : MovingEntity
         base.Update();
 
         // control entity if it is targeted to be controlled
-        if (GameManager.instance.isControlTarget(this) && !isFollowing)
+        if (GameManager.instance.hasControl() && !isFollowing)
         {
             
             // give Player tag to controllable entity

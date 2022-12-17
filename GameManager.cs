@@ -1,10 +1,11 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
     private string nextAreaEntrance;
-    public bool exitsEnabled;
+    private bool exitsEnabled;
     
     
     private Vector2 bottomLeftLimit;
@@ -16,6 +17,8 @@ public class GameManager : MonoBehaviour
     public int maxLevel = 99;
     public bool mapScene = true;
 
+    private ControllableEntity lastControlled;
+
     public PlayableCharacterEntity[] party;
     
     public int followLeaderLimit = 2;
@@ -23,11 +26,13 @@ public class GameManager : MonoBehaviour
 
     private bool bottomLeftMarkerDetected;
     private bool topRightMarkerDetected;
+
+    private bool userControl;    // does user have control of players
     
-    private ControllableEntity controlTarget;
+    private ControllableEntity controlTarget;    // player or vehicle user controls on screen
 
     private bool autoReturnControl;
-
+    
     private bool inVehicle = false;
     
     private bool nextRain;
@@ -56,6 +61,7 @@ public class GameManager : MonoBehaviour
         // initialize game variables
         exitsEnabled = true;
         nextAreaEntrance = null;
+        userControl = true;
         
         
         // initialize party 
@@ -76,7 +82,7 @@ public class GameManager : MonoBehaviour
         } 
         
         // initialize follow the leader
-        initializeParty();
+        initializeFollowTheLeader();
     }
 
     // Update is called once per frame
@@ -101,9 +107,10 @@ public class GameManager : MonoBehaviour
             }
         
             // allow user to quit game for now
-            if (Input.GetKeyUp(KeyCode.Escape))
+            if (Input.GetKeyDown(KeyCode.Escape))
             {
-                Application.Quit();
+                //Application.Quit();
+                Debug.Log("Debugging");
             }
         
             // assign control by default to party leader if not in vehicle
@@ -114,7 +121,7 @@ public class GameManager : MonoBehaviour
         }     
     }
 
-    public void initializeParty()
+    public void initializeFollowTheLeader()
     {
         if (!inVehicle)
         {
@@ -125,7 +132,11 @@ public class GameManager : MonoBehaviour
                 party[i].gameObject.SetActive(true);
             
                 // position player to a default location
-                party[i].transform.position = new Vector2(party[0].transform.position.x, party[0].transform.position.y);
+                if (lastControlled == null)
+                {
+                    party[i].transform.position = new Vector2(party[0].transform.position.x, party[0].transform.position.y);
+                }
+                
 
                 if (lastPlayer != null)
                 {
@@ -186,10 +197,23 @@ public class GameManager : MonoBehaviour
     public bool getNextDarkness() => nextDarkness;
     public void setNextAreaEntrance(string ae) => nextAreaEntrance = ae;
     public string getNextAreaEntrance() => nextAreaEntrance;
+    
     public void revokeControl()
     {
-        controlTarget.tag = "WalkThrough";
-        controlTarget = null;
+        foreach (var member in party)
+        {
+            member.tag = "WalkThrough";
+            member.clearDirectionalBuffer();
+        }
+
+        lastControlled = controlTarget;
+        userControl = false;
+    }
+
+    public void restoreControl()
+    {        
+        lastControlled.tag = "Player";
+        userControl = true;
     }
 
     public bool getMainFireKeyUp()
@@ -216,4 +240,8 @@ public class GameManager : MonoBehaviour
     public void setAutoReturnControl(bool setting) => autoReturnControl = setting;
     public Vector2 getNextDestination() => nextDestination;
     public void setNextDestination(Vector2 dest) => nextDestination = dest;
+    public bool getExitsEnabled() => exitsEnabled;
+    public void setExistEnabled(bool setting) => exitsEnabled = setting;
+
+    public bool hasControl() => userControl;
 }

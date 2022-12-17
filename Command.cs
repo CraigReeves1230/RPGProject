@@ -17,13 +17,13 @@ public class Command : ScriptableObject
     private GameObject gameObjectParameter;
     private EventWorker eventWorkerParam;
     private EventSequence eventSequenceParam;
-    private DialogManager dialogManagerParam;
+    private DialogActivator dialogActivatorParam;
     private Scene sceneParam;
     private EventSequence.PromptCallback callbackParam;
 
-    public void setName(string name)
+    public void setName(string inName)
     {
-        name = name;
+        name = inName;
     }
 
     public void setStringParams(params string[] parameters)
@@ -87,14 +87,15 @@ public class Command : ScriptableObject
         }
     }
 
-    public void setDialogManagerParam(DialogManager dm)
+
+    public void setDialogActivatorParam(DialogActivator da)
     {
-        dialogManagerParam = dm;
+        dialogActivatorParam = da;
     }
 
-    public DialogManager getDialogManagerParam()
+    public DialogActivator getDialogActivatorParam()
     {
-        return dialogManagerParam;
+        return dialogActivatorParam;
     }
     
     public void setIntParams(params int[] parameters)

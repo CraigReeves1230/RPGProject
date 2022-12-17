@@ -5,8 +5,9 @@ using UnityEngine;
 public class DialogActivator : MonoBehaviour
 {
     public string[] lines;
-    private bool canActivate;
-    public bool showName = true;
+    private bool canActivateFromCollision;
+
+    private bool triggeredByEvent;
     
     // Start is called before the first frame update
     void Start()
@@ -14,20 +15,43 @@ public class DialogActivator : MonoBehaviour
         
     }
 
+    public bool eventActivate()
+    {
+        var currentLine = 0;
+        while (currentLine < lines.Length)
+        {
+            if (currentLine == 0)
+            {
+                DialogManager.instance.showDialog(lines);
+                currentLine++;
+            }
+            else
+            {
+                if (GameManager.instance.getMainFireKeyUp())
+                {
+                    DialogManager.instance.showDialog(lines);
+                    currentLine++;
+                }
+            }
+        }
+
+        return true;
+    }
+
     // Update is called once per frame
     void Update()
     {
-        if (canActivate && !DialogManager.instance.getIsTyping() && GameManager.instance.getMainFireKeyUp())
+        if (canActivateFromCollision && !DialogManager.instance.getIsTyping() && GameManager.instance.getMainFireKeyUp())
         {
             DialogManager.instance.showDialog(lines);
-        } 
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
         {
-            canActivate = true;
+            canActivateFromCollision = true;
         }
     }
 
@@ -35,7 +59,9 @@ public class DialogActivator : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            canActivate = false;
+            canActivateFromCollision = false;
         }
     }
+
+    
 }

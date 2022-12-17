@@ -6,7 +6,6 @@ using UnityEngine;
 
 public abstract class MovingEntity : MonoBehaviour
 {       
-    private bool canMove = true;    
     private bool stayInBounds = true;    
     private Animator anim;
     private Rigidbody2D rigidBody;
@@ -72,7 +71,7 @@ public abstract class MovingEntity : MonoBehaviour
         // handle non-following movement
         if (!isFollowing)
         {
-            rigidBody.velocity = canMove ? new Vector2(horizontalMov, verticalMov) * currentMoveSpeed : rigidBody.velocity = new Vector2(0, 0);
+            rigidBody.velocity = new Vector2(horizontalMov, verticalMov) * currentMoveSpeed;
         }
         else
         {
@@ -80,7 +79,7 @@ public abstract class MovingEntity : MonoBehaviour
         }
         
         // control handle running as well as diaganol movement for non following player
-        if (!isFollowing && canMove)
+        if (!isFollowing)
         {
             currentMoveSpeed = isRunning ? runningSpeed : moveSpeed;
         }
@@ -92,7 +91,7 @@ public abstract class MovingEntity : MonoBehaviour
             anim.SetFloat("moveY", rigidBody.velocity.y);
         }
        
-        if (canMove && !isFollowing)
+        if (!isFollowing)
         {
             // have non-following entity face the right directions
             if (horizontalMov > 0 || horizontalMov < 0 || verticalMov < 0 || verticalMov > 0)
@@ -207,7 +206,7 @@ public abstract class MovingEntity : MonoBehaviour
         }
         
         // handle movement for a following entity
-        if (canMove && isFollowing)
+        if (isFollowing)
         {
             // handle moving and animating follower
             if (Vector2.Distance(transform.position, followTarget.transform.position) > followingDistance)
@@ -328,7 +327,7 @@ public abstract class MovingEntity : MonoBehaviour
     
     
     // getters and setters
-    public void setCanMove(bool setting) => canMove = setting;
+    
     public void setStayInBounds(bool setting) => stayInBounds = setting;
 
     public void FollowTarget(MovingEntity tgt)
@@ -337,7 +336,7 @@ public abstract class MovingEntity : MonoBehaviour
         isFollowing = true;
     }
     
-    public void StopFollowing()
+    public void stopFollowing()
     {
         isFollowing = false;
         followTarget = null;
@@ -359,7 +358,6 @@ public abstract class MovingEntity : MonoBehaviour
     // returns true if the target is being followed
     public bool getIsFollowing(MovingEntity target) => (isFollowing && followTarget == target);
 
-    public void stopFollowing() => isFollowing = false;
     public bool getIsRunning(MovingEntity entity) => isRunning;
     public void setIsRunning(bool setting) => isRunning = setting;
     public void setHorizontalMov(float val) => horizontalMov = val;
