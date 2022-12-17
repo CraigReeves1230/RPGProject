@@ -125,8 +125,10 @@ public class GameManager : MonoBehaviour
     {
         if (!inVehicle)
         {
+            var limit = party.Length < (followLeaderLimit+1) ? party.Length : (followLeaderLimit+1);
+                
             ControllableEntity lastPlayer = null;
-            for (int i = 0; i < (followLeaderLimit + 1); i++)
+            for (int i = 0; i < limit; i++)
             { 
                 // make player active
                 party[i].gameObject.SetActive(true);

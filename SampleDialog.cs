@@ -12,8 +12,7 @@ public class SampleDialog : EventSequence
         stopAllFollowing();
         walkEast(GameManager.instance.partyLead(), 9f);
         walkSouth(GameManager.instance.partyLead(), 9f);
-        walkWest(GameManager.instance.partyLead(), 9f);
-        
+        walkWest(GameManager.instance.partyLead(), 9f);        
         returnControl();
         followTheLeader();
         
