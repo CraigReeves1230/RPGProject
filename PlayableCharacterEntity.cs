@@ -109,13 +109,16 @@ public class PlayableCharacterEntity : ControllableEntity
         gameObject.SetActive(Array.Exists(GameManager.instance.party, element => element == this));  
         
         // run button
-        if (GameManager.instance.getSecondaryFireKeyDown())
+        if (GameManager.instance.hasControl())
         {
-            isRunning = true;
-        }
-        if (GameManager.instance.getSecondaryFireKeyUp())
-        {
-            isRunning = false;
+            if (GameManager.instance.getSecondaryFireKeyDown())
+            {
+                isRunning = true;
+            }
+            if (GameManager.instance.getSecondaryFireKeyUp())
+            {
+                isRunning = false;
+            }
         }
     }
 

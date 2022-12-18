@@ -204,6 +204,7 @@ public class GameManager : MonoBehaviour
     {
         foreach (var member in party)
         {
+            Input.ResetInputAxes();
             member.tag = "WalkThrough";
             member.clearDirectionalBuffer();
         }
@@ -214,6 +215,7 @@ public class GameManager : MonoBehaviour
 
     public void restoreControl()
     {        
+        Input.ResetInputAxes();
         lastControlled.tag = "Player";
         userControl = true;
     }
@@ -243,7 +245,7 @@ public class GameManager : MonoBehaviour
     public Vector2 getNextDestination() => nextDestination;
     public void setNextDestination(Vector2 dest) => nextDestination = dest;
     public bool getExitsEnabled() => exitsEnabled;
-    public void setExistEnabled(bool setting) => exitsEnabled = setting;
+    public void setExitsEnabled(bool setting) => exitsEnabled = setting;
 
     public bool hasControl() => userControl;
 }

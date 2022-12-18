@@ -16,8 +16,9 @@ public class DialogManager : MonoBehaviour
     private bool typing;
     private float waitTime;
     private bool displayLineFull;
+    private bool triggeredByEvent;
 
-    public bool dialogOpen;
+    private bool dialogOpen;
 
     public Sprite[] faces;
 
@@ -76,6 +77,8 @@ public class DialogManager : MonoBehaviour
         dialogDownPosition = dialogBox.transform.position.y;
         nameBoxDownPosition = nameBox.transform.position.y;
         faceBoxDownPosition = faceBox.transform.position.y;
+
+        dialogOpen = false;
         
         // up position
         dialogUpPosition = dialogDownPosition * 4.57f;
@@ -123,29 +126,23 @@ public class DialogManager : MonoBehaviour
     {
         if (dialogOpen)
         {
-            if (eventTriggered)
+            if (triggeredByEvent)
             {
                 currentLine = 0;
             }
-            
-            if (currentLine >= dialogLines.Length || newLines[0] == ":close")
+            else
             {
-                // close dialog box
-                anim.SetBool("dialogBoxOpen", false);
-                anim.SetBool("dialogBoxClose", true);
-                
-                nameBox.SetActive(false);
-                currentLine = 0;
-                dialogLines = null;
-                nameText.text = null;
-                faceBox.SetActive(false);
-                dialogOpen = false;
-                GameManager.instance.restoreControl();
+                currentLine++;
+            }
+            
+            if (currentLine >= dialogLines.Length && !triggeredByEvent)
+            {
+                closeDialog();
             }
             else
             {
                 // continue displaying text
-                if (eventTriggered)
+                if (triggeredByEvent)
                 {
                     dialogLines = newLines;
                 }
@@ -166,6 +163,9 @@ public class DialogManager : MonoBehaviour
         else
         {
             // dialog box first opens
+            // set if was triggered by event or not
+            triggeredByEvent = eventTriggered;
+            
             dialogBox.SetActive(true);
             dialogOpen = true;
             
@@ -262,11 +262,30 @@ public class DialogManager : MonoBehaviour
                             faceBoxImage.sprite = faces[next];
                         }
                         break;
+                    case ":close":
+                        closeDialog();
+                        break;
                 }
             }
 
             currentLine++;
         }
+    }
+
+    public void closeDialog()
+    {
+        // close dialog box
+        anim.SetBool("dialogBoxOpen", false);
+        anim.SetBool("dialogBoxClose", true);
+                
+        nameBox.SetActive(false);
+        currentLine = 0;
+        dialogLines = null;
+        nameText.text = null;
+        faceBox.SetActive(false);
+        dialogOpen = false;
+        triggeredByEvent = false;
+        GameManager.instance.restoreControl();
     }
 
     // getting and setters

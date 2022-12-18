@@ -138,9 +138,12 @@ public class EventEngine : MonoBehaviour
         if (commandName == "msg")
         {   
             var lines = command.getStringParameters();
-            var ew = command.getEventWorkerParameter();
-            var dialogActivator = command.getDialogActivatorParam();
-            return msg(dialogActivator, ew, lines);
+            return msg(lines);
+        }
+        
+        if (commandName == "msgCls")
+        {   
+            return msgCls();
         }
         
 
@@ -395,6 +398,7 @@ public class EventEngine : MonoBehaviour
     
     private bool autoMove(MovingEntity entity, string direction, float distance, bool running)
     {
+        entity.setIsRunning(running);
         var destinationReached = false;
         
         // get player position
@@ -414,12 +418,6 @@ public class EventEngine : MonoBehaviour
             if (!destinationReached)
             {
                 GameManager.instance.revokeControl();
-                
-                // determine if running
-                if (running)
-                {
-                    entity.setIsRunning(true);
-                }
                 
                 entity.setHorizontalMov(1f);
             }
@@ -446,12 +444,6 @@ public class EventEngine : MonoBehaviour
             {
                 GameManager.instance.revokeControl();
                 
-                // determine if running
-                if (running)
-                {
-                    entity.setIsRunning(true);
-                }
-                
                 entity.setVerticalMov(1f);
             }
             else
@@ -476,12 +468,7 @@ public class EventEngine : MonoBehaviour
             if (!destinationReached)
             {
                 GameManager.instance.revokeControl();
-                
-                // determine if running
-                if (running)
-                {
-                    entity.setIsRunning(true);
-                }
+               
                 
                 entity.setVerticalMov(-1f);
             }
@@ -508,11 +495,6 @@ public class EventEngine : MonoBehaviour
             {
                 GameManager.instance.revokeControl();
                 
-                // determine if running
-                if (running)
-                {
-                    entity.setIsRunning(true);
-                }
                 
                 entity.setHorizontalMov(-1f);
             }
@@ -538,13 +520,7 @@ public class EventEngine : MonoBehaviour
             if (!destinationReached)
             {
                 GameManager.instance.revokeControl();
-                
-                // determine if running
-                if (running)
-                {
-                    entity.setIsRunning(true);
-                }
-                
+
                 entity.setHorizontalMov(-1f);
                 entity.setVerticalMov(1f);
             }
@@ -571,12 +547,7 @@ public class EventEngine : MonoBehaviour
             if (!destinationReached)
             {
                 GameManager.instance.revokeControl();
-                
-                // determine if running
-                if (running)
-                {
-                    entity.setIsRunning(true);
-                }
+
                 
                 entity.setHorizontalMov(1f);
                 entity.setVerticalMov(1f);
@@ -604,13 +575,7 @@ public class EventEngine : MonoBehaviour
             if (!destinationReached)
             {
                 GameManager.instance.revokeControl();
-                
-                // determine if running
-                if (running)
-                {
-                    entity.setIsRunning(true);
-                }
-                
+
               
                 entity.setHorizontalMov(1f);
                 entity.setVerticalMov(-1f);
@@ -638,13 +603,7 @@ public class EventEngine : MonoBehaviour
             if (!destinationReached)
             {
                 GameManager.instance.revokeControl();
-                
-                // determine if running
-                if (running)
-                {
-                    entity.setIsRunning(true);
-                }
-                
+
                
                 entity.setHorizontalMov(-1f);
                 entity.setVerticalMov(-1f);
@@ -663,30 +622,30 @@ public class EventEngine : MonoBehaviour
 
     private bool faceNorth(Animator anim)
     {
-        anim.SetFloat("LastMoveY", 1.0f);
-        anim.SetFloat("LastMoveX", 0f);
-        return anim.GetFloat("LastMoveY") >= 1.0f;
+        anim.SetFloat("lastMoveY", 1.0f);
+        anim.SetFloat("lastMoveX", 0f);
+        return anim.GetFloat("lastMoveY") >= 1.0f;
     }
     
     private bool faceSouth(Animator anim)
     {
-        anim.SetFloat("LastMoveY", -1.0f);
-        anim.SetFloat("LastMoveX", 0f);
-        return anim.GetFloat("LastMoveY") <= 1.0f;
+        anim.SetFloat("lastMoveY", -1.0f);
+        anim.SetFloat("lastMoveX", 0f);
+        return anim.GetFloat("lastMoveY") <= 1.0f;
     }
     
     private bool faceEast(Animator anim)
     {
-        anim.SetFloat("LastMoveX", 1.0f);
-        anim.SetFloat("LastMoveY", 0f);
-        return anim.GetFloat("LastMoveX") >= 1.0f;
+        anim.SetFloat("lastMoveX", 1.0f);
+        anim.SetFloat("lastMoveY", 0f);
+        return anim.GetFloat("lastMoveX") >= 1.0f;
     }
     
     private bool faceWest(Animator anim)
     {
-        anim.SetFloat("LastMoveX", -1.0f);
-        anim.SetFloat("LastMoveY", 0f);
-        return anim.GetFloat("LastMoveX") <= 1.0f;
+        anim.SetFloat("lastMoveX", -1.0f);
+        anim.SetFloat("lastMoveY", 0f);
+        return anim.GetFloat("lastMoveX") <= 1.0f;
     }
 
     private bool stopAllFollowing()
@@ -743,12 +702,18 @@ public class EventEngine : MonoBehaviour
         return true;
     }
 
-    private bool msg(DialogActivator da, EventWorker ew, params string[] lns)
+    private bool msg(params string[] lns)
     {
+        
         DialogManager.instance.showDialog(true, lns);
         return true;
     }
-
+    
+    private bool msgCls()
+    {
+        DialogManager.instance.closeDialog();
+        return true;
+    }
     
     private bool wait(EventWorker ew)
     {

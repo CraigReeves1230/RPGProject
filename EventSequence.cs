@@ -19,12 +19,6 @@ public abstract class EventSequence : MonoBehaviour
     
     // get scene
     [SerializeField] private Scene scene;
-    
-    // get dialog manager
-    private DialogManager dialogManager;
-    
-    // get dialog activator
-    private DialogActivator dialogActivator;
 
     // determines if event is activated by hitting return or just stepping onto it
     [SerializeField]
@@ -86,12 +80,6 @@ public abstract class EventSequence : MonoBehaviour
     {
         // Initialize event worker
         eventWorker = gameObject.AddComponent<EventWorker>();
-        
-        // Find dialog manager
-        dialogManager = FindObjectOfType<DialogManager>();
-        
-        // Add dialog Activator
-        dialogActivator = gameObject.AddComponent<DialogActivator>();
 
         // get trigger collision box of event
         var colliders = GetComponents<Collider2D>();
@@ -633,8 +621,13 @@ public abstract class EventSequence : MonoBehaviour
         Command command = newCom();
         command.setName("msg");
         command.setStringParams(lines);
-        command.setDialogActivatorParam(dialogActivator);
-        command.setEventWorkerParam(eventWorker);
+        eventWorker.storeInQueue(command);
+    }
+    
+    protected void msgCls()
+    {
+        Command command = newCom();
+        command.setName("msgCls");
         eventWorker.storeInQueue(command);
     }
 

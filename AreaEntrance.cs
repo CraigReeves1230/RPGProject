@@ -32,7 +32,7 @@ public class AreaEntrance : MonoBehaviour
             var newY = !ignoreY ? gameObject.transform.position.y : GameManager.instance.getControlTarget().gameObject.transform.position.y;
             
           
-            GameManager.instance.setExistEnabled(false);
+            GameManager.instance.setExitsEnabled(false);
             
             // new entity positions
             var party = GameManager.instance.party;
@@ -54,7 +54,6 @@ public class AreaEntrance : MonoBehaviour
             GameManager.instance.setNextAreaEntrance(null);
 
             GameManager.instance.restoreControl();
-            
             UIFade.instance.FadeFromBlack();
         }
     }

@@ -39,7 +39,7 @@ public class AreaExit : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collidingObject)
     {
-        if (collidingObject.CompareTag("Player"))
+        if (GameManager.instance.isControlTarget(collidingObject.gameObject))
         {
             // re-enable exists
             handleAreaExitEndCollision();
@@ -49,7 +49,7 @@ public class AreaExit : MonoBehaviour
     
     public void handleAreaExitCollision(Collider2D coll, string theAreaEntranceName, string theAreaToLoad)
     {
-        if (coll.CompareTag("Player") && GameManager.instance.getExitsEnabled())
+        if (GameManager.instance.isControlTarget(coll.gameObject) && GameManager.instance.getExitsEnabled())
         {
             GameManager.instance.setNextAreaEntrance(theAreaEntranceName);
             areaToLoad = theAreaToLoad;
@@ -61,7 +61,7 @@ public class AreaExit : MonoBehaviour
 
     public void handleAreaExitEndCollision()
     {
-        GameManager.instance.setExistEnabled(true);
+        GameManager.instance.setExitsEnabled(true);
     }
     
     
