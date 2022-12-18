@@ -745,7 +745,7 @@ public class EventEngine : MonoBehaviour
 
     private bool msg(DialogActivator da, EventWorker ew, params string[] lns)
     {
-        DialogManager.instance.showDialog(lns);
+        DialogManager.instance.showDialog(true, lns);
         return true;
     }
 

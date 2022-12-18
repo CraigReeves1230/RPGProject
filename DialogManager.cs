@@ -17,6 +17,8 @@ public class DialogManager : MonoBehaviour
     private float waitTime;
     private bool displayLineFull;
 
+    public bool dialogOpen;
+
     public Sprite[] faces;
 
     private string[] dialogLines;
@@ -117,15 +119,16 @@ public class DialogManager : MonoBehaviour
     }
 
     
-    public void showDialog(string[] newLines)
-    {        
-        // show face image
-        if (dialogBox.activeInHierarchy)
+    public void showDialog(bool eventTriggered, string[] newLines)
+    {
+        if (dialogOpen)
         {
+            if (eventTriggered)
+            {
+                currentLine = 0;
+            }
             
-            currentLine++;
-
-            if (currentLine >= dialogLines.Length)
+            if (currentLine >= dialogLines.Length || newLines[0] == ":close")
             {
                 // close dialog box
                 anim.SetBool("dialogBoxOpen", false);
@@ -136,13 +139,17 @@ public class DialogManager : MonoBehaviour
                 dialogLines = null;
                 nameText.text = null;
                 faceBox.SetActive(false);
+                dialogOpen = false;
                 GameManager.instance.restoreControl();
             }
             else
             {
                 // continue displaying text
-                
-                
+                if (eventTriggered)
+                {
+                    dialogLines = newLines;
+                }
+
                 // check for commands to put up either face box or name box
                 CheckSpecialCommands();
                 
@@ -160,6 +167,7 @@ public class DialogManager : MonoBehaviour
         {
             // dialog box first opens
             dialogBox.SetActive(true);
+            dialogOpen = true;
             
             // by default, name and face boxes are not active
             nameBox.SetActive(false);

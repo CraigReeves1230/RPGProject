@@ -15,35 +15,12 @@ public class DialogActivator : MonoBehaviour
         
     }
 
-    public bool eventActivate()
-    {
-        var currentLine = 0;
-        while (currentLine < lines.Length)
-        {
-            if (currentLine == 0)
-            {
-                DialogManager.instance.showDialog(lines);
-                currentLine++;
-            }
-            else
-            {
-                if (GameManager.instance.getMainFireKeyUp())
-                {
-                    DialogManager.instance.showDialog(lines);
-                    currentLine++;
-                }
-            }
-        }
-
-        return true;
-    }
-
     // Update is called once per frame
     void Update()
     {
         if (canActivateFromCollision && !DialogManager.instance.getIsTyping() && GameManager.instance.getMainFireKeyUp())
         {
-            DialogManager.instance.showDialog(lines);
+            DialogManager.instance.showDialog(false, lines);
         }
     }
 
