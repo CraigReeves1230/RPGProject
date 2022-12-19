@@ -83,7 +83,7 @@ public class DialogManager : MonoBehaviour
         // up position
         dialogUpPosition = dialogDownPosition * 4.57f;
         nameBoxUpPosition = nameBoxDownPosition * 3.14f;
-        faceBoxUpPosition = faceBoxDownPosition * 4.67f;
+        faceBoxUpPosition = faceBoxDownPosition * 4.66f;
     }
 
     
@@ -175,8 +175,11 @@ public class DialogManager : MonoBehaviour
             
             dialogLines = newLines;
             currentLine = 0;
-            
-            GameManager.instance.revokeControl();
+
+            if (!eventTriggered)
+            {
+                GameManager.instance.revokeControl();
+            }
 
             // check for commands to put up either face box or name box
             CheckSpecialCommands();
@@ -284,8 +287,13 @@ public class DialogManager : MonoBehaviour
         nameText.text = null;
         faceBox.SetActive(false);
         dialogOpen = false;
+
+        if (!triggeredByEvent)
+        {
+            GameManager.instance.restoreControl();
+        }
+        
         triggeredByEvent = false;
-        GameManager.instance.restoreControl();
     }
 
     // getting and setters

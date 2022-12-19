@@ -19,6 +19,7 @@ public class SampleDialog : EventSequence
         var blondie = GameManager.instance.partyLead();
         var baldman = GameManager.instance.party[1];
         
+        stealControl();
         walkEast(blondie, 4f);
         delay(1f);
         msg(":name Blondie :face 0", "This is a test. Yada, yada yada.");

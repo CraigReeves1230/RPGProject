@@ -27,7 +27,7 @@ public class AreaExit : MonoBehaviour
             waitToLoad -= Time.deltaTime;
             if (waitToLoad <= 0)
             {
-                SceneManager.LoadScene(areaToLoad);
+                GameManager.instance.setNextScene(areaToLoad);
             }
         }
     }

@@ -13,7 +13,6 @@ public class EventEngine : MonoBehaviour
     private Vector2 characterDestination;
     private bool autoMoving;
     private float endTime;
-    private GoToScene gts;
     private CamController camera;
     private bool promptRunning;
     private int currentPick = 1;
@@ -22,7 +21,6 @@ public class EventEngine : MonoBehaviour
     public bool start(Command command)
     {        
         var commandName = command.getName();
-        gts = FindObjectOfType<GoToScene>();
         weather = FindObjectOfType<Weather>();
 
         camera = FindObjectOfType<CamController>();
@@ -184,12 +182,12 @@ public class EventEngine : MonoBehaviour
 
         if (commandName == "goToScene")
         {
-            var scene = command.getSceneParam();
+            var sceneName = command.getStringParameters()[0];
             var x = command.getFloatParameters()[0];
             var y = command.getFloatParameters()[1];
-            var partOfSequence = command.getBoolParameters()[0];
-            var player = command.getGameObject();
-            return goToScene(scene, x, y,  partOfSequence);
+            var fadeOut = command.getBoolParameters()[0];
+            var partOfSequence = command.getBoolParameters()[1];
+            return goToScene(sceneName, x, y, fadeOut, partOfSequence);
         }
 
         if (commandName == "runEast")
@@ -651,10 +649,12 @@ public class EventEngine : MonoBehaviour
     private bool stopAllFollowing()
     {
         var party = GameManager.instance.party;
+        
         foreach (var member in party)
         {
             member.stopFollowing();
         }
+
 
         return true;
     }
@@ -721,26 +721,9 @@ public class EventEngine : MonoBehaviour
         return true;
     }
 
-    private bool goToScene(Scene scene, float x, float y, bool partOfSequence, ControllableEntity assignControlTo = null)
-    {
-        gts.setLevelToLoad(scene);
-        gts.setAsEvent(partOfSequence);
-        
-        if (!partOfSequence)
-        {
-            if (assignControlTo == null)
-            {
-                GameManager.instance.restoreControl();
-            }
-            else
-            {
-                GameManager.instance.assignControl(assignControlTo);
-            }
-        }
-        
-        gts.setPosition(x, y);
-        gts.go();
-
+    private bool goToScene(string sceneName, float x, float y, bool fadeOut, bool partOfSequence)
+    {        
+        GameManager.instance.GoToScene(sceneName, x, y, fadeOut, partOfSequence);
         return true;
     }
 

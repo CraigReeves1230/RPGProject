@@ -1,5 +1,6 @@
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -22,7 +23,11 @@ public class GameManager : MonoBehaviour
     public PlayableCharacterEntity[] party;
     
     public int followLeaderLimit = 2;
+    public bool redoFollowTheLeaderScheduled;
+    
     private bool isParty;
+
+    private string currentScene;
 
     private bool bottomLeftMarkerDetected;
     private bool topRightMarkerDetected;
@@ -32,15 +37,25 @@ public class GameManager : MonoBehaviour
     private ControllableEntity controlTarget;    // player or vehicle user controls on screen
 
     private bool autoReturnControl;
+
+    private string nextScene;
+
+    private bool positionPartyScheduled;
+
+    private float waitToLoadScene = 1f;
+
+    private bool shouldFadeOut;
     
     private bool inVehicle = false;
+
+    private Vector2 nextPosition;
+    private string nextSceneToLoad;
+    private bool fadeInScheduled;
     
     private bool nextRain;
     private bool nextSnow;
     private bool nextFog;
     private bool nextDarkness;
-
-    public Vector2 nextDestination;
     
     // Start is called before the first frame update
     void Start()
@@ -117,7 +132,57 @@ public class GameManager : MonoBehaviour
             if (controlTarget == null && !inVehicle)
             {
                 controlTarget = partyLead();
-            }   
+            }
+
+            // keeps track of the current scene
+            currentScene = SceneManager.GetActiveScene().name;
+            
+            // scene management
+            if (nextScene != null && nextScene != currentScene)
+            {
+                if (shouldFadeOut)
+                {
+                    UIFade.instance.FadeToBlack();
+                    revokeControl();
+                    waitToLoadScene -= Time.deltaTime;
+                    if (waitToLoadScene <= 0)
+                    {
+                        SceneManager.LoadScene(nextScene);
+                        
+                        // position players
+                        if (positionPartyScheduled)
+                        {
+                            foreach (var member in party)
+                            {
+                                member.transform.position = nextPosition;
+                            }
+                            positionPartyScheduled = false;
+                        }
+
+                        if (redoFollowTheLeaderScheduled)
+                        {
+                            initializeFollowTheLeader();
+                            redoFollowTheLeaderScheduled = false;
+                        }
+                        
+                        waitToLoadScene = 1f;
+                        fadeInScheduled = true;
+                    }
+                }
+                else
+                {
+                    SceneManager.LoadScene(nextScene);
+                }
+            }
+
+            if (fadeInScheduled)
+            {
+                UIFade.instance.FadeFromBlack();
+                waitToLoadScene -= Time.deltaTime;
+                restoreControl();
+                fadeInScheduled = false;
+                shouldFadeOut = false;
+            }
         }     
     }
 
@@ -206,6 +271,7 @@ public class GameManager : MonoBehaviour
         {
             Input.ResetInputAxes();
             member.tag = "WalkThrough";
+            member.setIsRunning(false);
             member.clearDirectionalBuffer();
         }
 
@@ -216,6 +282,7 @@ public class GameManager : MonoBehaviour
     public void restoreControl()
     {        
         Input.ResetInputAxes();
+        lastControlled.setIsRunning(false);
         lastControlled.tag = "Player";
         userControl = true;
     }
@@ -239,13 +306,37 @@ public class GameManager : MonoBehaviour
     {
         return Input.GetKeyUp(KeyCode.LeftShift);
     }
+    
+    // go to new scene
+    public void GoToScene(string sceneName, float x, float y, bool fadeOut, bool partOfSequence)
+    {
+        if (!partOfSequence)
+        {
+            nextPosition = new Vector2(x, y);
+            positionPartyScheduled = true;
+
+            if (followLeaderLimit > 0)
+            {
+                redoFollowTheLeaderScheduled = true;
+            }       
+        }
+        
+        if (fadeOut)
+        {
+            UIFade.instance.FadeToBlack();
+            shouldFadeOut = fadeOut;
+        }
+        
+        nextScene = sceneName;
+    }
 
     public bool getAutoReturnControl() => autoReturnControl;
     public void setAutoReturnControl(bool setting) => autoReturnControl = setting;
-    public Vector2 getNextDestination() => nextDestination;
-    public void setNextDestination(Vector2 dest) => nextDestination = dest;
     public bool getExitsEnabled() => exitsEnabled;
     public void setExitsEnabled(bool setting) => exitsEnabled = setting;
+    public string getCurrentScene() => currentScene;
+    public void setNextScene(string scn) => nextScene = scn;
+    public void scheduleFadeIn() => fadeInScheduled = true;
 
     public bool hasControl() => userControl;
 }

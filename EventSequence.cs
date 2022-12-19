@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
@@ -16,13 +17,10 @@ public abstract class EventSequence : MonoBehaviour
     
     // get event collision box (if applicaable)
     private Collider2D eventCollisionBox;
-    
-    // get scene
-    [SerializeField] private Scene scene;
 
-    // determines if event is activated by hitting return or just stepping onto it
+    // determines if event is activated by hitting fire or just stepping onto it
     [SerializeField]
-    private bool activatedOnReturn = true;
+    private bool activatedOnButtonPress = true;
     
     // determines if event is activated only by being triggered by another event
     [SerializeField] private bool activatedByEventOnly;
@@ -95,7 +93,7 @@ public abstract class EventSequence : MonoBehaviour
         if (autoTrigger)
         {
             runOnce = false;
-            activatedOnReturn = false;
+            activatedOnButtonPress = false;
         }
 
         if (loop)
@@ -140,7 +138,7 @@ public abstract class EventSequence : MonoBehaviour
             withinEventZone = true;
 
             // trigger event if activated on return is false
-            if (!autoTrigger && !activatedOnReturn && !workerBusy && !activatedByEventOnly)
+            if (!autoTrigger && !activatedOnButtonPress && !workerBusy && !activatedByEventOnly)
             {
                 activateEvent();
             }
@@ -177,7 +175,7 @@ public abstract class EventSequence : MonoBehaviour
     {
         if (!withinEventZone || workerBusy || autoTrigger) return;
 
-        if (activatedOnReturn && !activatedByEventOnly && Input.GetButtonUp("Fire1"))
+        if (activatedOnButtonPress && !activatedByEventOnly && Input.GetButtonUp("Fire1"))
         {
             activateEvent();
         }
@@ -523,15 +521,6 @@ public abstract class EventSequence : MonoBehaviour
         eventWorker.resume();
     }
 
-    public void setScene(Scene scene)
-    {
-        this.scene = scene;
-    }
-
-    public Scene getScene()
-    {
-        return scene;
-    }
 
     public void cancelSequence()
     {
@@ -632,14 +621,13 @@ public abstract class EventSequence : MonoBehaviour
     }
 
     // go to a different scene
-    protected void goToScene(float x, float y, MovingEntity inPlayer, bool partOfSequence)
+    protected void goToScene(float x, float y, string sceneName, bool fadeOut, bool partOfSequence)
     {
         Command command = newCom();
         command.setName("goToScene");
-        command.setSceneParam(scene);
+        command.setStringParams(sceneName);
         command.setFloatParams(x, y);
-        command.setBoolParams(partOfSequence);
-        command.setGameObjectParam(inPlayer.gameObject);
+        command.setBoolParams(fadeOut, partOfSequence);
         eventWorker.storeInQueue(command);
     }
 
