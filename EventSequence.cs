@@ -191,7 +191,6 @@ public abstract class EventSequence : MonoBehaviour
     // put event scripting here
     public abstract void run();
     
-    
     public void updateWithinZone(GameObject player)
     {
         var playerCollisionBox = player.GetComponent<Collider2D>();

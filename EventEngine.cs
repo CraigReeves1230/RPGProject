@@ -415,8 +415,6 @@ public class EventEngine : MonoBehaviour
 
             if (!destinationReached)
             {
-                GameManager.instance.revokeControl();
-                
                 entity.setHorizontalMov(1f);
             }
             else
@@ -440,8 +438,6 @@ public class EventEngine : MonoBehaviour
 
             if (!destinationReached)
             {
-                GameManager.instance.revokeControl();
-                
                 entity.setVerticalMov(1f);
             }
             else
@@ -464,10 +460,7 @@ public class EventEngine : MonoBehaviour
             destinationReached = pos.y <= characterDestination.y;
 
             if (!destinationReached)
-            {
-                GameManager.instance.revokeControl();
-               
-                
+            {   
                 entity.setVerticalMov(-1f);
             }
             else
@@ -490,10 +483,7 @@ public class EventEngine : MonoBehaviour
             destinationReached = pos.x <= characterDestination.x;
 
             if (!destinationReached)
-            {
-                GameManager.instance.revokeControl();
-                
-                
+            { 
                 entity.setHorizontalMov(-1f);
             }
             else
@@ -517,8 +507,6 @@ public class EventEngine : MonoBehaviour
 
             if (!destinationReached)
             {
-                GameManager.instance.revokeControl();
-
                 entity.setHorizontalMov(-1f);
                 entity.setVerticalMov(1f);
             }
@@ -544,9 +532,6 @@ public class EventEngine : MonoBehaviour
 
             if (!destinationReached)
             {
-                GameManager.instance.revokeControl();
-
-                
                 entity.setHorizontalMov(1f);
                 entity.setVerticalMov(1f);
             }
@@ -572,9 +557,6 @@ public class EventEngine : MonoBehaviour
 
             if (!destinationReached)
             {
-                GameManager.instance.revokeControl();
-
-              
                 entity.setHorizontalMov(1f);
                 entity.setVerticalMov(-1f);
             }
@@ -599,10 +581,7 @@ public class EventEngine : MonoBehaviour
             destinationReached = (pos.x <= characterDestination.x && pos.y <= characterDestination.y);
 
             if (!destinationReached)
-            {
-                GameManager.instance.revokeControl();
-
-               
+            {       
                 entity.setHorizontalMov(-1f);
                 entity.setVerticalMov(-1f);
             }
