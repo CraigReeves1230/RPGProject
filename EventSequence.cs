@@ -601,6 +601,13 @@ public abstract class EventSequence : MonoBehaviour
         command.setName("fadeOut");
         eventWorker.storeInQueue(command);
     }
+
+    protected void fadeToBlack(float delayTime = 1f)
+    {
+        fadeOut();
+        delay(delayTime);
+    }
+    
     
     protected void fadeIn()
     {

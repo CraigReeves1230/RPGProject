@@ -35,11 +35,10 @@ public class SampleEgress : EventSequence
         wait();
         msgCls();
         delay(.5f);
-       // fadeOut();
-       // delay(1f);
-        goToScene(29.63f, -9.1f, "Cave2", false, true);
+        //fadeToBlack();
+        goToScene(29.63f, -9.1f, "Cave2", true, true);
         positionCharacter(blondie, 27.6f, -9f);
-       // fadeIn();
+        fadeIn();
         delay(2f);
         msg(":name Baldman :face 1", "We still here, daddy!");
         wait();
