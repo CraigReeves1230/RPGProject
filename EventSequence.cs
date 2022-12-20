@@ -617,20 +617,26 @@ public abstract class EventSequence : MonoBehaviour
     }
     
     // go to a different scene
-    protected void goToScene(float x, float y, string sceneName, bool fadeOut, bool partOfSequence)
+    protected void goToScene(float x, float y, string sceneName, bool partOfSequence)
     {
         Command command = newCom();
         command.setName("goToScene");
         command.setStringParams(sceneName);
         command.setFloatParams(x, y);
-        command.setBoolParams(fadeOut, partOfSequence);
+        command.setBoolParams(partOfSequence);
 
         if (partOfSequence)
         {
             DontDestroyOnLoad(gameObject);
         }
-        
+
         eventWorker.storeInQueue(command);
+    }
+
+    protected void fadeToScene(float x, float y, string sceneName, bool partOfSequence, float delayTime = 1f)
+    {
+        fadeToBlack(delayTime);
+        goToScene(x, y, sceneName, partOfSequence);
     }
 
     protected void setNextWeather(bool rain, bool snow, bool fog, bool darkness)

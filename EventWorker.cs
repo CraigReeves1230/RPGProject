@@ -29,8 +29,11 @@ public class EventWorker : MonoBehaviour
     void Update()
     {
         eventsInQueue = commandList.Count;
+        GameManager.instance.eventSequenceRunning = eventsInQueue > 0;
         if (eventsInQueue > 0 && !paused && !waitingForKey)
         {
+            GameManager.instance.eventSequenceRunning = true;
+            
             // work only the oldest queue in the stack
             workCommand(commandList.First());
         }

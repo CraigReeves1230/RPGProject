@@ -30,6 +30,8 @@ public class GameManager : MonoBehaviour
 
     private string currentScene;
 
+    public bool eventSequenceRunning;
+    
     private bool bottomLeftMarkerDetected;
     private bool topRightMarkerDetected;
 
@@ -42,10 +44,6 @@ public class GameManager : MonoBehaviour
     private string nextScene;
 
     private bool positionPartyScheduled;
-
-    private float waitToLoadScene = 1f;
-
-    private bool shouldFadeOut;
     
     private bool inVehicle = false;
 
@@ -141,75 +139,35 @@ public class GameManager : MonoBehaviour
             // scene management
             if (nextScene != null && nextScene != currentScene)
             {
-                if (shouldFadeOut)
+                SceneManager.LoadScene(nextScene);
+                
+                // position players
+                if (positionPartyScheduled)
                 {
-                    UIFade.instance.FadeToBlack();
-                    waitToLoadScene -= Time.deltaTime;
-                    if (waitToLoadScene <= 0)
+                    foreach (var member in party)
                     {
-                        SceneManager.LoadScene(nextScene);
-                        
-                        // position players
-                        if (positionPartyScheduled)
-                        {
-                            foreach (var member in party)
-                            {
-                                member.transform.position = nextPosition;
-                            }
-                            positionPartyScheduled = false;
-                        }
-
-                        if (redoFollowTheLeaderScheduled)
-                        {
-                            initializeFollowTheLeader();
-                            redoFollowTheLeaderScheduled = false;
-                        }
-
-                        if (returnControlScheduled)
-                        {
-                            restoreControl();
-                            returnControlScheduled = false;
-                        }
-                        
-                        waitToLoadScene = 1f;
-                        fadeInScheduled = true;
+                        member.transform.position = nextPosition;
                     }
+                    positionPartyScheduled = false;
                 }
-                else
-                {
-                    SceneManager.LoadScene(nextScene);
-                    
-                    // position players
-                    if (positionPartyScheduled)
-                    {
-                        foreach (var member in party)
-                        {
-                            member.transform.position = nextPosition;
-                        }
-                        positionPartyScheduled = false;
-                    }
 
-                    if (redoFollowTheLeaderScheduled)
-                    {
-                        initializeFollowTheLeader();
-                        redoFollowTheLeaderScheduled = false;
-                    }
-                    
-                    if (returnControlScheduled)
-                    {
-                        restoreControl();
-                        returnControlScheduled = false;
-                    }
+                if (redoFollowTheLeaderScheduled)
+                {
+                    initializeFollowTheLeader();
+                    redoFollowTheLeaderScheduled = false;
+                }
+                
+                if (returnControlScheduled)
+                {
+                    restoreControl();
+                    returnControlScheduled = false;
                 }
             }
 
             if (fadeInScheduled)
             {
                 UIFade.instance.FadeFromBlack();
-                waitToLoadScene -= Time.deltaTime;
-                
                 fadeInScheduled = false;
-                shouldFadeOut = false;
             }
         }     
     }
@@ -243,7 +201,6 @@ public class GameManager : MonoBehaviour
         }
     }
     
-
     // Error message
     public void errorMsg(string message)
     {
@@ -260,39 +217,7 @@ public class GameManager : MonoBehaviour
 
     // gets the current control target
     public ControllableEntity getControlTarget() => controlTarget;
-    
-    // returns true if controllable entity is the current target
-    public bool isControlTarget(ControllableEntity entity) => entity == controlTarget;
-    public bool isControlTarget(GameObject entityObj) => entityObj == controlTarget.gameObject;
-    
-    
-    // getters and setters
-    public PlayableCharacterEntity partyLead() => party[0];
-    public void setBottomLeftMarkerDetected(bool setting) => bottomLeftMarkerDetected = setting;
-    public void setTopRightMarkerDetected(bool setting) => topRightMarkerDetected = setting;
-    public bool isInVehicle() => inVehicle;
-    public void setInVehicle(bool setting) => inVehicle = setting;
-    public Vector2 getBottomLeftLimit() => bottomLeftLimit;
-    public void setBottomLeftLimit(Vector2 pos) => bottomLeftLimit = pos;
-    public Vector2 getTopRightLimit() => topRightLimit;
-    public void setTopRightLimit(Vector2 pos) => topRightLimit = pos;
-    
-    public Vector2 getCamBottomLeftLimit() => camBottomLeftLimit;
-    public void setCamBottomLeftLimit(Vector2 pos) => camBottomLeftLimit = pos;
-    public Vector2 getCamTopRightLimit() => camTopRightLimit;
-    public void setCamTopRightLimit(Vector2 pos) => camTopRightLimit = pos;
 
-    public void setNextRain(bool setting) => nextRain = setting; 
-    public void setNextSnow(bool setting) => nextSnow = setting; 
-    public void setNextFog(bool setting) => nextFog = setting; 
-    public void setNextDarkness(bool setting) => nextDarkness = setting;
-    public bool getNextRain() => nextRain;
-    public bool getNextSnow() => nextSnow;
-    public bool getNextFog() => nextFog;
-    public bool getNextDarkness() => nextDarkness;
-    public void setNextAreaEntrance(string ae) => nextAreaEntrance = ae;
-    public string getNextAreaEntrance() => nextAreaEntrance;
-    
     public void revokeControl()
     {
         foreach (var member in party)
@@ -336,7 +261,7 @@ public class GameManager : MonoBehaviour
     }
     
     // go to new scene
-    public void GoToScene(string sceneName, float x, float y, bool fadeOut, bool partOfSequence)
+    public void GoToScene(string sceneName, float x, float y, bool partOfSequence)
     {
         if (!partOfSequence)
         {
@@ -348,15 +273,11 @@ public class GameManager : MonoBehaviour
                 redoFollowTheLeaderScheduled = true;
             }
 
+            fadeInScheduled = true;
+            
             returnControlScheduled = true;
         }
-        
-        if (fadeOut)
-        {
-            UIFade.instance.FadeToBlack();
-            shouldFadeOut = fadeOut;
-        }
-        
+
         nextScene = sceneName;
     }
 
@@ -367,6 +288,33 @@ public class GameManager : MonoBehaviour
     public string getCurrentScene() => currentScene;
     public void setNextScene(string scn) => nextScene = scn;
     public void scheduleFadeIn() => fadeInScheduled = true;
-
     public bool hasControl() => userControl;
+    // getters and setters
+    public bool isControlTarget(ControllableEntity entity) => entity == controlTarget;
+    public bool isControlTarget(GameObject entityObj) => entityObj == controlTarget.gameObject;
+    public PlayableCharacterEntity partyLead() => party[0];
+    public void setBottomLeftMarkerDetected(bool setting) => bottomLeftMarkerDetected = setting;
+    public void setTopRightMarkerDetected(bool setting) => topRightMarkerDetected = setting;
+    public bool isInVehicle() => inVehicle;
+    public void setInVehicle(bool setting) => inVehicle = setting;
+    public Vector2 getBottomLeftLimit() => bottomLeftLimit;
+    public void setBottomLeftLimit(Vector2 pos) => bottomLeftLimit = pos;
+    public Vector2 getTopRightLimit() => topRightLimit;
+    public void setTopRightLimit(Vector2 pos) => topRightLimit = pos;
+    
+    public Vector2 getCamBottomLeftLimit() => camBottomLeftLimit;
+    public void setCamBottomLeftLimit(Vector2 pos) => camBottomLeftLimit = pos;
+    public Vector2 getCamTopRightLimit() => camTopRightLimit;
+    public void setCamTopRightLimit(Vector2 pos) => camTopRightLimit = pos;
+
+    public void setNextRain(bool setting) => nextRain = setting; 
+    public void setNextSnow(bool setting) => nextSnow = setting; 
+    public void setNextFog(bool setting) => nextFog = setting; 
+    public void setNextDarkness(bool setting) => nextDarkness = setting;
+    public bool getNextRain() => nextRain;
+    public bool getNextSnow() => nextSnow;
+    public bool getNextFog() => nextFog;
+    public bool getNextDarkness() => nextDarkness;
+    public void setNextAreaEntrance(string ae) => nextAreaEntrance = ae;
+    public string getNextAreaEntrance() => nextAreaEntrance;
 }

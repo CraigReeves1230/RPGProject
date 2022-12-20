@@ -35,8 +35,7 @@ public class SampleEgress : EventSequence
         wait();
         msgCls();
         delay(.5f);
-        fadeToBlack();
-        goToScene(29.63f, -9.1f, "Cave2", true, true);
+        fadeToScene(29.63f, -9.1f, "Cave2", false);
         positionCharacter(blondie, 27.6f, -9f);
         fadeIn();
         delay(2f);
