@@ -212,7 +212,7 @@ public abstract class EventSequence : MonoBehaviour
     {
         var command = ScriptableObject.CreateInstance<Command>();
         command.setName("faceNorth");
-        command.setGameObjectParam(character.gameObject);
+        command.setGameObjectParams(character.gameObject);
         eventWorker.storeInQueue(command);  
     }
     
@@ -220,7 +220,7 @@ public abstract class EventSequence : MonoBehaviour
     {
         var command = ScriptableObject.CreateInstance<Command>();
         command.setName("faceSouth");
-        command.setGameObjectParam(character.gameObject);
+        command.setGameObjectParams(character.gameObject);
         eventWorker.storeInQueue(command);  
     }
     
@@ -228,7 +228,7 @@ public abstract class EventSequence : MonoBehaviour
     {
         var command = ScriptableObject.CreateInstance<Command>();
         command.setName("faceEast");
-        command.setGameObjectParam(character.gameObject);
+        command.setGameObjectParams(character.gameObject);
         eventWorker.storeInQueue(command);  
     }
     
@@ -236,7 +236,7 @@ public abstract class EventSequence : MonoBehaviour
     {
         var command = ScriptableObject.CreateInstance<Command>();
         command.setName("faceWest");
-        command.setGameObjectParam(character.gameObject);
+        command.setGameObjectParams(character.gameObject);
         eventWorker.storeInQueue(command);  
     }
     
@@ -247,7 +247,7 @@ public abstract class EventSequence : MonoBehaviour
         var command = ScriptableObject.CreateInstance<Command>();
         command.setName("walkEast");
         command.setFloatParams(distance);
-        command.setGameObjectParam(character.gameObject);
+        command.setGameObjectParams(character.gameObject);
         eventWorker.storeInQueue(command);
     }
 
@@ -256,7 +256,7 @@ public abstract class EventSequence : MonoBehaviour
         var command = ScriptableObject.CreateInstance<Command>();
         command.setName("walkNW");
         command.setFloatParams(distance);
-        command.setGameObjectParam(character.gameObject);
+        command.setGameObjectParams(character.gameObject);
         eventWorker.storeInQueue(command);
     }
     
@@ -265,7 +265,7 @@ public abstract class EventSequence : MonoBehaviour
         var command = ScriptableObject.CreateInstance<Command>();
         command.setName("walkNE");
         command.setFloatParams(distance);
-        command.setGameObjectParam(character.gameObject);
+        command.setGameObjectParams(character.gameObject);
         eventWorker.storeInQueue(command);
     }
     
@@ -274,7 +274,7 @@ public abstract class EventSequence : MonoBehaviour
         var command = ScriptableObject.CreateInstance<Command>();
         command.setName("walkSE");
         command.setFloatParams(distance);
-        command.setGameObjectParam(character.gameObject);
+        command.setGameObjectParams(character.gameObject);
         eventWorker.storeInQueue(command);
     }
     
@@ -283,7 +283,7 @@ public abstract class EventSequence : MonoBehaviour
         var command = ScriptableObject.CreateInstance<Command>();
         command.setName("walkSW");
         command.setFloatParams(distance);
-        command.setGameObjectParam(character.gameObject);
+        command.setGameObjectParams(character.gameObject);
         eventWorker.storeInQueue(command);
     }
 
@@ -306,7 +306,7 @@ public abstract class EventSequence : MonoBehaviour
         var command = ScriptableObject.CreateInstance<Command>();
         command.setName("runNW");
         command.setFloatParams(distance);
-        command.setGameObjectParam(character.gameObject);
+        command.setGameObjectParams(character.gameObject);
         eventWorker.storeInQueue(command);
     }
     
@@ -315,7 +315,7 @@ public abstract class EventSequence : MonoBehaviour
         var command = ScriptableObject.CreateInstance<Command>();
         command.setName("runNE");
         command.setFloatParams(distance);
-        command.setGameObjectParam(character.gameObject);
+        command.setGameObjectParams(character.gameObject);
         eventWorker.storeInQueue(command);
     }
     
@@ -324,7 +324,7 @@ public abstract class EventSequence : MonoBehaviour
         var command = ScriptableObject.CreateInstance<Command>();
         command.setName("runSE");
         command.setFloatParams(distance);
-        command.setGameObjectParam(character.gameObject);
+        command.setGameObjectParams(character.gameObject);
         eventWorker.storeInQueue(command);
     }
     
@@ -333,7 +333,7 @@ public abstract class EventSequence : MonoBehaviour
         var command = ScriptableObject.CreateInstance<Command>();
         command.setName("runSW");
         command.setFloatParams(distance);
-        command.setGameObjectParam(character.gameObject);
+        command.setGameObjectParams(character.gameObject);
         eventWorker.storeInQueue(command);
     }
     
@@ -342,7 +342,7 @@ public abstract class EventSequence : MonoBehaviour
         var command = ScriptableObject.CreateInstance<Command>();
         command.setName("walkNorth");
         command.setFloatParams(distance);
-        command.setGameObjectParam(character.gameObject);
+        command.setGameObjectParams(character.gameObject);
         eventWorker.storeInQueue(command);
     }
     
@@ -351,7 +351,7 @@ public abstract class EventSequence : MonoBehaviour
         var command = ScriptableObject.CreateInstance<Command>();
         command.setName("walkWest");
         command.setFloatParams(distance);
-        command.setGameObjectParam(character.gameObject);
+        command.setGameObjectParams(character.gameObject);
         eventWorker.storeInQueue(command);
     }
     
@@ -360,7 +360,7 @@ public abstract class EventSequence : MonoBehaviour
         var command = ScriptableObject.CreateInstance<Command>();
         command.setName("walkSouth");
         command.setFloatParams(distance);
-        command.setGameObjectParam(character.gameObject);
+        command.setGameObjectParams(character.gameObject);
         eventWorker.storeInQueue(command);
      }
     
@@ -369,7 +369,7 @@ public abstract class EventSequence : MonoBehaviour
         var command = ScriptableObject.CreateInstance<Command>();
         command.setName("runEast");
         command.setFloatParams(distance);
-        command.setGameObjectParam(character.gameObject);
+        command.setGameObjectParams(character.gameObject);
         eventWorker.storeInQueue(command);
     }
     
@@ -378,7 +378,7 @@ public abstract class EventSequence : MonoBehaviour
         var command = ScriptableObject.CreateInstance<Command>();
         command.setName("runSouth");
         command.setFloatParams(distance);
-        command.setGameObjectParam(character.gameObject);
+        command.setGameObjectParams(character.gameObject);
         eventWorker.storeInQueue(command);
     }
     
@@ -387,7 +387,7 @@ public abstract class EventSequence : MonoBehaviour
         var command = ScriptableObject.CreateInstance<Command>();
         command.setName("runNorth");
         command.setFloatParams(distance);
-        command.setGameObjectParam(character.gameObject);
+        command.setGameObjectParams(character.gameObject);
         eventWorker.storeInQueue(command);
     }
     
@@ -396,7 +396,7 @@ public abstract class EventSequence : MonoBehaviour
         var command = ScriptableObject.CreateInstance<Command>();
         command.setName("runWest");
         command.setFloatParams(distance);
-        command.setGameObjectParam(character.gameObject);
+        command.setGameObjectParams(character.gameObject);
         eventWorker.storeInQueue(command);
     }
 
@@ -430,44 +430,20 @@ public abstract class EventSequence : MonoBehaviour
         eventWorker.storeInQueue(command);
     }
     
-    protected void turnToFace(MovingEntity character, MovingEntity reference)
+
+    public void turnToFace(MovingEntity character, GameObject target)
     {
-        MovingEntity cm = character.GetComponent<MovingEntity>();
-        var playerPos = new Vector2(reference.transform.position.x, reference.transform.position.y);
-        var npcPos = new Vector2(character.transform.position.x, character.transform.position.y);
-        var angle = Math.Abs(Math.Atan2(npcPos.y - playerPos.y, npcPos.x - playerPos.x) * 180f / Math.PI);
-        
-        if (angle >= 45f && angle <= 120f)
-        {
-            // character will either look north or south
-            if (reference.transform.position.y > character.transform.position.y)
-            {
-                faceNorth(character);
-            }
-            else
-            {
-                faceSouth(character);
-            }
-        }
-        else
-        {
-            // character will either look east or west
-            if (playerPos.x > npcPos.x)
-            {
-                faceEast(character);
-            }
-            else
-            {
-                faceWest(character);
-            }
-        }
+        var command = newCom();
+        command.setName("turnToFace");
+        command.setGameObjectParams(character.gameObject, target);
+        eventWorker.storeInQueue(command);
     }
 
     public void positionCharacter(MovingEntity character, float x, float y)
     {
         var command = newCom();
         command.setName("positionCharacter");
-        command.setGameObjectParam(character.gameObject);
+        command.setGameObjectParams(character.gameObject);
         command.setFloatParams(x, y);
         eventWorker.storeInQueue(command);
     }
@@ -476,7 +452,7 @@ public abstract class EventSequence : MonoBehaviour
     {
         var command = newCom();
         command.setName("triggerAnimation");
-        command.setGameObjectParam(character.gameObject);
+        command.setGameObjectParams(character.gameObject);
         command.setStringParams(trigger);
         eventWorker.storeInQueue(command);
     }
@@ -619,6 +595,20 @@ public abstract class EventSequence : MonoBehaviour
         eventWorker.storeInQueue(command);
     }
 
+    protected void fadeOut()
+    {
+        Command command = newCom();
+        command.setName("fadeOut");
+        eventWorker.storeInQueue(command);
+    }
+    
+    protected void fadeIn()
+    {
+        Command command = newCom();
+        command.setName("fadeIn");
+        eventWorker.storeInQueue(command);
+    }
+    
     // go to a different scene
     protected void goToScene(float x, float y, string sceneName, bool fadeOut, bool partOfSequence)
     {
@@ -627,6 +617,12 @@ public abstract class EventSequence : MonoBehaviour
         command.setStringParams(sceneName);
         command.setFloatParams(x, y);
         command.setBoolParams(fadeOut, partOfSequence);
+
+        if (partOfSequence)
+        {
+            DontDestroyOnLoad(gameObject);
+        }
+        
         eventWorker.storeInQueue(command);
     }
 
@@ -644,7 +640,7 @@ public abstract class EventSequence : MonoBehaviour
     {
         Command command = newCom();
         command.setName("showCharacter");
-        command.setGameObjectParam(character.gameObject);
+        command.setGameObjectParams(character.gameObject);
         eventWorker.storeInQueue(command);
     }
     
@@ -652,7 +648,7 @@ public abstract class EventSequence : MonoBehaviour
     {
         Command command = newCom();
         command.setName("hideCharacter");
-        command.setGameObjectParam(character.gameObject);
+        command.setGameObjectParams(character.gameObject);
         eventWorker.storeInQueue(command);
     }
     
@@ -661,7 +657,7 @@ public abstract class EventSequence : MonoBehaviour
     {
         Command command = newCom();
         command.setName("changeCameraFollowTarget");
-        command.setGameObjectParam(entity);
+        command.setGameObjectParams(entity);
         eventWorker.storeInQueue(command);
     }
 

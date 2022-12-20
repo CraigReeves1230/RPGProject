@@ -13,8 +13,8 @@ public class SampleEgress : EventSequence
         
         stealControl();
         stopAllFollowing();
-        faceSouth(blondie);
         walkSouth(baldman, .5f);
+        turnToFace(blondie, baldman.gameObject);
         delay(.5f);
         msg(":face 1 :name Baldman", "Here we go...");
         wait();
@@ -34,6 +34,21 @@ public class SampleEgress : EventSequence
         msg("Whatever happens in there, just know that I will always love you.");
         wait();
         msgCls();
-        goToScene(29.63f, -9.1f, "Cave2", true, false);
+        delay(.5f);
+       // fadeOut();
+       // delay(1f);
+        goToScene(29.63f, -9.1f, "Cave2", false, true);
+        positionCharacter(blondie, 27.6f, -9f);
+       // fadeIn();
+        delay(2f);
+        msg(":name Baldman :face 1", "We still here, daddy!");
+        wait();
+        msg("We in this and we the ones!");
+        wait();
+        msgCls();
+        msg(":name Blondie :face 0", "Alright, Baldman, I'm glad to see you're back in good spirits, but let's try to remember the mission.");
+        wait();
+        msgCls();
+        returnControl();
     }
 }

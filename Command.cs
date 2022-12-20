@@ -13,7 +13,7 @@ public class Command : ScriptableObject
     private bool[] boolParameters;
     private MovingEntity[] playerParameters;
     private string name;
-    private GameObject gameObjectParameter;
+    private GameObject[] gameObjectParameters;
     private EventWorker eventWorkerParam;
     private EventSequence eventSequenceParam;
     private DialogActivator dialogActivatorParam;
@@ -126,9 +126,13 @@ public class Command : ScriptableObject
         return eventWorkerParam;
     }
 
-    public void setGameObjectParam(GameObject gameObject)
+    public void setGameObjectParams(params GameObject[] parameters)
     {
-        gameObjectParameter = gameObject;
+        gameObjectParameters = new GameObject[parameters.Length];
+        for (var i = 0; i < parameters.Length; i++)
+        {
+            gameObjectParameters[i] = parameters[i];
+        }
     }
 
     public string getName()
@@ -156,8 +160,8 @@ public class Command : ScriptableObject
         return floatParameters;
     }
 
-    public GameObject getGameObject()
+    public GameObject[] getGameObjects()
     {
-        return gameObjectParameter;
+        return gameObjectParameters;
     }
 }

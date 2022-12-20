@@ -24,6 +24,7 @@ public class GameManager : MonoBehaviour
     
     public int followLeaderLimit = 2;
     public bool redoFollowTheLeaderScheduled;
+    public bool returnControlScheduled;
     
     private bool isParty;
 
@@ -143,7 +144,6 @@ public class GameManager : MonoBehaviour
                 if (shouldFadeOut)
                 {
                     UIFade.instance.FadeToBlack();
-                    revokeControl();
                     waitToLoadScene -= Time.deltaTime;
                     if (waitToLoadScene <= 0)
                     {
@@ -164,6 +164,12 @@ public class GameManager : MonoBehaviour
                             initializeFollowTheLeader();
                             redoFollowTheLeaderScheduled = false;
                         }
+
+                        if (returnControlScheduled)
+                        {
+                            restoreControl();
+                            returnControlScheduled = false;
+                        }
                         
                         waitToLoadScene = 1f;
                         fadeInScheduled = true;
@@ -172,6 +178,28 @@ public class GameManager : MonoBehaviour
                 else
                 {
                     SceneManager.LoadScene(nextScene);
+                    
+                    // position players
+                    if (positionPartyScheduled)
+                    {
+                        foreach (var member in party)
+                        {
+                            member.transform.position = nextPosition;
+                        }
+                        positionPartyScheduled = false;
+                    }
+
+                    if (redoFollowTheLeaderScheduled)
+                    {
+                        initializeFollowTheLeader();
+                        redoFollowTheLeaderScheduled = false;
+                    }
+                    
+                    if (returnControlScheduled)
+                    {
+                        restoreControl();
+                        returnControlScheduled = false;
+                    }
                 }
             }
 
@@ -179,7 +207,7 @@ public class GameManager : MonoBehaviour
             {
                 UIFade.instance.FadeFromBlack();
                 waitToLoadScene -= Time.deltaTime;
-                restoreControl();
+                
                 fadeInScheduled = false;
                 shouldFadeOut = false;
             }
@@ -318,7 +346,9 @@ public class GameManager : MonoBehaviour
             if (followLeaderLimit > 0)
             {
                 redoFollowTheLeaderScheduled = true;
-            }       
+            }
+
+            returnControlScheduled = true;
         }
         
         if (fadeOut)

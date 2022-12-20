@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class EventEngine : MonoBehaviour
 {
-    private GameObject gameObjectParam;
+    private GameObject[] gameObjectParams;
     private float[] floatParams;
     private string[] stringParams;
     private string name;
@@ -27,28 +27,28 @@ public class EventEngine : MonoBehaviour
 
         if (commandName == "walkEast")
         {
-            var character = command.getGameObject().GetComponent<MovingEntity>();
+            var character = command.getGameObjects()[0].GetComponent<MovingEntity>();
             var dist = command.getFloatParameters()[0];
             return autoMove(character, "east", dist, false);
         }
         
         if (commandName == "walkWest")
         {
-            var character = command.getGameObject().GetComponent<MovingEntity>();
+            var character = command.getGameObjects()[0].GetComponent<MovingEntity>();
             var dist = command.getFloatParameters()[0];
             return autoMove(character, "west", dist, false);
         }
 
         if (commandName == "walkSouth")
         {
-            var character = command.getGameObject().GetComponent<MovingEntity>();
+            var character = command.getGameObjects()[0].GetComponent<MovingEntity>();
             var dist = command.getFloatParameters()[0];
             return autoMove(character, "south", dist, false);
         }
         
         if (commandName == "walkNorth")
         {
-            var character = command.getGameObject().GetComponent<MovingEntity>();
+            var character = command.getGameObjects()[0].GetComponent<MovingEntity>();
             var dist = command.getFloatParameters()[0];
             return autoMove(character, "north", dist, false);
         }
@@ -75,25 +75,25 @@ public class EventEngine : MonoBehaviour
         
         if (commandName == "faceNorth")
         {
-            var anim = command.getGameObject().GetComponent<Animator>();
+            var anim = command.getGameObjects()[0].GetComponent<Animator>();
             return faceNorth(anim);
         }
         
         if (commandName == "faceWest")
         {
-            var anim = command.getGameObject().GetComponent<Animator>();
+            var anim = command.getGameObjects()[0].GetComponent<Animator>();
             return faceWest(anim);
         }
         
         if (commandName == "faceSouth")
         {
-            var anim = command.getGameObject().GetComponent<Animator>();
+            var anim = command.getGameObjects()[0].GetComponent<Animator>();
             return faceSouth(anim);
         }
         
         if (commandName == "faceEast")
         {
-            var anim = command.getGameObject().GetComponent<Animator>();
+            var anim = command.getGameObjects()[0].GetComponent<Animator>();
             return faceEast(anim);
         }
 
@@ -142,6 +142,13 @@ public class EventEngine : MonoBehaviour
         if (commandName == "msgCls")
         {   
             return msgCls();
+        }
+
+        if (commandName == "turnToFace")
+        {
+            var character = command.getGameObjects()[0].GetComponent<MovingEntity>();
+            var target = command.getGameObjects()[1];
+            return turnToFace(character, target);
         }
         
 
@@ -192,41 +199,41 @@ public class EventEngine : MonoBehaviour
 
         if (commandName == "runEast")
         {
-            var character = command.getGameObject().GetComponent<MovingEntity>();
+            var character = command.getGameObjects()[0].GetComponent<MovingEntity>();
             var dist = command.getFloatParameters()[0];
             return autoMove(character, "east", dist, true);
         }
         
         if (commandName == "runSouth")
         {
-            var character = command.getGameObject().GetComponent<MovingEntity>();
+            var character = command.getGameObjects()[0].GetComponent<MovingEntity>();
             var dist = command.getFloatParameters()[0];
             return autoMove(character, "south", dist, true);
         }
         
         if (commandName == "runWest")
         {
-            var character = command.getGameObject().GetComponent<MovingEntity>();
+            var character = command.getGameObjects()[0].GetComponent<MovingEntity>();
             var dist = command.getFloatParameters()[0];
             return autoMove(character, "west", dist, true);
         }
         
         if (commandName == "runNorth")
         {
-            var character = command.getGameObject().GetComponent<MovingEntity>();
+            var character = command.getGameObjects()[0].GetComponent<MovingEntity>();
             var dist = command.getFloatParameters()[0];
             return autoMove(character, "north", dist, true);
         }
 
         if (commandName == "showCharacter")
         {
-            var sprite = command.getGameObject().GetComponent<SpriteRenderer>();
+            var sprite = command.getGameObjects()[0].GetComponent<SpriteRenderer>();
             return showOrHideCharacter(sprite, true);
         }
         
         if (commandName == "hideCharacter")
         {
-            var sprite = command.getGameObject().GetComponent<SpriteRenderer>();
+            var sprite = command.getGameObjects()[0].GetComponent<SpriteRenderer>();
             return showOrHideCharacter(sprite, false);
         }
 
@@ -234,7 +241,7 @@ public class EventEngine : MonoBehaviour
         {
             var x = command.getFloatParameters()[0];
             var y = command.getFloatParameters()[1];
-            var character = command.getGameObject();
+            var character = command.getGameObjects()[0];
 
             return positionCharacter(character, x, y);
         }
@@ -242,13 +249,13 @@ public class EventEngine : MonoBehaviour
         if (commandName == "triggerAnimation")
         {
             var trigger = command.getStringParameters()[0];
-            var anim = command.getGameObject().GetComponent<Animator>();
+            var anim = command.getGameObjects()[0].GetComponent<Animator>();
             return triggerAnimation(anim, trigger);
         }
 
         if (commandName == "changeCameraFollowTarget")
         {
-            var newTarget = command.getGameObject();
+            var newTarget = command.getGameObjects()[0];
             return changeCameraFollowTarget(newTarget);
         }
         
@@ -258,58 +265,68 @@ public class EventEngine : MonoBehaviour
             return changeCameraSpeed(newSpeed);
         }*/
 
+        if (commandName == "fadeOut")
+        {
+            return fadeOut();
+        }
+        
+        if (commandName == "fadeIn")
+        {
+            return fadeIn();
+        }
+        
         if (commandName == "walkNW")
         {
-            var character = command.getGameObject().GetComponent<MovingEntity>();
+            var character = command.getGameObjects()[0].GetComponent<MovingEntity>();
             var distance = command.getFloatParameters()[0];
             return autoMove(character, "NW", distance, false);
         }
         
         if (commandName == "walkNE")
         {
-            var character = command.getGameObject().GetComponent<MovingEntity>();
+            var character = command.getGameObjects()[0].GetComponent<MovingEntity>();
             var distance = command.getFloatParameters()[0];
             return autoMove(character, "NE", distance, false);
         }
         
         if (commandName == "walkSE")
         {
-            var character = command.getGameObject().GetComponent<MovingEntity>();
+            var character = command.getGameObjects()[0].GetComponent<MovingEntity>();
             var distance = command.getFloatParameters()[0];
             return autoMove(character, "SE", distance, false);
         }
         
         if (commandName == "walkSW")
         {
-            var character = command.getGameObject().GetComponent<MovingEntity>();
+            var character = command.getGameObjects()[0].GetComponent<MovingEntity>();
             var distance = command.getFloatParameters()[0];
             return autoMove(character, "SW", distance, false);
         }
         
         if (commandName == "runNW")
         {
-            var character = command.getGameObject().GetComponent<MovingEntity>();
+            var character = command.getGameObjects()[0].GetComponent<MovingEntity>();
             var distance = command.getFloatParameters()[0];
             return autoMove(character, "NW", distance, true);
         }
         
         if (commandName == "runNE")
         {
-            var character = command.getGameObject().GetComponent<MovingEntity>();
+            var character = command.getGameObjects()[0].GetComponent<MovingEntity>();
             var distance = command.getFloatParameters()[0];
             return autoMove(character, "NE", distance, true);
         }
         
         if (commandName == "runSE")
         {
-            var character = command.getGameObject().GetComponent<MovingEntity>();
+            var character = command.getGameObjects()[0].GetComponent<MovingEntity>();
             var distance = command.getFloatParameters()[0];
             return autoMove(character, "SE", distance, true);
         }
         
         if (commandName == "runSW")
         {
-            var character = command.getGameObject().GetComponent<MovingEntity>();
+            var character = command.getGameObjects()[0].GetComponent<MovingEntity>();
             var distance = command.getFloatParameters()[0];
             return autoMove(character, "SW", distance, true);
         }
@@ -391,6 +408,53 @@ public class EventEngine : MonoBehaviour
     private bool returnControl()
     {
         GameManager.instance.restoreControl();
+        return true;
+    }
+
+    private bool fadeOut()
+    {
+        UIFade.instance.FadeToBlack();
+        return true;
+    }
+    
+    private bool fadeIn()
+    {
+        UIFade.instance.FadeFromBlack();
+        return true;
+    }
+
+    private bool turnToFace(MovingEntity character, GameObject target)
+    {
+        var playerPos = new Vector2(target.transform.position.x, target.transform.position.y);
+        var npcPos = new Vector2(character.transform.position.x, character.transform.position.y);
+        var angle = Mathf.Abs(Mathf.Atan2(npcPos.y - playerPos.y, npcPos.x - playerPos.x) * 180f / Mathf.PI);
+        var anim = character.GetComponent<Animator>();
+        
+        if (angle >= 45f && angle <= 120f)
+        {
+            // character will either look north or south
+            if (character.transform.position.y > character.transform.position.y)
+            {
+                faceNorth(anim);
+            }
+            else
+            {
+                faceSouth(anim);
+            }
+        }
+        else
+        {
+            // character will either look east or west
+            if (playerPos.x > npcPos.x)
+            {
+                faceEast(anim);
+            }
+            else
+            {
+                faceWest(anim);
+            }
+        }
+
         return true;
     }
     
