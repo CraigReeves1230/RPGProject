@@ -49,7 +49,8 @@ public class AreaExit : MonoBehaviour
     
     public void handleAreaExitCollision(Collider2D coll, string theAreaEntranceName, string theAreaToLoad)
     {
-        if (GameManager.instance.isControlTarget(coll.gameObject) && GameManager.instance.getExitsEnabled())
+        if (GameManager.instance.isControlTarget(coll.gameObject) && !GameManager.instance.getIsEventSequenceRunning() 
+                                                                  && GameManager.instance.getExitsEnabled())
         {
             GameManager.instance.setNextAreaEntrance(theAreaEntranceName);
             areaToLoad = theAreaToLoad;

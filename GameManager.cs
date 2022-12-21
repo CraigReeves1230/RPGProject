@@ -12,8 +12,8 @@ public class GameManager : MonoBehaviour
     private Vector2 bottomLeftLimit;
     private Vector2 topRightLimit;
 
-    public Vector2 camBottomLeftLimit;
-    public Vector2 camTopRightLimit;
+    private Vector2 camBottomLeftLimit;
+    private Vector2 camTopRightLimit;
 
     public int maxLevel = 99;
     public bool mapScene = true;
@@ -23,14 +23,14 @@ public class GameManager : MonoBehaviour
     public PlayableCharacterEntity[] party;
     
     public int followLeaderLimit = 2;
-    public bool redoFollowTheLeaderScheduled;
-    public bool returnControlScheduled;
+    private bool redoFollowTheLeaderScheduled;
+    private bool returnControlScheduled;
     
     private bool isParty;
 
     private string currentScene;
 
-    public bool eventSequenceRunning;
+    private bool eventSequenceRunning;
     
     private bool bottomLeftMarkerDetected;
     private bool topRightMarkerDetected;
@@ -45,7 +45,7 @@ public class GameManager : MonoBehaviour
 
     private bool positionPartyScheduled;
     
-    private bool inVehicle = false;
+    private bool inVehicle;
 
     private Vector2 nextPosition;
     private string nextSceneToLoad;
@@ -160,8 +160,11 @@ public class GameManager : MonoBehaviour
                 if (returnControlScheduled)
                 {
                     restoreControl();
+                    
                     returnControlScheduled = false;
                 }
+
+                nextScene = null;
             }
 
             if (fadeInScheduled)
@@ -185,12 +188,11 @@ public class GameManager : MonoBehaviour
                 party[i].gameObject.SetActive(true);
             
                 // position player to a default location
-                if (lastControlled == null)
+                if (lastControlled == null || nextScene != null)
                 {
                     party[i].transform.position = new Vector2(party[0].transform.position.x, party[0].transform.position.y);
                 }
                 
-
                 if (lastPlayer != null)
                 {
                     party[i].FollowTarget(lastPlayer);
@@ -277,10 +279,22 @@ public class GameManager : MonoBehaviour
             
             returnControlScheduled = true;
         }
+        else
+        {
+            // reposition party
+            foreach (var member in party)
+            {
+               member.transform.position = new Vector2(x, y);
+            }
+        }
 
         nextScene = sceneName;
     }
 
+    // getters and setters
+
+    public bool getIsEventSequenceRunning() => eventSequenceRunning;
+    public void setIsEventSequenceRunning(bool setting) => eventSequenceRunning = setting;
     public bool getAutoReturnControl() => autoReturnControl;
     public void setAutoReturnControl(bool setting) => autoReturnControl = setting;
     public bool getExitsEnabled() => exitsEnabled;
@@ -289,7 +303,7 @@ public class GameManager : MonoBehaviour
     public void setNextScene(string scn) => nextScene = scn;
     public void scheduleFadeIn() => fadeInScheduled = true;
     public bool hasControl() => userControl;
-    // getters and setters
+    
     public bool isControlTarget(ControllableEntity entity) => entity == controlTarget;
     public bool isControlTarget(GameObject entityObj) => entityObj == controlTarget.gameObject;
     public PlayableCharacterEntity partyLead() => party[0];

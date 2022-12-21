@@ -624,6 +624,7 @@ public abstract class EventSequence : MonoBehaviour
         command.setStringParams(sceneName);
         command.setFloatParams(x, y);
         command.setBoolParams(partOfSequence);
+        command.setEventWorkerParam(eventWorker);
 
         if (partOfSequence)
         {
@@ -637,6 +638,7 @@ public abstract class EventSequence : MonoBehaviour
     {
         fadeToBlack(delayTime);
         goToScene(x, y, sceneName, partOfSequence);
+        fadeIn();
     }
 
     protected void setNextWeather(bool rain, bool snow, bool fog, bool darkness)

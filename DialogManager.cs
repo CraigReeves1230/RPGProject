@@ -288,7 +288,7 @@ public class DialogManager : MonoBehaviour
         faceBox.SetActive(false);
         dialogOpen = false;
 
-        if (!triggeredByEvent)
+        if (!GameManager.instance.getIsEventSequenceRunning())
         {
             GameManager.instance.restoreControl();
         }

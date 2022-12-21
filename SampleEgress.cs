@@ -35,9 +35,7 @@ public class SampleEgress : EventSequence
         wait();
         msgCls();
         delay(.5f);
-        fadeToScene(29.63f, -9.1f, "Cave2", false);
-        positionCharacter(blondie, 27.6f, -9f);
-        fadeIn();
+        fadeToScene(29.63f, -9.1f, "Cave2", true);
         delay(2f);
         msg(":name Baldman :face 1", "We still here, daddy!");
         wait();
@@ -47,6 +45,7 @@ public class SampleEgress : EventSequence
         msg(":name Blondie :face 0", "Alright, Baldman, I'm glad to see you're back in good spirits, but let's try to remember the mission.");
         wait();
         msgCls();
+        followTheLeader();
         returnControl();
     }
 }
