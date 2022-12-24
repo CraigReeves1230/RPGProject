@@ -203,6 +203,13 @@ public abstract class EventSequence : MonoBehaviour
             withinEventZone = false;
         }
     }
+    
+    //////////////////////////////////////////// GETTERS AND SETTERS ////////////////////////////////////////////
+
+    public void setLoop(bool setting) => loop = setting;
+    public bool getIsLoop() => loop;
+    public bool getIsAutotrigger() => autoTrigger;
+    public void setIsAutotrigger(bool setting) => autoTrigger = setting;
 
     //////////////////////////////////////////// CALLBACKS //////////////////////////////////////////////////////
 
@@ -595,6 +602,9 @@ public abstract class EventSequence : MonoBehaviour
         eventWorker.storeInQueue(command);
     }
 
+    
+    // fade
+    
     protected void fadeOut()
     {
         Command command = newCom();

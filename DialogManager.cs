@@ -16,7 +16,6 @@ public class DialogManager : MonoBehaviour
     private bool typing;
     private float waitTime;
     private bool displayLineFull;
-    private bool triggeredByEvent;
 
     private bool dialogOpen;
 
@@ -78,6 +77,7 @@ public class DialogManager : MonoBehaviour
         nameBoxDownPosition = nameBox.transform.position.y;
         faceBoxDownPosition = faceBox.transform.position.y;
 
+        // dialog is closed by default
         dialogOpen = false;
         
         // up position
@@ -90,7 +90,7 @@ public class DialogManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // in classic display mode, if user hits fire again, quit typing and just show the line
+        // in traditional display mode, if user hits fire again, quit typing and just show the line
         if (displayStyle == DisplayStyleOptions.Traditional)
         {
             if (typing && GameManager.instance.getMainFireKeyDown())
@@ -122,49 +122,33 @@ public class DialogManager : MonoBehaviour
     }
 
     
-    public void showDialog(bool eventTriggered, string[] newLines)
+    public void showDialog(string[] newLines)
     {
         if (dialogOpen)
         {
-            if (triggeredByEvent)
+            // reset line counter
+            currentLine = 0;
+            
+            // continue displaying text if dialog box already open        
+            dialogLines = newLines;
+            
+
+            // check for commands to put up either face box or name box
+            CheckSpecialCommands();
+            
+            dialogText.text = dialogLines[currentLine];
+            
+            // type out text if in traditional display mode
+            if (displayStyle == DisplayStyleOptions.Traditional)
             {
-                currentLine = 0;
-            }
-            else
-            {
-                currentLine++;
+                StopAllCoroutines();
+                StartCoroutine(TypeSentence(dialogText.text));
             }
             
-            if (currentLine >= dialogLines.Length && !triggeredByEvent)
-            {
-                closeDialog();
-            }
-            else
-            {
-                // continue displaying text
-                if (triggeredByEvent)
-                {
-                    dialogLines = newLines;
-                }
-
-                // check for commands to put up either face box or name box
-                CheckSpecialCommands();
-                
-                dialogText.text = dialogLines[currentLine];
-                
-                // type out text if in classic display mode
-                if (displayStyle == DisplayStyleOptions.Traditional)
-                {
-                    StopAllCoroutines();
-                    StartCoroutine(TypeSentence(dialogText.text));
-                }
-            }
         }
         else
         {
-            // dialog box first opens
-            // set if was triggered by event or not
-            triggeredByEvent = eventTriggered;
+            // dialog box opening for the first time
             
             dialogBox.SetActive(true);
             dialogOpen = true;
@@ -176,10 +160,6 @@ public class DialogManager : MonoBehaviour
             dialogLines = newLines;
             currentLine = 0;
 
-            if (!eventTriggered)
-            {
-                GameManager.instance.revokeControl();
-            }
 
             // check for commands to put up either face box or name box
             CheckSpecialCommands();
@@ -189,6 +169,7 @@ public class DialogManager : MonoBehaviour
             anim.SetBool("dialogBoxOpen", true);
             anim.SetBool("dialogBoxClose", false);
 
+            // type out text if in traditional display mode
             if (displayStyle == DisplayStyleOptions.Traditional)
             {
                 StopAllCoroutines();
@@ -196,7 +177,6 @@ public class DialogManager : MonoBehaviour
             }
         }
     }
-    
     
     // types out text in classic display mode
     private IEnumerator TypeSentence(string sentence)
@@ -220,7 +200,7 @@ public class DialogManager : MonoBehaviour
         Input.ResetInputAxes();
     }
 
-    
+    // checks for special commands
     public void CheckSpecialCommands()
     {
         bool specialCommands = dialogLines[currentLine].Contains(":up") 
@@ -275,9 +255,9 @@ public class DialogManager : MonoBehaviour
         }
     }
 
+    // closes dialog box
     public void closeDialog()
     {
-        // close dialog box
         anim.SetBool("dialogBoxOpen", false);
         anim.SetBool("dialogBoxClose", true);
                 
@@ -287,13 +267,6 @@ public class DialogManager : MonoBehaviour
         nameText.text = null;
         faceBox.SetActive(false);
         dialogOpen = false;
-
-        if (!GameManager.instance.getIsEventSequenceRunning())
-        {
-            GameManager.instance.restoreControl();
-        }
-        
-        triggeredByEvent = false;
     }
 
     // getting and setters

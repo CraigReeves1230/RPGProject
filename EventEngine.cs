@@ -426,35 +426,7 @@ public class EventEngine : MonoBehaviour
 
     private bool turnToFace(MovingEntity character, GameObject target)
     {
-        var playerPos = new Vector2(target.transform.position.x, target.transform.position.y);
-        var npcPos = new Vector2(character.transform.position.x, character.transform.position.y);
-        var angle = Mathf.Abs(Mathf.Atan2(npcPos.y - playerPos.y, npcPos.x - playerPos.x) * 180f / Mathf.PI);
-        var anim = character.GetComponent<Animator>();
-        
-        if (angle >= 45f && angle <= 120f)
-        {
-            // character will either look north or south
-            if (character.transform.position.y > character.transform.position.y)
-            {
-                faceNorth(anim);
-            }
-            else
-            {
-                faceSouth(anim);
-            }
-        }
-        else
-        {
-            // character will either look east or west
-            if (playerPos.x > npcPos.x)
-            {
-                faceEast(anim);
-            }
-            else
-            {
-                faceWest(anim);
-            }
-        }
+        character.turnToFace(target);
 
         return true;
     }
@@ -749,7 +721,7 @@ public class EventEngine : MonoBehaviour
     private bool msg(params string[] lns)
     {
         
-        DialogManager.instance.showDialog(true, lns);
+        DialogManager.instance.showDialog(lns);
         return true;
     }
     

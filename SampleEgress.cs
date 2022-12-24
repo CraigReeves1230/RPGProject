@@ -16,6 +16,10 @@ public class SampleEgress : EventSequence
         walkSouth(baldman, .5f);
         turnToFace(blondie, baldman.gameObject);
         delay(.5f);
+        runNE(baldman, 2f);
+        delay(.5f);
+        runSW(baldman, 2f);
+        delay(.5f);
         msg(":face 1 :name Baldman", "Here we go...");
         wait();
         msgCls();
@@ -27,7 +31,7 @@ public class SampleEgress : EventSequence
         wait();
         msgCls();
         delay(1f);
-        faceNorth(baldman);
+        turnToFace(baldman, blondie.gameObject);
         delay(.5f);
         msg(":face 1 :name Baldman", "Alright, Blondie.");
         wait();

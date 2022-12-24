@@ -348,6 +348,40 @@ public abstract class MovingEntity : MonoBehaviour
         verticalMov = 0f;
     }
 
+    // causes character to turn to face target
+    public void turnToFace(GameObject target)
+    {
+        var targetPos = new Vector2(target.transform.position.x, target.transform.position.y);
+        var charPos = new Vector2(transform.position.x, transform.position.y);
+        var angle = Mathf.Abs(Mathf.Atan2(charPos.y - targetPos.y, charPos.x - targetPos.x) * 180f / Mathf.PI);
+        var anim = GetComponent<Animator>();
+        
+        if (angle >= 45f && angle <= 120f)
+        {
+            // character will either look north or south
+            if (target.transform.position.y > transform.position.y)
+            {
+                anim.SetFloat("lastMoveY", 1f);
+            }
+            else
+            {
+                anim.SetFloat("lastMoveY", -1f);
+            }
+        }
+        else
+        {
+            // character will either look east or west
+            if (targetPos.x > charPos.x)
+            {
+                anim.SetFloat("lastMoveX", 1f);
+            }
+            else
+            {
+                anim.SetFloat("lastMoveX", -1f);
+            }
+        }
+    }
+
     public float getFollowDistance(MovingEntity entity) => followingDistance;
     public MovingEntity getFollowTarget() => followTarget;
     public void setFollowDistance(float distance) => followingDistance = distance;

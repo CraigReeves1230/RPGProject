@@ -16,7 +16,6 @@ public class Command : ScriptableObject
     private GameObject[] gameObjectParameters;
     private EventWorker eventWorkerParam;
     private EventSequence eventSequenceParam;
-    private DialogActivator dialogActivatorParam;
     private Scene sceneParam;
     private EventSequence.PromptCallback callbackParam;
 
@@ -84,17 +83,6 @@ public class Command : ScriptableObject
         {
             floatParameters[i] = parameters[i];
         }
-    }
-
-
-    public void setDialogActivatorParam(DialogActivator da)
-    {
-        dialogActivatorParam = da;
-    }
-
-    public DialogActivator getDialogActivatorParam()
-    {
-        return dialogActivatorParam;
     }
     
     public void setIntParams(params int[] parameters)
