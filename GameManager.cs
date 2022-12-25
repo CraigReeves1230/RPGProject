@@ -102,9 +102,10 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {          
-        // look for bounds
+        
         if (mapScene)
         {
+            // look for bounds
             if (bottomLeftMarkerDetected == false)
             {
                 errorMsg("Error: Bottom left marker is missing.");
@@ -123,8 +124,7 @@ public class GameManager : MonoBehaviour
             // allow user to quit game for now
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                //Application.Quit();
-                Debug.Log("Debugging");
+                Application.Quit();
             }
         
             // assign control by default to party leader if not in vehicle
@@ -167,6 +167,7 @@ public class GameManager : MonoBehaviour
                 nextScene = null;
             }
 
+            // manage fade in
             if (fadeInScheduled)
             {
                 UIFade.instance.FadeFromBlack();
@@ -175,7 +176,7 @@ public class GameManager : MonoBehaviour
         }     
     }
 
-    public void initializeFollowTheLeader()
+    public void initializeFollowTheLeader(bool positionFollowers = true)
     {
         if (!inVehicle)
         {
@@ -188,7 +189,7 @@ public class GameManager : MonoBehaviour
                 party[i].gameObject.SetActive(true);
             
                 // position player to a default location
-                if (lastControlled == null || nextScene != null)
+                if (positionFollowers)
                 {
                     party[i].transform.position = new Vector2(party[0].transform.position.x, party[0].transform.position.y);
                 }
@@ -202,6 +203,7 @@ public class GameManager : MonoBehaviour
             }
         }
     }
+    
     
     // Error message
     public void errorMsg(string message)

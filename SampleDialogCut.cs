@@ -1,20 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
-public class SampleDialog : EventSequence
+public class SampleDialogCut : EventCutscene
 {
-    public MovingEntity baldman;
-    public MovingEntity blondie;
-
-    public void Start()
-    {
-        base.Start();
-    }
-    
-    public override void run()
+    protected override void doCutscene()
     {
         var blondie = GameManager.instance.partyLead();
         var baldman = GameManager.instance.party[1];
@@ -43,6 +33,6 @@ public class SampleDialog : EventSequence
         msg(":name Blondie :face 0", "You worry too much, Baldman. I'm really happy you're here.");
         wait();
         msgCls();
-        followTheLeader();
+        followTheLeader(false);
     }
 }

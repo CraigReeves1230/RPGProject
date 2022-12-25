@@ -70,7 +70,8 @@ public class EventEngine : MonoBehaviour
 
         if (commandName == "followTheLeader")
         {
-            return followTheLeader();
+            var repositionPlayers = command.getBoolParameters()[0];
+            return followTheLeader(repositionPlayers);
         }
         
         if (commandName == "faceNorth")
@@ -330,6 +331,12 @@ public class EventEngine : MonoBehaviour
             var character = command.getGameObjects()[0].GetComponent<MovingEntity>();
             var distance = command.getFloatParameters()[0];
             return autoMove(character, "SW", distance, true);
+        }
+
+        if (commandName == "setExitsEnabled")
+        {
+            var setting = command.getBoolParameters()[0];
+            return setExitsEnabled(setting);
         }
 
         if (commandName == "setRain")
@@ -675,9 +682,9 @@ public class EventEngine : MonoBehaviour
         return true;
     }
 
-    private bool followTheLeader()
+    private bool followTheLeader(bool repositionPlayers)
     {
-        GameManager.instance.initializeFollowTheLeader();
+        GameManager.instance.initializeFollowTheLeader(repositionPlayers);
         return true;
     }
 
@@ -702,7 +709,15 @@ public class EventEngine : MonoBehaviour
 
     private bool pause(EventWorker worker)
     {
+        gameObject.GetComponent<MovingEntity>().setHorizontalMov(0f);
+        gameObject.GetComponent<MovingEntity>().setVerticalMov(0f);
         worker.pauseNow();
+        return true;
+    }
+
+    private bool setExitsEnabled(bool setting)
+    {
+        GameManager.instance.setExitsEnabled(setting);
         return true;
     }
 

@@ -356,6 +356,10 @@ public abstract class MovingEntity : MonoBehaviour
         var angle = Mathf.Abs(Mathf.Atan2(charPos.y - targetPos.y, charPos.x - targetPos.x) * 180f / Mathf.PI);
         var anim = GetComponent<Animator>();
         
+        // clear movement buffer
+        setHorizontalMov(0f);
+        setVerticalMov(0f);
+        
         if (angle >= 45f && angle <= 120f)
         {
             // character will either look north or south

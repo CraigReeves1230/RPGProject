@@ -62,6 +62,8 @@ public class EventWorker : MonoBehaviour
     // pauses event queue
     public void pauseNow()
     {
+        gameObject.GetComponent<MovingEntity>().setHorizontalMov(0f);
+        gameObject.GetComponent<MovingEntity>().setVerticalMov(0f);
         paused = true;
     }
 

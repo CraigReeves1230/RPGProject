@@ -3,22 +3,21 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class SampleEgress : EventSequence
+public class SampleEgress : EventCutscene
 {
     
-    public override void run()
+    protected override void doCutscene()
     {
         var blondie = GameManager.instance.partyLead();
         var baldman = GameManager.instance.party[1];
         
-        stealControl();
         stopAllFollowing();
         walkSouth(baldman, .5f);
         turnToFace(blondie, baldman.gameObject);
         delay(.5f);
-        runNE(baldman, 2f);
+        runSE(baldman, 2f);
         delay(.5f);
-        runSW(baldman, 2f);
+        runNW(baldman, 2f);
         delay(.5f);
         msg(":face 1 :name Baldman", "Here we go...");
         wait();
@@ -50,6 +49,5 @@ public class SampleEgress : EventSequence
         wait();
         msgCls();
         followTheLeader();
-        returnControl();
     }
 }

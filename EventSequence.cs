@@ -301,10 +301,11 @@ public abstract class EventSequence : MonoBehaviour
         eventWorker.storeInQueue(command);
     }
 
-    protected void followTheLeader()
+    protected void followTheLeader(bool repositionPlayers = true)
     {
         var command = ScriptableObject.CreateInstance<Command>();
         command.setName("followTheLeader");
+        command.setBoolParams(repositionPlayers);
         eventWorker.storeInQueue(command);
     }
     
@@ -404,6 +405,14 @@ public abstract class EventSequence : MonoBehaviour
         command.setName("runWest");
         command.setFloatParams(distance);
         command.setGameObjectParams(character.gameObject);
+        eventWorker.storeInQueue(command);
+    }
+
+    protected void setExitsEnabled(bool setting)
+    {
+        var command = ScriptableObject.CreateInstance<Command>();
+        command.setName("setExitsEnabled");
+        command.setBoolParams(setting);
         eventWorker.storeInQueue(command);
     }
 
