@@ -37,6 +37,7 @@ public abstract class MovingEntity : MonoBehaviour
     private float bumpingRunSpeed;
     private float diagMoveSpeed;
     private float diagRunSpeed;
+    private float catchupMult = 1.13f;
     
         
     // Start is called before the first frame update
@@ -55,8 +56,6 @@ public abstract class MovingEntity : MonoBehaviour
             runningSpeed = followTarget.runningSpeed;
         }    
         currentMoveSpeed = moveSpeed;
-        catchupMoveSpeed = moveSpeed * 0.8f;
-        catchupRunSpeed = runningSpeed * 0.8f;
         
         bumpingMoveSpeed = moveSpeed * 0.507f;
         bumpingRunSpeed = runningSpeed * 0.507f;
@@ -219,11 +218,13 @@ public abstract class MovingEntity : MonoBehaviour
                     {
                         if (!isRunning)
                         {
-                            transform.position = Vector3.MoveTowards(transform.position, followTarget.transform.position, catchupMoveSpeed * Time.deltaTime);
+                            transform.position = Vector3.MoveTowards(transform.position, followTarget.transform.position,
+                                (moveSpeed * catchupMult) * Time.deltaTime);
                         }
                         else
                         {
-                            transform.position = Vector3.MoveTowards(transform.position, followTarget.transform.position, catchupRunSpeed * Time.deltaTime);
+                            transform.position = Vector3.MoveTowards(transform.position, followTarget.transform.position,
+                                (runningSpeed * catchupMult) * Time.deltaTime);
                         }
                     } else if (bumping)    // when pressing up against a colliding wall, keep follower from jittering
                     {
