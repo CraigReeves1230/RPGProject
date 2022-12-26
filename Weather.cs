@@ -6,9 +6,9 @@ using UnityEngine.Tilemaps;
 
 public class Weather : MonoBehaviour
 {
-    private ParticleSystem rain;
-    private ParticleSystem snow;
-    private ParticleSystem fog;
+    public ParticleSystem rain;
+    public ParticleSystem snow;
+    public ParticleSystem fog;
     public Tilemap[] tilemaps;
     public bool rainByDefault;
     public bool snowByDefault;
@@ -31,14 +31,7 @@ public class Weather : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        rain = GameObject.Find("RainGenerator").GetComponent<ParticleSystem>();
-        rainEmission = rain.emission;
         
-        snow = GameObject.Find("SnowGenerator").GetComponent<ParticleSystem>();
-        snowEmission = snow.emission;
-        
-        fog = GameObject.Find("FogGenerator").GetComponent<ParticleSystem>();
-        fogEmission = fog.emission;
         
         rain.gameObject.SetActive(rainByDefault);
         snow.gameObject.SetActive(snowByDefault);
