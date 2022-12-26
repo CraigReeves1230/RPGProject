@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting.Dependencies.NCalc;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -14,6 +15,9 @@ public class CamController : MonoBehaviour
 
     public bool lockXPosition;
     public bool lockYPosition;
+    
+    public float moveSpeed = 7.5f;
+    private float realSpeed;
 
     public bool ignoreMapBoundsX;
     public bool ignoreMapBoundsY;
@@ -21,6 +25,14 @@ public class CamController : MonoBehaviour
     private float boundY;
 
     public bool usingCamBounds;
+    
+    public enum CamStyleOptions
+    {
+        Modern,
+        Traditional
+    }
+
+    public CamStyleOptions cameraStyle;
 
     
     // Start is called before the first frame update
@@ -34,20 +46,48 @@ public class CamController : MonoBehaviour
         
         height = Camera.main.orthographicSize * 2;
         width = (height) * Camera.main.aspect;
+
+        realSpeed = 120f;
         
         // change background color
         Camera.main.backgroundColor = new Color(0f, 0f, 0f);
 
     }
 
-
-    void Update()
+    private void Update()
     {
+        if (cameraStyle == CamStyleOptions.Modern)
+        {
+            // have camera start fast when loading up scene but slow down to set speed
+            if (realSpeed > moveSpeed)
+            {
+                realSpeed -= .5f;
+            }
+        }
     }
 
-    // Late Update is called once per frame after Update. Good for cameras.
+
     void LateUpdate()
-    {        
+    {
+        // late update if in traditional style
+        if (cameraStyle == CamStyleOptions.Traditional)
+        {
+            handleControlCamera();
+        }
+    }
+
+    void FixedUpdate()
+    {
+        // fixed update if in modern style
+        if (cameraStyle == CamStyleOptions.Modern)
+        {
+            handleControlCamera();
+        }
+    }
+
+    // camera functionality goes here
+    private void handleControlCamera()
+    {
         // make sure there is a target
         if (target == null)
         {
@@ -59,9 +99,15 @@ public class CamController : MonoBehaviour
         float z = transform.position.z;
         
         // control camera
+        if (cameraStyle == CamStyleOptions.Modern)
+        {
+            transform.position = Vector3.Lerp(transform.position, new Vector3(x, y, z), realSpeed * Time.deltaTime);
+        }
+        else
+        {
+            transform.position = new Vector3(x, y, z);
+        }
         
-        transform.position = new Vector3(x, y, z);
-
         
         // keep in bounds
         if (!ignoreMapBoundsX)
