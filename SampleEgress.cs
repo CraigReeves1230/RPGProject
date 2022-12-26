@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class SampleEgress : EventCutscene
@@ -12,12 +11,9 @@ public class SampleEgress : EventCutscene
         var baldman = GameManager.instance.party[1];
         
         stopAllFollowing();
+        stopAllFollowing();
         walkSouth(baldman, .5f);
         turnToFace(blondie, baldman.gameObject);
-        delay(.5f);
-        runSE(baldman, 2f);
-        delay(.5f);
-        runNW(baldman, 2f);
         delay(.5f);
         msg(":face 1 :name Baldman", "Here we go...");
         wait();
@@ -38,7 +34,11 @@ public class SampleEgress : EventCutscene
         wait();
         msgCls();
         delay(.5f);
-        fadeToScene(29.63f, -9.1f, "Cave2", true);
+        fadeToScene("Cave2", true);
+        positionCharacter(blondie, 29.63f, -9.1f);
+        positionCharacter(baldman, 29.63f, -8.1f);
+        faceSouth(baldman);
+        faceNorth(blondie);
         delay(2f);
         msg(":name Baldman :face 1", "We still here, daddy!");
         wait();
@@ -48,6 +48,6 @@ public class SampleEgress : EventCutscene
         msg(":name Blondie :face 0", "Alright, Baldman, I'm glad to see you're back in good spirits, but let's try to remember the mission.");
         wait();
         msgCls();
-        followTheLeader();
+        followTheLeader(false);
     }
 }

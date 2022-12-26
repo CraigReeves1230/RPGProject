@@ -7,11 +7,9 @@ public class SampleNPCDialog : NPCDialog
    
     protected override void doDialog()
     {
-        msg(":name Man", "I'd be careful. That cave is really dangerous.");
+        msg(":name Wizard", "I am an NPC. This is sample dialog.");
         wait();
-        msg(":name Blondie :face 0", "Oh trust me, we're well aware!");
-        wait();
-        msg("But thank you for the heads up!");
+        msg("Have a nice day!");
         wait();
         msgCls();
     }

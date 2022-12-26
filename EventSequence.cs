@@ -13,40 +13,40 @@ public abstract class EventSequence : MonoBehaviour
     [SerializeField] protected MovingEntity[] npcs;
     
     // event worker instance
-    private EventWorker eventWorker;
+    protected EventWorker eventWorker;
     
     // get event collision box (if applicaable)
-    private Collider2D eventCollisionBox;
+    protected Collider2D eventCollisionBox;
 
     // determines if event is activated by hitting fire or just stepping onto it
     [SerializeField]
-    private bool activatedOnButtonPress = true;
+    protected bool activatedOnButtonPress = true;
     
     // determines if event is activated only by being triggered by another event
-    [SerializeField] private bool activatedByEventOnly;
+    [SerializeField] protected bool activatedByEventOnly;
     
     // set to true once entire sequence is sent to the Event worker
-    private bool sequenceSendComplete;
+    protected bool sequenceSendComplete;
     
     // set to true if the event worker is busy processing events
-    private bool workerBusy;    
+    protected bool workerBusy;    
 
     // for non-autotriggered events, this determines when the event is activated
-    private bool eventActivated;
+    protected bool eventActivated;
 
     // determines if player is making contact with event's collision box
-    private bool withinEventZone;
+    protected bool withinEventZone;
         
     // determines if script runs only once or can be run more than once
     public bool runOnce;
     
     // determines if script loops. this automatically disables run once
     [SerializeField] 
-    private bool loop;
+    protected bool loop;
     
     // determines if auto trigger is on, automatically disabling run once and activate on return
     [SerializeField]
-    private bool autoTrigger;
+    protected bool autoTrigger;
 
     // function callback for prompt window
     public delegate void PromptCallback(int choice);
@@ -636,12 +636,12 @@ public abstract class EventSequence : MonoBehaviour
     }
     
     // go to a different scene
-    protected void goToScene(float x, float y, string sceneName, bool partOfSequence)
+    protected void goToScene(string sceneName, bool partOfSequence, float x = 0, float y = 0)
     {
         Command command = newCom();
         command.setName("goToScene");
         command.setStringParams(sceneName);
-        command.setFloatParams(x, y);
+        command.setFloatParams(x, y); 
         command.setBoolParams(partOfSequence);
         command.setEventWorkerParam(eventWorker);
 
@@ -653,10 +653,10 @@ public abstract class EventSequence : MonoBehaviour
         eventWorker.storeInQueue(command);
     }
 
-    protected void fadeToScene(float x, float y, string sceneName, bool partOfSequence, float delayTime = 1f)
+    protected void fadeToScene(string sceneName, bool partOfSequence, float delayTime = 1f, float x = 0, float y = 0)
     {
         fadeToBlack(delayTime);
-        goToScene(x, y, sceneName, partOfSequence);
+        goToScene(sceneName, partOfSequence, x, y);
         fadeIn();
     }
 

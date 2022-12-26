@@ -6,16 +6,16 @@ public class MovementSequence : EventSequence
 {
     public List<string> eventSteps;
     private MovingEntity me;
-    private EventSequence es;
 
     // Start is called before the first frame update
     void Start()
     {
         base.Start();
         me = gameObject.GetComponent<MovingEntity>();
-        es = gameObject.GetComponent<EventSequence>();
-        es.setLoop(true);
-        es.setIsAutotrigger(true);
+        loop = true;
+        autoTrigger = true;
+        activatedByEventOnly = false;
+        activatedOnButtonPress = false;
     }
 
 

@@ -27,8 +27,8 @@ public abstract class MovingEntity : MonoBehaviour
     private Vector2 targetPos;
     
     // moving speeds
-    public float moveSpeed;
-    public float runningSpeed; 
+    public float moveSpeed = 3f;
+    public float runningSpeed = 6f; 
     protected bool isRunning;
     private float currentMoveSpeed;
     private float catchupMoveSpeed;
@@ -86,8 +86,20 @@ public abstract class MovingEntity : MonoBehaviour
         //  animate non-following movement
         if (!isFollowing)
         {
-            anim.SetFloat("moveX", rigidBody.velocity.x);
-            anim.SetFloat("moveY", rigidBody.velocity.y);
+            if (!isRunning)
+            {
+                anim.SetFloat("moveX", rigidBody.velocity.x);
+                anim.SetFloat("moveY", rigidBody.velocity.y);
+                anim.SetFloat("runX", 0);
+                anim.SetFloat("runY", 0);
+            }
+            else
+            {
+                anim.SetFloat("runX", rigidBody.velocity.x);
+                anim.SetFloat("runY", rigidBody.velocity.y);
+                anim.SetFloat("moveX", 0);
+                anim.SetFloat("moveY", 0);
+            }
         }
        
         if (!isFollowing)
@@ -278,14 +290,40 @@ public abstract class MovingEntity : MonoBehaviour
     {   
         if (angle <= 45f)
         {
-            anim.SetFloat("moveX", -1);
-            anim.SetFloat("moveY", 0);
+            if (!isRunning)
+            {
+                anim.SetFloat("moveX", -1);
+                anim.SetFloat("moveY", 0);
+                anim.SetFloat("runX", 0);
+                anim.SetFloat("runY", 0);
+            }
+            else
+            {
+                anim.SetFloat("runX", -1);
+                anim.SetFloat("runY", 0);
+                anim.SetFloat("moveX", 0);
+                anim.SetFloat("moveY", 0);
+            }
+            
             anim.SetFloat("lastMoveX", -1);
             anim.SetFloat("lastMoveY", 0);
         } else if (angle >= 120f)
         {
-            anim.SetFloat("moveX", 1);
-            anim.SetFloat("moveY", 0);
+            if (!isRunning)
+            {
+                anim.SetFloat("moveX", 1);
+                anim.SetFloat("moveY", 0);
+                anim.SetFloat("runX", 0);
+                anim.SetFloat("runY", 0);
+            }
+            else
+            {
+                anim.SetFloat("runX", 1);
+                anim.SetFloat("runY", 0);
+                anim.SetFloat("moveX", 0);
+                anim.SetFloat("moveY", 0);
+            }
+            
             anim.SetFloat("lastMoveX", 1);
             anim.SetFloat("lastMoveY", 0);
         }
@@ -293,15 +331,41 @@ public abstract class MovingEntity : MonoBehaviour
         {
             if (targetPos.y >= followerPos.y)
             {
-                anim.SetFloat("moveX", 0);
-                anim.SetFloat("moveY", 1);
+                if (!isRunning)
+                {
+                    anim.SetFloat("moveX", 0);
+                    anim.SetFloat("moveY", 1);
+                    anim.SetFloat("runX", 0);
+                    anim.SetFloat("runY", 0);
+                }
+                else
+                {
+                    anim.SetFloat("runX", 0);
+                    anim.SetFloat("runY", 1);
+                    anim.SetFloat("moveX", 0);
+                    anim.SetFloat("moveY", 0);
+                }
+                
                 anim.SetFloat("lastMoveX", 0);
                 anim.SetFloat("lastMoveY", 1);
             }
             else
             {
-                anim.SetFloat("moveX", 0);
-                anim.SetFloat("moveY", -1);
+                if (!isRunning)
+                {
+                    anim.SetFloat("moveX", 0);
+                    anim.SetFloat("moveY", -1);
+                    anim.SetFloat("runX", 0);
+                    anim.SetFloat("runY", 0);
+                }
+                else
+                {
+                    anim.SetFloat("runX", 0);
+                    anim.SetFloat("runY", -1);
+                    anim.SetFloat("moveX", 0);
+                    anim.SetFloat("moveY", 0);
+                }
+                
                 anim.SetFloat("lastMoveX", 0);
                 anim.SetFloat("lastMoveY", -1);
             }
@@ -315,6 +379,8 @@ public abstract class MovingEntity : MonoBehaviour
         {
            anim.SetFloat("moveX", 0);
            anim.SetFloat("moveY", 0);   
+           anim.SetFloat("runX", 0);
+           anim.SetFloat("runY", 0);
         }
     }
 

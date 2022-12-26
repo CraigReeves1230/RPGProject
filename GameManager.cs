@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -197,6 +198,7 @@ public class GameManager : MonoBehaviour
                 if (lastPlayer != null)
                 {
                     party[i].FollowTarget(lastPlayer);
+                    party[i].tag = "WalkThrough";
                 }
             
                 lastPlayer = party[i];
@@ -280,14 +282,6 @@ public class GameManager : MonoBehaviour
             fadeInScheduled = true;
             
             returnControlScheduled = true;
-        }
-        else
-        {
-            // reposition party
-            foreach (var member in party)
-            {
-               member.transform.position = new Vector2(x, y);
-            }
         }
 
         nextScene = sceneName;

@@ -193,7 +193,6 @@ public class EventEngine : MonoBehaviour
             var sceneName = command.getStringParameters()[0];
             var x = command.getFloatParameters()[0];
             var y = command.getFloatParameters()[1];
-            var fadeOut = command.getBoolParameters()[0];
             var partOfSequence = command.getBoolParameters()[0];
             var ew = command.getEventWorkerParameter();
             return goToScene(sceneName, x, y, partOfSequence, ew);
@@ -804,6 +803,7 @@ public class EventEngine : MonoBehaviour
 
     private bool changeCameraFollowTarget(GameObject newTarget)
     {
+        camera = FindObjectOfType<CamController>();
         camera.setCameraTarget(newTarget.transform);
         return true;
     }
