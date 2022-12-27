@@ -643,6 +643,7 @@ public abstract class EventSequence : MonoBehaviour
         command.setStringParams(sceneName);
         command.setFloatParams(x, y); 
         command.setBoolParams(partOfSequence);
+        command.setEventSequenceParam(this);
         command.setEventWorkerParam(eventWorker);
 
         if (partOfSequence)

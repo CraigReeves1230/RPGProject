@@ -45,6 +45,9 @@ public class GameManager : MonoBehaviour
     private string nextScene;
 
     private bool positionPartyScheduled;
+
+    private EventSequence destroyEventSequenceScheduled;
+    private EventWorker destroyEventWorkerScheduled;
     
     private bool inVehicle;
 
@@ -167,6 +170,17 @@ public class GameManager : MonoBehaviour
 
                 nextScene = null;
             }
+            
+            // if this event was triggered from another scene, destroy it in the current scene once it's done
+            if (destroyEventSequenceScheduled != null)
+            {
+                if (destroyEventWorkerScheduled.numberOfEventsInQueue() < 1)
+                {
+                    Destroy(destroyEventSequenceScheduled.gameObject);
+                    destroyEventSequenceScheduled = null;
+                    destroyEventWorkerScheduled = null;
+                }
+            }
 
             // manage fade in
             if (fadeInScheduled)
@@ -267,7 +281,7 @@ public class GameManager : MonoBehaviour
     }
     
     // go to new scene
-    public void GoToScene(string sceneName, float x, float y, bool partOfSequence)
+    public void GoToScene(string sceneName, float x, float y, bool partOfSequence, EventSequence eventSequence = null, EventWorker ew = null)
     {
         if (!partOfSequence)
         {
@@ -283,7 +297,16 @@ public class GameManager : MonoBehaviour
             
             returnControlScheduled = true;
         }
-
+        else
+        {
+            if (eventSequence != null && ew != null)
+            {
+                // remove event sequence from last scene
+                destroyEventSequenceScheduled = eventSequence;
+                destroyEventWorkerScheduled = ew;
+            }
+        }
+        
         nextScene = sceneName;
     }
 

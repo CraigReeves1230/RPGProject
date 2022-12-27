@@ -35,10 +35,10 @@ public class SampleEgress : EventCutscene
         msgCls();
         delay(.5f);
         fadeToScene("Cave2", true);
-        positionCharacter(blondie, 29.63f, -9.1f);
-        positionCharacter(baldman, 29.63f, -8.1f);
-        faceSouth(baldman);
-        faceNorth(blondie);
+        positionCharacter(blondie, 43.21f, 4.46f);
+        positionCharacter(baldman, 43.21f, 3.46f);
+        turnToFace(baldman, blondie.gameObject);
+        turnToFace(blondie, baldman.gameObject);
         delay(2f);
         msg(":name Baldman :face 1", "We still here, daddy!");
         wait();

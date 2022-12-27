@@ -195,7 +195,8 @@ public class EventEngine : MonoBehaviour
             var y = command.getFloatParameters()[1];
             var partOfSequence = command.getBoolParameters()[0];
             var ew = command.getEventWorkerParameter();
-            return goToScene(sceneName, x, y, partOfSequence, ew);
+            var es = command.getEventSequenceParam();
+            return goToScene(sceneName, x, y, partOfSequence, ew, es);
         }
 
         if (commandName == "runEast")
@@ -762,7 +763,7 @@ public class EventEngine : MonoBehaviour
         return true;
     }
 
-    private bool goToScene(string sceneName, float x, float y, bool partOfSequence, EventWorker ew)
+    private bool goToScene(string sceneName, float x, float y, bool partOfSequence, EventWorker ew, EventSequence es)
     {   
         // if not part of sequence, clear event queue
         if (!partOfSequence)
@@ -770,7 +771,7 @@ public class EventEngine : MonoBehaviour
             ew.cancelEventQueue();
         }
         
-        GameManager.instance.GoToScene(sceneName, x, y, partOfSequence);
+        GameManager.instance.GoToScene(sceneName, x, y, partOfSequence, es, ew);
         return true;
     }
 
