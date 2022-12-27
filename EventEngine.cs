@@ -342,19 +342,30 @@ public class EventEngine : MonoBehaviour
         {
             var setting = command.getBoolParameters()[0];
             var darken = command.getBoolParameters()[1];
-            return setRain(setting, darken);
+            var darknessSpeed = command.getFloatParameters()[0];
+            var rainTransitionSpeed = command.getFloatParameters()[1];
+            var rainIntensity = command.getFloatParameters()[2];
+            return setRain(setting, darken, darknessSpeed, rainTransitionSpeed, rainIntensity);
         }
         
         if (commandName == "setSnow")
         {
             var setting = command.getBoolParameters()[0];
-            return setSnow(setting);
+            var darken = command.getBoolParameters()[1];
+            var darknessSpeed = command.getFloatParameters()[0];
+            var snowTransitionSpeed = command.getFloatParameters()[1];
+            var snowIntensity = command.getFloatParameters()[2];
+            return setSnow(setting, darken, darknessSpeed, snowTransitionSpeed, snowIntensity);
         }
         
         if (commandName == "setFog")
         {
             var setting = command.getBoolParameters()[0];
-            return setFog(setting);
+            var darken = command.getBoolParameters()[1];
+            var darknessSpeed = command.getFloatParameters()[0];
+            var fogTransitionSpeed = command.getFloatParameters()[1];
+            var fogIntensity = command.getFloatParameters()[2];
+            return setFog(setting, darken, darknessSpeed, fogTransitionSpeed, fogIntensity);
         }
 
         if (commandName == "setNextWeather")
@@ -377,9 +388,9 @@ public class EventEngine : MonoBehaviour
     
     /* ----------------------------------------------------------------------------------------------------------*/
 
-    private bool setRain(bool setting, bool darkenScene)
+    private bool setRain(bool setting, bool darkenScene, float darknessSpeed = 0.5f, float rainTransitionSpeed = 10f, float rainIntensity = 550f)
     {
-        weather.setRain(setting, darkenScene);
+        weather.setRain(setting, darkenScene, darknessSpeed, rainTransitionSpeed, rainIntensity);
         return true;
     }
 
@@ -393,15 +404,15 @@ public class EventEngine : MonoBehaviour
         return true;
     }
     
-    private bool setSnow(bool setting)
+    private bool setSnow(bool setting, bool darkenScene, float darknessSpeed = 0.5f, float snowTransitionSpeed = 10f, float snowIntensity = 300f)
     {
-        weather.setSnow(setting);
+        weather.setSnow(setting, darkenScene, darknessSpeed, snowTransitionSpeed, snowIntensity);
         return true;
     }
     
-    private bool setFog(bool setting)
+    private bool setFog(bool setting, bool darkenScene, float darknessSpeed = 0.5f, float fogTransitionSpeed = 10f, float fogIntensity = 10f)
     {
-        weather.setFog(setting);
+        weather.setFog(setting, darkenScene, darknessSpeed, fogTransitionSpeed, fogIntensity);
         return true;
     }
     

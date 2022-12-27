@@ -703,27 +703,30 @@ public abstract class EventSequence : MonoBehaviour
         eventWorker.storeInQueue(command);
     }
 
-    protected void setRain(bool setting, bool darkenScene)
+    protected void setRain(bool setting, bool darkenScene = false, float darknessSpeed = 0.5f, float rainTransitionSpeed = 10f, float rainIntensity = 550f)
     {
         Command command = newCom();
         command.setName("setRain");
         command.setBoolParams(setting, darkenScene);
+        command.setFloatParams(darknessSpeed, rainTransitionSpeed, rainIntensity);
         eventWorker.storeInQueue(command);
     }
     
-    protected void setFog(bool setting)
+    protected void setFog(bool setting, bool darkenScene = false, float darknessSpeed = 0.5f, float fogTransitionSpeed = 10f, float fogIntensity = 10f)
     {
         Command command = newCom();
         command.setName("setFog");
-        command.setBoolParams(setting);
+        command.setBoolParams(setting, darkenScene);   
+        command.setFloatParams(darknessSpeed, fogTransitionSpeed, fogIntensity);
         eventWorker.storeInQueue(command);
     }
     
-    protected void setSnow(bool setting)
+    protected void setSnow(bool setting, bool darkenScene = false, float darknessSpeed = 0.5f, float snowTransitionSpeed = 10f, float snowIntensity = 300f)
     {
         Command command = newCom();
         command.setName("setSnow");
-        command.setBoolParams(setting);
+        command.setBoolParams(setting, darkenScene);   
+        command.setFloatParams(darknessSpeed, snowTransitionSpeed, snowIntensity);
         eventWorker.storeInQueue(command);
     }
 }

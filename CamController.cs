@@ -7,7 +7,7 @@ using UnityEngine.Tilemaps;
 
 public class CamController : MonoBehaviour
 {
-    public static CamController mainCamera;
+    public static CamController instance;
     private Transform target;
     
     private float height;
@@ -39,9 +39,9 @@ public class CamController : MonoBehaviour
     void Start()
     {        
         // main cam should be singleton
-        if (mainCamera == null)
+        if (instance == null)
         {
-            mainCamera = this;
+            instance = this;
         }
         
         height = Camera.main.orthographicSize * 2;
