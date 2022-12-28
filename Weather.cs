@@ -8,6 +8,7 @@ using UnityEngine.Tilemaps;
 
 public class Weather : MonoBehaviour
 {
+    public static Weather instance;
     public ParticleSystem rain;
     public ParticleSystem snow;
     public ParticleSystem fog;
@@ -28,6 +29,8 @@ public class Weather : MonoBehaviour
     private float rainRate;
     private float rainTransitionSpeed = 10f;
     private float rainStrength = 550f;
+
+    private SpriteRenderer[] sprites;
     
     // fog variables
     private bool isFogging;
@@ -45,6 +48,13 @@ public class Weather : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        // only one Weather generator
+        if (instance == null)
+        {
+            instance = this;
+        }
+        
+        
         // position to follow camera
         rain.gameObject.SetActive(rainByDefault);
         snow.gameObject.SetActive(snowByDefault);
@@ -69,6 +79,14 @@ public class Weather : MonoBehaviour
         rainEmission.rateOverTime = rainRate;
         snowEmission.rateOverTime = snowRate;
         fogEmission.rateOverTime = fogRate;
+        
+        // find all sprites to darken
+        var mes = FindObjectsOfType<MovingEntity>();
+        sprites = new SpriteRenderer[mes.Length];
+        for (int i = 0; i <= mes.Length; i++)
+        {
+            sprites[i] = mes[i].GetComponent<SpriteRenderer>();
+        }
     }
 
     void FixedUpdate()
@@ -81,7 +99,10 @@ public class Weather : MonoBehaviour
             {
                 tilemap.color = Color.Lerp(tilemap.color, Color.gray, t * darkenSpeed);
             }
-
+            foreach (var sprite in sprites)
+            {
+                sprite.color = Color.Lerp(sprite.color, Color.gray, t * darkenSpeed);
+            }
         }
         else
         {
@@ -89,6 +110,10 @@ public class Weather : MonoBehaviour
             foreach (var tilemap in tilemaps)
             {
                 tilemap.color = Color.Lerp(tilemap.color, Color.white, t * (darkenSpeed / 2));
+            }
+            foreach (var sprite in sprites)
+            {
+                sprite.color = Color.Lerp(sprite.color, Color.white, t * (darkenSpeed / 2));
             }
         }
 
@@ -153,36 +178,42 @@ public class Weather : MonoBehaviour
         return new Vector2(x, y);
     }
 
-    public void setRain(bool setting, bool darkenScene, float darknessSpeed, float rainTransSpeed, float rainIntensity)
+    public void setRain(bool setting, float rainTransSpeed, float rainIntensity)
     {
         startTime = Time.time;
         rain.gameObject.SetActive(true);
         isRaining = setting;
-        darkened = darkenScene;
-        darkenSpeed = darknessSpeed;
         rainTransitionSpeed = rainTransSpeed;
         rainStrength = rainIntensity;
     }
     
-    public void setSnow(bool setting, bool darkenScene, float darknessSpeed, float snowTransSpeed, float snowIntensity)
+    public void setSnow(bool setting, float snowTransSpeed, float snowIntensity)
     {
         startTime = Time.time;
         snow.gameObject.SetActive(true);
         isSnowing = setting;
-        darkened = darkenScene;
-        darkenSpeed = darknessSpeed;
         snowTransitionSpeed = snowTransSpeed;
         snowStrength = snowIntensity;
     }
 
-    public void setFog(bool setting, bool darkenScene, float darknessSpeed, float fogTransSpeed, float fogIntensity)
+    public void setFog(bool setting, float fogTransSpeed, float fogIntensity)
     {
         startTime = Time.time;
         fog.gameObject.SetActive(true);
         isFogging = setting;
-        darkened = darkenScene;
-        darkenSpeed = darknessSpeed;
         fogTransitionSpeed = fogTransSpeed;
         fogStrength = fogIntensity;
     }
+
+    public void setDarkness(bool setting, float speed)
+    {
+        startTime = Time.time;
+        darkened = setting;
+        darkenSpeed = speed;
+    }
+
+    public bool getIsDarkened() => darkened;
+    public bool getIsRaining() => isRaining;
+    public bool getIsFogging() => isFogging;
+
 }

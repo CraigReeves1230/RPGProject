@@ -704,30 +704,39 @@ public abstract class EventSequence : MonoBehaviour
         eventWorker.storeInQueue(command);
     }
 
-    protected void setRain(bool setting, bool darkenScene = false, float darknessSpeed = 0.5f, float rainTransitionSpeed = 10f, float rainIntensity = 550f)
+    protected void setRain(bool setting, float rainTransitionSpeed = 10f, float rainIntensity = 550f)
     {
         Command command = newCom();
         command.setName("setRain");
-        command.setBoolParams(setting, darkenScene);
-        command.setFloatParams(darknessSpeed, rainTransitionSpeed, rainIntensity);
+        command.setBoolParams(setting);
+        command.setFloatParams(rainTransitionSpeed, rainIntensity);
+        eventWorker.storeInQueue(command);
+    }
+
+    protected void setDarkness(bool setting, float speed = 0.5f)
+    {
+        Command command = newCom();
+        command.setName("setDarkness");
+        command.setBoolParams(setting);
+        command.setFloatParams(speed);
         eventWorker.storeInQueue(command);
     }
     
-    protected void setFog(bool setting, bool darkenScene = false, float darknessSpeed = 0.5f, float fogTransitionSpeed = 10f, float fogIntensity = 10f)
+    protected void setFog(bool setting, float fogTransitionSpeed = 10f, float fogIntensity = 10f)
     {
         Command command = newCom();
         command.setName("setFog");
-        command.setBoolParams(setting, darkenScene);   
-        command.setFloatParams(darknessSpeed, fogTransitionSpeed, fogIntensity);
+        command.setBoolParams(setting);   
+        command.setFloatParams(fogTransitionSpeed, fogIntensity);
         eventWorker.storeInQueue(command);
     }
     
-    protected void setSnow(bool setting, bool darkenScene = false, float darknessSpeed = 0.5f, float snowTransitionSpeed = 10f, float snowIntensity = 300f)
+    protected void setSnow(bool setting, float snowTransitionSpeed = 10f, float snowIntensity = 300f)
     {
         Command command = newCom();
         command.setName("setSnow");
-        command.setBoolParams(setting, darkenScene);   
-        command.setFloatParams(darknessSpeed, snowTransitionSpeed, snowIntensity);
+        command.setBoolParams(setting);   
+        command.setFloatParams(snowTransitionSpeed, snowIntensity);
         eventWorker.storeInQueue(command);
     }
 }

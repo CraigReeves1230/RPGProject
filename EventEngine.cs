@@ -342,32 +342,33 @@ public class EventEngine : MonoBehaviour
         if (commandName == "setRain")
         {
             var setting = command.getBoolParameters()[0];
-            var darken = command.getBoolParameters()[1];
-            var darknessSpeed = command.getFloatParameters()[0];
-            var rainTransitionSpeed = command.getFloatParameters()[1];
-            var rainIntensity = command.getFloatParameters()[2];
-            return setRain(setting, darken, darknessSpeed, rainTransitionSpeed, rainIntensity);
+            var rainTransitionSpeed = command.getFloatParameters()[0];
+            var rainIntensity = command.getFloatParameters()[1];
+            return setRain(setting, rainTransitionSpeed, rainIntensity);
         }
         
         if (commandName == "setSnow")
         {
             var setting = command.getBoolParameters()[0];
-            var darken = command.getBoolParameters()[1];
-            var darknessSpeed = command.getFloatParameters()[0];
-            var snowTransitionSpeed = command.getFloatParameters()[1];
-            var snowIntensity = command.getFloatParameters()[2];
-            return setSnow(setting, darken, darknessSpeed, snowTransitionSpeed, snowIntensity);
+            var snowTransitionSpeed = command.getFloatParameters()[0];
+            var snowIntensity = command.getFloatParameters()[1];
+            return setSnow(setting, snowTransitionSpeed, snowIntensity);
         }
         
         if (commandName == "setFog")
         {
             var setting = command.getBoolParameters()[0];
-            var darken = command.getBoolParameters()[1];
-            var darknessSpeed = command.getFloatParameters()[0];
-            var fogTransitionSpeed = command.getFloatParameters()[1];
-            var fogIntensity = command.getFloatParameters()[2];
-            return setFog(setting, darken, darknessSpeed, fogTransitionSpeed, fogIntensity);
+            var fogTransitionSpeed = command.getFloatParameters()[0];
+            var fogIntensity = command.getFloatParameters()[1];
+            return setFog(setting, fogTransitionSpeed, fogIntensity);
         }
+        
+        if (commandName == "setDarkness")
+        {
+            var setting = command.getBoolParameters()[0];
+            var speed = command.getFloatParameters()[0];
+            return setDarkness(setting, speed);
+        } 
 
         if (commandName == "setNextWeather")
         {
@@ -389,12 +390,31 @@ public class EventEngine : MonoBehaviour
     
     /* ----------------------------------------------------------------------------------------------------------*/
 
-    private bool setRain(bool setting, bool darkenScene, float darknessSpeed = 0.5f, float rainTransitionSpeed = 10f, float rainIntensity = 550f)
+    private bool setRain(bool setting, float rainTransitionSpeed = 10f, float rainIntensity = 550f)
     {
-        weather.setRain(setting, darkenScene, darknessSpeed, rainTransitionSpeed, rainIntensity);
+        weather.setRain(setting, rainTransitionSpeed, rainIntensity);
         return true;
     }
 
+    
+    private bool setSnow(bool setting, float snowTransitionSpeed = 10f, float snowIntensity = 300f)
+    {
+        weather.setSnow(setting, snowTransitionSpeed, snowIntensity);
+        return true;
+    }
+    
+    private bool setFog(bool setting, float fogTransitionSpeed = 10f, float fogIntensity = 10f)
+    {
+        weather.setFog(setting, fogTransitionSpeed, fogIntensity);
+        return true;
+    }
+
+    private bool setDarkness(bool setting, float speed = 0.5f)
+    {
+        weather.setDarkness(setting, speed);
+        return true;
+    }
+    
     private bool setNextWeather(bool rain, bool snow, bool fog, bool darkness)
     {
         GameManager.instance.setNextRain(rain);
@@ -402,18 +422,6 @@ public class EventEngine : MonoBehaviour
         GameManager.instance.setNextSnow(snow);
         GameManager.instance.setNextDarkness(darkness);
 
-        return true;
-    }
-    
-    private bool setSnow(bool setting, bool darkenScene, float darknessSpeed = 0.5f, float snowTransitionSpeed = 10f, float snowIntensity = 300f)
-    {
-        weather.setSnow(setting, darkenScene, darknessSpeed, snowTransitionSpeed, snowIntensity);
-        return true;
-    }
-    
-    private bool setFog(bool setting, bool darkenScene, float darknessSpeed = 0.5f, float fogTransitionSpeed = 10f, float fogIntensity = 10f)
-    {
-        weather.setFog(setting, darkenScene, darknessSpeed, fogTransitionSpeed, fogIntensity);
         return true;
     }
     
