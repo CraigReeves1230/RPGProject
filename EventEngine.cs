@@ -368,15 +368,16 @@ public class EventEngine : MonoBehaviour
             var setting = command.getBoolParameters()[0];
             var speed = command.getFloatParameters()[0];
             return setDarkness(setting, speed);
-        } 
+        }
 
-        if (commandName == "setNextWeather")
+        if (commandName == "setSceneDefaultWeather")
         {
             var rain = command.getBoolParameters()[0];
-            var snow = command.getBoolParameters()[1];
-            var fog = command.getBoolParameters()[2];
+            var fog = command.getBoolParameters()[1];
+            var snow = command.getBoolParameters()[2];
             var darkness = command.getBoolParameters()[3];
-            return setNextWeather(rain, snow, fog, darkness);
+            var sceneName = command.getStringParameters()[0];
+            return setSceneDefaultWeather(rain, fog, snow, darkness, sceneName);
         }
 
         /*if (commandName == "giveItem")
@@ -409,19 +410,16 @@ public class EventEngine : MonoBehaviour
         return true;
     }
 
+    private bool setSceneDefaultWeather(bool rain, bool fog, bool snow, bool darkness, string sceneName = null)
+    {
+        var currentScene = sceneName ?? Weather.instance.sceneName;
+        GameManager.instance.weatherOverrides[currentScene] = new[] {rain, fog, snow, darkness};
+        return true;
+    }
+
     private bool setDarkness(bool setting, float speed = 0.5f)
     {
         weather.setDarkness(setting, speed);
-        return true;
-    }
-    
-    private bool setNextWeather(bool rain, bool snow, bool fog, bool darkness)
-    {
-        GameManager.instance.setNextRain(rain);
-        GameManager.instance.setNextFog(fog);
-        GameManager.instance.setNextSnow(snow);
-        GameManager.instance.setNextDarkness(darkness);
-
         return true;
     }
     

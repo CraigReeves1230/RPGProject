@@ -10,7 +10,7 @@ public class AreaExit : MonoBehaviour
     public string areaEntrance;
     private Collider2D other;
     
-    public float waitToLoad = 1f;
+    public float waitToLoad = 0.5f;
     private bool shouldLoadAfterFade;
     
     // Start is called before the first frame update

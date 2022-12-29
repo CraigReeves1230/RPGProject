@@ -31,6 +31,8 @@ public class GameManager : MonoBehaviour
 
     private string currentScene;
 
+    public Dictionary<string, bool[]> weatherOverrides;
+
     private bool eventSequenceRunning;
     
     private bool bottomLeftMarkerDetected;
@@ -98,6 +100,9 @@ public class GameManager : MonoBehaviour
                 party[i].gameObject.SetActive(false);
             }
         } 
+        
+        // weather overrides
+        weatherOverrides = new Dictionary<string, bool[]>();
         
         // initialize follow the leader
         initializeFollowTheLeader();

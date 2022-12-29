@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
-using Unity.VisualScripting.Dependencies.NCalc;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Tilemaps;
 
 public class Weather : MonoBehaviour
@@ -13,11 +8,10 @@ public class Weather : MonoBehaviour
     public ParticleSystem snow;
     public ParticleSystem fog;
     public Tilemap[] tilemaps;
-    public bool rainByDefault;
-    public bool snowByDefault;
-    public bool fogByDefault;
-    public bool sceneDarkenedByDefault;
-    public float startTime;
+    public string sceneName;
+    private bool weatherSet;
+    
+    private float startTime;
     private bool darkened;
     private float darkenSpeed = 0.5f;
     private ParticleSystem.EmissionModule rainEmission;
@@ -29,6 +23,12 @@ public class Weather : MonoBehaviour
     private float rainRate;
     private float rainTransitionSpeed = 10f;
     private float rainStrength = 550f;
+    
+    // defaults
+    public bool rainByDefault;
+    public bool fogByDefault;
+    public bool snowByDefault;
+    public bool darknessByDefault;
 
     private SpriteRenderer[] sprites;
     
@@ -42,7 +42,7 @@ public class Weather : MonoBehaviour
     private bool isSnowing;
     private float snowRate;
     private float snowTransitionSpeed = 10f;
-    private float snowStrength = 300f;
+    private float snowStrength = 150f;
     
 
     // Start is called before the first frame update
@@ -53,23 +53,10 @@ public class Weather : MonoBehaviour
         {
             instance = this;
         }
-        
-        
-        // position to follow camera
-        rain.gameObject.SetActive(rainByDefault);
-        snow.gameObject.SetActive(snowByDefault);
-        fog.gameObject.SetActive(fogByDefault);
-        isRaining = rainByDefault;
-        isSnowing = snowByDefault;
-        isFogging = fogByDefault;
 
-        // screen darkened by default
-        darkened = sceneDarkenedByDefault;
-
-        // if not raining, snowing or fogging by default set emissions to 0
-        rainRate = !rainByDefault ? 0f : 200f;
-        snowRate = !snowByDefault ? 0f : 250f;
-        fogRate = !fogByDefault ? 0f : 10f;
+        rainRate = rainStrength;
+        snowRate = snowStrength;
+        fogRate = fogStrength;
 
         // set emission rates
         rainEmission = rain.GetComponent<ParticleSystem>().emission;
@@ -160,12 +147,93 @@ public class Weather : MonoBehaviour
         rainEmission.rateOverTime = rainRate;
         snowEmission.rateOverTime = snowRate;
         fogEmission.rateOverTime = fogRate;
+        
+        // Go about setting the weather
+        if (!weatherSet)
+        {
+            if (GameManager.instance.weatherOverrides.ContainsKey(sceneName))
+            {
+                // rain
+                if (GameManager.instance.weatherOverrides[sceneName][0])
+                {
+                    setRain(true, 10000f, 550f);
+                }
+                else
+                {
+                    rain.gameObject.SetActive(false);
+                }
+
+                // fog
+                if (GameManager.instance.weatherOverrides[sceneName][1])
+                {
+                    setFog(true, 10000f, 10f);
+                }
+                else
+                {
+                    fog.gameObject.SetActive(false);
+                }
+
+                // snow
+                if (GameManager.instance.weatherOverrides[sceneName][2])
+                {
+                    setSnow(true, 10000f, 250f);
+                }
+                else
+                {
+                    snow.gameObject.SetActive(false);
+                }
+
+                // darkness
+                if (GameManager.instance.weatherOverrides[sceneName][3])
+                {
+                    setDarkness(true, 10000f);
+                }
+                else
+                {
+                    setDarkness(false, 10000f);
+                }
+            }
+            else
+            {
+                if (rainByDefault)
+                {
+                    setRain(true, 10000f, rainStrength);
+                }
+                else
+                {
+                    rain.gameObject.SetActive(false);
+                }
+
+                if (snowByDefault)
+                {
+                    setSnow(true, 10000f, snowStrength);
+                }
+                else
+                {
+                    snow.gameObject.SetActive(false);
+                }
+
+                if (fogByDefault)
+                {
+                    setFog(true, 10000f, fogStrength);
+                }
+                else
+                {
+                    fog.gameObject.SetActive(false);
+                }
+
+                setDarkness(darknessByDefault, 10000f);
+            }
+
+
+            weatherSet = true;
+        }
     }
 
     private Vector2 positionSnowOrRain()
     {
         var x = Camera.main.transform.position.x;
-        var y = Camera.main.transform.position.y + Camera.main.orthographicSize * 2;
+        var y = Camera.main.transform.position.y + Camera.main.orthographicSize * 1.5f;
         
         return new Vector2(x, y);
     }

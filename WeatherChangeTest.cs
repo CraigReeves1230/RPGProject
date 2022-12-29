@@ -7,11 +7,13 @@ public class WeatherChangeTest : EventCutscene
     
     protected override void doCutscene()
     {
-        var r = GameManager.instance.partyLead();
-        var s = GameManager.instance.party[1];
-
-       
         setDarkness(!Weather.instance.getIsDarkened(), 0.1f);
         setRain(!Weather.instance.getIsRaining(), 5f);
+        
+        setSceneDefaultWeather(!Weather.instance.getIsRaining(), Weather.instance.getIsFogging(),
+            Weather.instance.getIsSnowing(), !Weather.instance.getIsDarkened());
+        
+        setSceneDefaultWeather(!Weather.instance.getIsRaining(), Weather.instance.getIsFogging(),
+            Weather.instance.getIsSnowing(), !Weather.instance.getIsDarkened(), "TrialForest1");
     }
 }

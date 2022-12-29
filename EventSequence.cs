@@ -660,14 +660,6 @@ public abstract class EventSequence : MonoBehaviour
         goToScene(sceneName, partOfSequence, x, y);
         fadeIn();
     }
-
-    protected void setNextWeather(bool rain, bool snow, bool fog, bool darkness)
-    {      
-        Command command = newCom();
-        command.setName("setNextWeather");
-        command.setBoolParams(rain, snow, fog, darkness);
-        eventWorker.storeInQueue(command);
-    }
     
     // hide and show characters
     
@@ -737,6 +729,15 @@ public abstract class EventSequence : MonoBehaviour
         command.setName("setSnow");
         command.setBoolParams(setting);   
         command.setFloatParams(snowTransitionSpeed, snowIntensity);
+        eventWorker.storeInQueue(command);
+    }
+    
+    protected void setSceneDefaultWeather(bool rain, bool fog, bool snow, bool darkness, string sceneName = null)
+    {
+        Command command = newCom();
+        command.setName("setSceneDefaultWeather");
+        command.setBoolParams(rain, fog, snow, darkness);   
+        command.setStringParams(sceneName);
         eventWorker.storeInQueue(command);
     }
 }

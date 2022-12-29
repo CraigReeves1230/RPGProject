@@ -9,6 +9,7 @@ public class AreaEntrance : MonoBehaviour
     public string entranceName;
     public bool ignoreX;
     public bool ignoreY;
+    public float fadeInWaitTime = 1f;
     
     
     // Start is called before the first frame update
@@ -53,8 +54,16 @@ public class AreaEntrance : MonoBehaviour
             
             GameManager.instance.setNextAreaEntrance(null);
 
-            GameManager.instance.restoreControl();
-            UIFade.instance.FadeFromBlack();
+            StopAllCoroutines();
+            StartCoroutine(restoreControlAndFadeIn());
+            
         }
+    }
+
+    IEnumerator restoreControlAndFadeIn()
+    {
+        yield return new WaitForSeconds(fadeInWaitTime);
+        GameManager.instance.restoreControl();
+        UIFade.instance.FadeFromBlack();
     }
 }
