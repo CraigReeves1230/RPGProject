@@ -215,5 +215,5 @@ public class Weather : MonoBehaviour
     public bool getIsDarkened() => darkened;
     public bool getIsRaining() => isRaining;
     public bool getIsFogging() => isFogging;
-
+    public bool getIsSnowing() => isSnowing;
 }
