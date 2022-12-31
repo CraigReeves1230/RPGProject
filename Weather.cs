@@ -8,6 +8,7 @@ public class Weather : MonoBehaviour
     public ParticleSystem snow;
     public ParticleSystem fog;
     public Tilemap[] tilemaps;
+    public SpriteRenderer[] spriteMaps;
     public string sceneName;
     private bool weatherSet;
     
@@ -90,6 +91,10 @@ public class Weather : MonoBehaviour
             {
                 sprite.color = Color.Lerp(sprite.color, Color.gray, t * darkenSpeed);
             }
+            foreach (var sprite in spriteMaps)
+            {
+                sprite.color = Color.Lerp(sprite.color, Color.gray, t * darkenSpeed);
+            }
         }
         else
         {
@@ -99,6 +104,10 @@ public class Weather : MonoBehaviour
                 tilemap.color = Color.Lerp(tilemap.color, Color.white, t * (darkenSpeed / 2));
             }
             foreach (var sprite in sprites)
+            {
+                sprite.color = Color.Lerp(sprite.color, Color.white, t * (darkenSpeed / 2));
+            }
+            foreach (var sprite in spriteMaps)
             {
                 sprite.color = Color.Lerp(sprite.color, Color.white, t * (darkenSpeed / 2));
             }
