@@ -16,6 +16,7 @@ public class DialogManager : MonoBehaviour
     private bool typing;
     private float waitTime;
     private bool displayLineFull;
+    private int numOfOptions;
 
     private bool dialogOpen;
 
@@ -69,7 +70,7 @@ public class DialogManager : MonoBehaviour
 
         // get animator component and initialize
         anim = GetComponent<Animator>();
-        anim.SetBool("dialogBoxClose", true);
+        anim.SetBool("MessageWindowOpened", false);
         
 
         // down position is default position for message window
@@ -166,8 +167,7 @@ public class DialogManager : MonoBehaviour
             
             dialogText.text = dialogLines[currentLine]; 
             
-            anim.SetBool("dialogBoxOpen", true);
-            anim.SetBool("dialogBoxClose", false);
+            anim.SetBool("MessageWindowOpened", true);
 
             // type out text if in traditional display mode
             if (displayStyle == DisplayStyleOptions.Traditional)
@@ -258,8 +258,7 @@ public class DialogManager : MonoBehaviour
     // closes dialog box
     public void closeDialog()
     {
-        anim.SetBool("dialogBoxOpen", false);
-        anim.SetBool("dialogBoxClose", true);
+        anim.SetBool("MessageWindowOpened", false);
                 
         nameBox.SetActive(false);
         currentLine = 0;
@@ -268,6 +267,8 @@ public class DialogManager : MonoBehaviour
         faceBox.SetActive(false);
         dialogOpen = false;
     }
+    
+   
 
     // getting and setters
     public bool getIsTyping() => typing;
