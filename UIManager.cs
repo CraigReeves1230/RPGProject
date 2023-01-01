@@ -27,12 +27,7 @@ public class UIManager : MonoBehaviour
         // make UI active
         fader.SetActive(true);
         messageWindow.SetActive(true);
-        promptWindow.SetActive(false);
+        promptWindow.SetActive(true);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

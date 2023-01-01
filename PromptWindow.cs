@@ -15,6 +15,7 @@ public class PromptWindow : MonoBehaviour
     public int numOfOptions;
     public float cursorMovUnit = 51f;
     private Vector2 cursorHomePosition;
+    private Animator anim;
     
     // Start is called before the first frame update
     void Start()
@@ -31,22 +32,24 @@ public class PromptWindow : MonoBehaviour
 
         // default cursor position
         cursorHomePosition = new Vector2(promptCursor.localPosition.x, promptCursor.localPosition.y);
+        anim = gameObject.GetComponent<Animator>();
     }
 
     public void showPrompt(string headerText, params string[] options)
     {
-        gameObject.SetActive(true);
         headingText.text = headerText;
         numOfOptions = options.Length;
         option1.text = (numOfOptions >= 1) ? options[0] : null;
         option2.text = (numOfOptions >= 2) ? options[1] : null;
         option3.text = (numOfOptions >= 3) ? options[2] : null;
         option4.text = (numOfOptions >= 4) ? options[3] : null;
+        
+        anim.SetBool("MessageWindowOpened", true);
     }
 
     public void closePromptWindow()
     {
-        gameObject.SetActive(false);
+        anim.SetBool("MessageWindowOpened", false);
         
         // reset cursor position
         promptCursor.localPosition = new Vector2(cursorHomePosition.x, cursorHomePosition.y);
