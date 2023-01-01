@@ -175,7 +175,7 @@ public abstract class EventSequence : MonoBehaviour
     {
         if (!withinEventZone || workerBusy || autoTrigger) return;
 
-        if (activatedOnButtonPress && !activatedByEventOnly && Input.GetButtonUp("Fire1"))
+        if (activatedOnButtonPress && !activatedByEventOnly && GameManager.instance.getMainFireKeyUp())
         {
             activateEvent();
         }

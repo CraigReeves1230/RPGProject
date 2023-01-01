@@ -15,7 +15,7 @@ public class EventEngine : MonoBehaviour
     private float endTime;
     private CamController camera;
     private bool promptRunning;
-    private int currentPick = 1;
+    private int currentPick = 1;    // for prompt window
     private Weather weather;
     
     public bool start(Command command)
@@ -153,34 +153,37 @@ public class EventEngine : MonoBehaviour
         }
         
 
-        /*if (commandName == "promptWin")
+        if (commandName == "promptWin")
         {
-            var dm = command.getDialogManagerParam();
             var headerText = command.getStringParameters()[0];
             
-            if (command.getStringParameters().Length < 4)
+            if (command.getStringParameters().Length == 2)
             {
-                return promptWin(dm, headerText, command.getStringParameters()[1], command.getStringParameters()[2]);
+                return promptWin(headerText, command.getStringParameters()[1]);
+            }
+            
+            if (command.getStringParameters().Length == 3)
+            {
+                return promptWin(headerText, command.getStringParameters()[1], command.getStringParameters()[2]);
             }
             
             if (command.getStringParameters().Length == 4)
             {
-                return promptWin(dm, headerText, command.getStringParameters()[1], command.getStringParameters()[2], command.getStringParameters()[3]);
+                return promptWin(headerText, command.getStringParameters()[1], command.getStringParameters()[2], command.getStringParameters()[3]);
             }
             
             if (command.getStringParameters().Length == 5)
             {
-                return promptWin(dm, headerText, command.getStringParameters()[1], command.getStringParameters()[2], command.getStringParameters()[3], command.getStringParameters()[4]);
+                return promptWin(headerText, command.getStringParameters()[1], command.getStringParameters()[2], command.getStringParameters()[3], command.getStringParameters()[4]);
             }
-        }*/
-
-        /*if (commandName == "waitForPrompt")
-        {
-            var dm = command.getDialogManagerParam();
-            var callback = command.getCallbackParam();
-            return waitForPrompt(dm, callback);
         }
-        */
+
+        if (commandName == "waitForPrompt")
+        {
+            var callback = command.getCallbackParam();
+            return waitForPrompt(callback);
+        }
+        
 
         if (commandName == "wait")
         {
@@ -825,28 +828,20 @@ public class EventEngine : MonoBehaviour
         camera.setCameraTarget(newTarget.transform);
         return true;
     }
-
-    /*private bool changeCameraSpeed(float newSpeed)
+    
+    private bool promptWin(string headerText, params string[] options)
     {
-        camera.setCamSpeed(newSpeed);
+        PromptWindow.instance.showPrompt(headerText, options);
         return true;
-    }*/
+    }
 
-    /*private bool promptWin(DialogManager dm, string headerText, params string[] options)
+    private bool waitForPrompt(EventSequence.PromptCallback callback)
     {
-        dm.promptDialog(headerText, options);
-        return true;
-    }*/
-
-    /*private bool waitForPrompt(DialogManager dm, EventSequence.PromptCallback callback)
-    {
-     
-        var promptCursor = dm.promptCursor;
-        var promptCursorPos1 = dm.promptCursorPos1;
-        var promptCursorPos2 = dm.promptCursorPos2;
-        var promptCursorPos3 = dm.promptCursorPos3;
-        var promptCursorPos4 = dm.promptCursorPos4;
-        var numOfOptions = dm.numOfOptions;
+        var promptCursor = PromptWindow.instance.promptCursor;
+   
+        var numOfOptions = PromptWindow.instance.numOfOptions;
+        var cursorX = PromptWindow.instance.promptCursor.localPosition.x;
+        var moveUnit = PromptWindow.instance.cursorMovUnit;
         
         // initialize cursor position
         if (!promptRunning)
@@ -858,60 +853,58 @@ public class EventEngine : MonoBehaviour
         // allow cursor to move 
         if (currentPick == 1)
         {
-            if (Input.GetKeyUp(KeyCode.DownArrow))
+            if (Input.GetAxisRaw("Vertical").Equals(-1f) && numOfOptions >= 2)
             {
-                promptCursor.localPosition = promptCursorPos2;
+                promptCursor.localPosition = new Vector2(promptCursor.localPosition.x, PromptWindow.instance.promptCursor.localPosition.y - moveUnit);
                 currentPick = 2;
-            } else if (Input.GetKeyUp(KeyCode.RightArrow) && numOfOptions >= 3)
-            {
-                promptCursor.localPosition = promptCursorPos3;
-                currentPick = 3;
-            }
+                Input.ResetInputAxes();
+            } 
         }
     
         if (currentPick == 2)
         {
-            if (Input.GetKeyUp(KeyCode.UpArrow))
+            if (Input.GetAxisRaw("Vertical").Equals(1f))
             {
-                promptCursor.localPosition = promptCursorPos1;
+                promptCursor.localPosition = new Vector2(promptCursor.localPosition.x, PromptWindow.instance.promptCursor.localPosition.y + moveUnit);
                 currentPick = 1;
-            } else if (Input.GetKeyUp(KeyCode.RightArrow) && numOfOptions >= 4)
+                Input.ResetInputAxes();
+            } else if (Input.GetAxisRaw("Vertical").Equals(-1f) && numOfOptions >= 3)
             {
-                promptCursor.localPosition = promptCursorPos4;
-                currentPick = 4;
+                promptCursor.localPosition = new Vector2(promptCursor.localPosition.x, PromptWindow.instance.promptCursor.localPosition.y - moveUnit);
+                currentPick = 3;
+                Input.ResetInputAxes();
             }
         }
             
         if (currentPick == 3)
         {
-            if (Input.GetKeyUp(KeyCode.LeftArrow))
+            if (Input.GetAxisRaw("Vertical").Equals(1f))
             {
-                promptCursor.localPosition = promptCursorPos1;
-                currentPick = 1;
-            } else if (Input.GetKeyUp(KeyCode.DownArrow) && numOfOptions >= 4)
+                promptCursor.localPosition = new Vector2(promptCursor.localPosition.x, PromptWindow.instance.promptCursor.localPosition.y + moveUnit);
+                currentPick = 2;
+                Input.ResetInputAxes();
+            } else if (Input.GetAxisRaw("Vertical").Equals(-1f) && numOfOptions >= 4)
             {
-                promptCursor.localPosition = promptCursorPos4;
+                promptCursor.localPosition = new Vector2(promptCursor.localPosition.x, PromptWindow.instance.promptCursor.localPosition.y - moveUnit);
                 currentPick = 4;
+                Input.ResetInputAxes();
             }
         }
             
         if (currentPick == 4)
         {
-            if (Input.GetKeyUp(KeyCode.UpArrow))
+            if (Input.GetAxisRaw("Vertical").Equals(1f))
             {
-                promptCursor.localPosition = promptCursorPos3;
+                promptCursor.localPosition = new Vector2(promptCursor.localPosition.x, PromptWindow.instance.promptCursor.localPosition.y + moveUnit);
                 currentPick = 3;
-            } else if (Input.GetKeyUp(KeyCode.LeftArrow))
-            {
-                promptCursor.localPosition = promptCursorPos2;
-                currentPick = 2;
-            }
+                Input.ResetInputAxes();
+            } 
         }
         
         // allow choice
-        if (Input.GetKeyUp(KeyCode.Return))
+        if (GameManager.instance.getMainFireKeyUp())
         {
-            dm.endPromptDialog();
+            PromptWindow.instance.closePromptWindow();
             promptRunning = false;
             
             // run callback 
@@ -921,7 +914,7 @@ public class EventEngine : MonoBehaviour
         
         // do not move on until an option has been chosen
         return false;
-    }*/
+    }
 
     /*private bool giveItem(string itemName)
     {
