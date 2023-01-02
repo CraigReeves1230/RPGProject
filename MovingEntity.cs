@@ -282,10 +282,15 @@ public abstract class MovingEntity : MonoBehaviour
             {
                 handleStopFollowAnimation();
             }
+            
+            // if follower gets stuck bring them back
+            if (Vector2.Distance(transform.position, followTarget.transform.position) > (followingDistance * 3f))
+            {
+                transform.position = new Vector2(followTarget.transform.position.x, followTarget.transform.position.y);
+            }
         }
     }
-   
-    
+
     void handleFollowAnimation()
     {   
         if (angle <= 45f)
