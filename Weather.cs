@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.Tilemaps;
 
 public class Weather : MonoBehaviour
@@ -7,8 +8,6 @@ public class Weather : MonoBehaviour
     public ParticleSystem rain;
     public ParticleSystem snow;
     public ParticleSystem fog;
-    public Tilemap[] tilemaps;
-    public SpriteRenderer[] spriteMaps;
     public string sceneName;
     private bool weatherSet;
     
@@ -18,6 +17,11 @@ public class Weather : MonoBehaviour
     private ParticleSystem.EmissionModule rainEmission;
     private ParticleSystem.EmissionModule snowEmission;
     private ParticleSystem.EmissionModule fogEmission;
+    
+    // get global light for darkening
+    public Light2D globalLight;
+    public float defaultLightIntensity = 1f;
+    public float darkenedLightIntensity = .25f;
     
     // rain variables
     private bool isRaining;
@@ -30,8 +34,6 @@ public class Weather : MonoBehaviour
     public bool fogByDefault;
     public bool snowByDefault;
     public bool darknessByDefault;
-
-    private SpriteRenderer[] sprites;
     
     // fog variables
     private bool isFogging;
@@ -59,7 +61,7 @@ public class Weather : MonoBehaviour
         snowRate = snowStrength;
         fogRate = fogStrength;
 
-        // set emission rates
+        // set emission
         rainEmission = rain.GetComponent<ParticleSystem>().emission;
         snowEmission = snow.GetComponent<ParticleSystem>().emission;
         fogEmission = fog.GetComponent<ParticleSystem>().emission; 
@@ -67,14 +69,6 @@ public class Weather : MonoBehaviour
         rainEmission.rateOverTime = rainRate;
         snowEmission.rateOverTime = snowRate;
         fogEmission.rateOverTime = fogRate;
-        
-        // find all sprites to darken
-        var mes = FindObjectsOfType<MovingEntity>();
-        sprites = new SpriteRenderer[mes.Length];
-        for (int i = 0; i <= mes.Length; i++)
-        {
-            sprites[i] = mes[i].GetComponent<SpriteRenderer>();
-        }
     }
 
     void FixedUpdate()
@@ -83,34 +77,18 @@ public class Weather : MonoBehaviour
         if (darkened)
         {
             var t = Time.time - startTime;
-            foreach (var tilemap in tilemaps)
+            if (globalLight.intensity > darkenedLightIntensity)
             {
-                tilemap.color = Color.Lerp(tilemap.color, Color.gray, t * darkenSpeed);
-            }
-            foreach (var sprite in sprites)
-            {
-                sprite.color = Color.Lerp(sprite.color, Color.gray, t * darkenSpeed);
-            }
-            foreach (var sprite in spriteMaps)
-            {
-                sprite.color = Color.Lerp(sprite.color, Color.gray, t * darkenSpeed);
-            }
+                globalLight.intensity = Mathf.Lerp(globalLight.intensity, darkenedLightIntensity, t * darkenSpeed);
+            }        
         }
         else
         {
             var t = Time.time - startTime;
-            foreach (var tilemap in tilemaps)
+            if (globalLight.intensity < defaultLightIntensity)
             {
-                tilemap.color = Color.Lerp(tilemap.color, Color.white, t * (darkenSpeed / 2));
-            }
-            foreach (var sprite in sprites)
-            {
-                sprite.color = Color.Lerp(sprite.color, Color.white, t * (darkenSpeed / 2));
-            }
-            foreach (var sprite in spriteMaps)
-            {
-                sprite.color = Color.Lerp(sprite.color, Color.white, t * (darkenSpeed / 2));
-            }
+                globalLight.intensity = Mathf.Lerp(globalLight.intensity, defaultLightIntensity, t * (darkenSpeed / 2));
+            } 
         }
 
         // handle beginning rain

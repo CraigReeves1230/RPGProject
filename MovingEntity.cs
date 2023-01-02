@@ -283,11 +283,32 @@ public abstract class MovingEntity : MonoBehaviour
                 handleStopFollowAnimation();
             }
             
-            // if follower gets stuck bring them back
-            if (Vector2.Distance(transform.position, followTarget.transform.position) > (followingDistance * 3f))
+            // if follower gets stuck somewhere bring them back
+            if (Vector2.Distance(transform.position, followTarget.transform.position) > (followingDistance * 2.5f))
             {
-                transform.position = new Vector2(followTarget.transform.position.x, followTarget.transform.position.y);
+                StartCoroutine(resetStuckFollower());
             }
+        }
+    }
+    
+    private IEnumerator resetStuckFollower()
+    {
+        // fade sprite out
+        while (spriteRenderer.color.a > .01)
+        {
+            spriteRenderer.color = new Color(spriteRenderer.color.r, spriteRenderer.color.g, spriteRenderer.color.b, spriteRenderer.color.a - .1f);
+            yield return new WaitForSeconds(0.2f);
+        }
+        
+        // reposition sprite
+        transform.position = new Vector2(followTarget.transform.position.x, followTarget.transform.position.y);
+        yield return new WaitForSeconds(0.2f);
+        
+        // fade sprite in
+        while (spriteRenderer.color.a <= 1)
+        {
+            spriteRenderer.color = new Color(spriteRenderer.color.r, spriteRenderer.color.g, spriteRenderer.color.b, spriteRenderer.color.a + .1f);
+            yield return new WaitForSeconds(0.2f);
         }
     }
 
