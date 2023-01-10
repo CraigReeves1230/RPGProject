@@ -40,13 +40,15 @@ public class GameManager : MonoBehaviour
 
     private bool userControl;    // does user have control of players
     
-    private ControllableEntity controlTarget;    // player or vehicle user controls on screen
+    private ControllableEntity controlTarget;    // the player or vehicle user controls on screen
 
     private bool autoReturnControl;
 
     private string nextScene;
 
     private bool positionPartyScheduled;
+
+    private bool itemDatabaseFilled;
 
     private EventSequence destroyEventSequenceScheduled;
     private EventWorker destroyEventWorkerScheduled;
@@ -61,11 +63,16 @@ public class GameManager : MonoBehaviour
     private bool nextSnow;
     private bool nextFog;
     private bool nextDarkness;
-    
+
+    // Items and inventory
+    public ItemObject[] allItems;
+    public Dictionary<string, ItemObject> itemsDatabase = new Dictionary<string, ItemObject>();
+    public InventoryObject partyInventory;
+
     // Start is called before the first frame update
     void Start()
     {
-        // game world should be a singleton
+        // game manager should be a singleton
         if (instance == null)
         {
             instance = this;
@@ -83,6 +90,11 @@ public class GameManager : MonoBehaviour
         nextAreaEntrance = null;
         userControl = true;
         
+        // intialize inventory
+        foreach (var item in allItems)
+        {
+            itemsDatabase[item.name] = item;
+        }
         
         // initialize party 
         for (int i = 0; i < party.Length; i++)
@@ -110,8 +122,7 @@ public class GameManager : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {          
-        
+    {        
         if (mapScene)
         {
             // look for bounds

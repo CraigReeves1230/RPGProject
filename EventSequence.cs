@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
@@ -438,14 +437,25 @@ public abstract class EventSequence : MonoBehaviour
         eventWorker.storeInQueue(command);
     }
 
-    protected void giveItem(string itemName)
+    protected void giveItem(string name, int amount = 1, InventoryObject inventory = null)
     {
         var command = newCom();
         command.setName("giveItem");
-        command.setStringParams(itemName);
+        command.setStringParams(name);
+        command.setIntParams(amount);
+        command.setInventoryObjectParams(inventory);
         eventWorker.storeInQueue(command);
     }
     
+    protected void takeItem(string name, int amount = 1, InventoryObject inventory = null)
+    {
+        var command = newCom();
+        command.setName("takeItem");
+        command.setStringParams(name);
+        command.setIntParams(amount);
+        command.setInventoryObjectParams(inventory);
+        eventWorker.storeInQueue(command);
+    }
 
     public void turnToFace(MovingEntity character, GameObject target)
     {
@@ -654,7 +664,7 @@ public abstract class EventSequence : MonoBehaviour
         eventWorker.storeInQueue(command);
     }
 
-    protected void fadeToScene(string sceneName, bool partOfSequence, float delayTime = 1f, float x = 0, float y = 0)
+    protected void fadeToScene(string sceneName, bool partOfSequence, float delayTime = 1f, float x = 0, float y = 0f)
     {
         fadeToBlack(delayTime);
         goToScene(sceneName, partOfSequence, x, y);

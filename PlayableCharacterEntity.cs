@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cache = UnityEngine.Cache;
 
-public class PlayableCharacterEntity : ControllableEntity
+public class PlayableCharacterEntity : ControllableEntity, IEquippable
 {    
     // character stats
     public string charName;
@@ -32,11 +32,7 @@ public class PlayableCharacterEntity : ControllableEntity
     private int currentAttackPower;
     private int currentMagicPower;
     private int currentDefense;
-    private int currentSpeed;
-    
-    // will eventually be refrences to scriptable objects
-    public string equippedWeapon;    
-    public string equippedArmr;    
+    private int currentSpeed; 
     
     // growth rates
     public float maxHPPercentGrowthRate;
@@ -45,6 +41,10 @@ public class PlayableCharacterEntity : ControllableEntity
     public float magicPowerPercentGrowthRate;
     public float defensePercentGrowthRate;
     public float speedPercentGrowthRate;
+    
+    // Equipment
+    public List<EquipmentSubType> canEquip;
+    public EquipmentOutfitObject equipmentOutfit;
 
     // handling exp
     private int currentEXP;
@@ -192,5 +192,63 @@ public class PlayableCharacterEntity : ControllableEntity
         {
             Physics2D.IgnoreCollision(gameObject.GetComponent<Collider2D>(), other.gameObject.GetComponent<Collider2D>());
         }
+    }
+
+    
+    // Equip
+    public void equip(string slotHandle, EquipmentObject item)
+    {
+        var itemIsEquippable = false;
+        
+        // determine if item can be equipped
+        if (item.equipmentSubType.Count > 0)
+        {
+            foreach (var type in canEquip)
+            {
+                if (item.equipmentSubType.Contains(type))
+                {
+                    itemIsEquippable = true;
+                    break;
+                }
+            }
+        }
+        else
+        {
+            // equipment that has no sub type is equippable by anyone
+            itemIsEquippable = true;
+        }
+
+        // do not go further if item can't be equipped
+        if (!itemIsEquippable) return;
+        
+        // add item to outfit
+        if (equipmentOutfit == null)
+        {
+            Debug.Log("ERROR: Equipment Outfit not found. To equip, entity must have an Equipment Outfit.");
+            return;
+        }
+
+        if (equipmentOutfit.addItem(item, slotHandle, this))
+        {
+            // add bonuses to player
+            currentAttackPower += item.attackBonus;
+            currentDefense += item.defenseBonus;
+            currentSpeed -= item.speedCost;
+        }   
+    }
+
+    public void unEquip(string slotHandle)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void setAttribute(string attribute, int setting)
+    {
+        throw new NotImplementedException();
+    }
+
+    public int getAttribute(string attribute)
+    {
+        throw new NotImplementedException();
     }
 }

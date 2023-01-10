@@ -383,11 +383,22 @@ public class EventEngine : MonoBehaviour
             return setSceneDefaultWeather(rain, fog, snow, darkness, sceneName);
         }
 
-        /*if (commandName == "giveItem")
+        if (commandName == "giveItem")
         {
             var itemName = command.getStringParameters()[0];
-            return giveItem(itemName);
-        }*/
+            var amountToGive = command.getIntParameters()[0];
+            var inventoryObj = command.getInventoryObjectParams()[0];
+            return giveItem(itemName, amountToGive, inventoryObj);
+        }
+        
+        if (commandName == "takeItem")
+        {
+            
+            var itemName = command.getStringParameters()[0];
+            var amountToRemove = command.getIntParameters()[0];
+            var inventoryObj = command.getInventoryObjectParams()[0];
+            return takeItem(itemName, amountToRemove, inventoryObj);
+        }
 
         return true;
     }
@@ -916,9 +927,49 @@ public class EventEngine : MonoBehaviour
         return false;
     }
 
-    /*private bool giveItem(string itemName)
+    private bool giveItem(string itemName, int amountToGive = 1, InventoryObject inventoryObj = null)
     {
-        gameWorld.giveItem(itemName);
+        var item = GameManager.instance.itemsDatabase[itemName];
+
+        if (item == null)
+        {
+            Debug.LogError("ERROR: Item " + name + "does not exist.");
+            return true;
+        }
+        
+        // by default, give to party inventory
+        if (inventoryObj == null)
+        {
+            GameManager.instance.partyInventory.addItem(item, amountToGive);
+            return true;
+        }
+        
+        // add item to inventory
+        inventoryObj.addItem(item, amountToGive);
+        
         return true;
-    }*/
+    }
+    
+    private bool takeItem(string itemName, int amountToRemove = 1, InventoryObject inventoryObj = null)
+    {
+        var item = GameManager.instance.itemsDatabase[itemName];
+
+        if (item == null)
+        {
+            Debug.LogError("ERROR: Item " + name + "does not exist.");
+            return true;
+        }
+        
+        // by default, give to party inventory
+        if (inventoryObj == null)
+        {
+            GameManager.instance.partyInventory.removeItem(item, amountToRemove);
+            return true;
+        }
+        
+        // add item to inventory
+        inventoryObj.removeItem(item, amountToRemove);
+        
+        return true;
+    }
 }

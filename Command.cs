@@ -18,6 +18,7 @@ public class Command : ScriptableObject
     private EventSequence eventSequenceParam;
     private Scene sceneParam;
     private EventSequence.PromptCallback callbackParam;
+    private InventoryObject[] inventoryObjectParams;
 
     public void setName(string inName)
     {
@@ -39,6 +40,15 @@ public class Command : ScriptableObject
         for (var i = 0; i < parameters.Length; i++)
         {
             boolParameters[i] = parameters[i];
+        }
+    }
+
+    public void setInventoryObjectParams(params InventoryObject[] parameters)
+    {
+        inventoryObjectParams = new InventoryObject[parameters.Length];
+        for (var i = 0; i < parameters.Length; i++)
+        {
+            inventoryObjectParams[i] = parameters[i];
         }
     }
 
@@ -66,6 +76,11 @@ public class Command : ScriptableObject
         sceneParam = scene;
     }
 
+    public InventoryObject[] getInventoryObjectParams()
+    {
+        return inventoryObjectParams;
+    }
+    
     public EventSequence.PromptCallback getCallbackParam()
     {
         return callbackParam;
