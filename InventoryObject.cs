@@ -86,6 +86,51 @@ public class InventoryObject : ScriptableObject
             }
         }
     }
+
+    public ItemObject getItemByHandle(string handle)
+    {
+        ItemObject foundObject = null;
+        foreach (var slot in container)
+        {
+            if (slot.item.handle == handle)
+            {
+                foundObject = slot.item;
+            }
+        }
+
+        return foundObject;
+    }
+
+    public int amountInInventory(ItemObject item)
+    {
+        int amount = 0;
+        foreach (var slot in container)
+        {
+            if (slot.item = item)
+            {
+                amount = slot.amount;
+                break;
+            }
+        }
+
+        return amount;
+    }
+    
+    public int amountEquipped(ItemObject item)
+    {
+        int amount = 0;
+        foreach (var slot in container)
+        {
+            if (slot.item = item)
+            {
+                amount = slot.equippedBy.Count;
+                break;
+            }
+        }
+
+        return amount;
+    }
+    
 }
 
 [System.Serializable]
@@ -93,12 +138,14 @@ public class InventorySlot
 {
     public ItemObject item;
     public int amount;
+    public List<EquipmentOutfitObject> equippedBy;
     
     // constructor
     public InventorySlot(ItemObject _item, int _amount)
     {
         item = _item;
         amount = _amount;
+        equippedBy = new List<EquipmentOutfitObject>();
     }
 
 }

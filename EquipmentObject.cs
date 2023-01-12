@@ -12,7 +12,6 @@ public class EquipmentObject : ItemObject
     public int attackBonus;
     public int defenseBonus;
     public int speedCost;
-    public IEquippable equippedBy;
     
     private void Awake()
     {

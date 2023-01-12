@@ -9,7 +9,8 @@ public class TestingForEquip : MonoBehaviour
 {
     public EquipmentObject itemToEquip;
     private bool inZone;
-    private PlayableCharacterEntity player;
+    public PlayableCharacterEntity baldman;
+    public PlayableCharacterEntity blondie;
     
     void Update()
     {
@@ -17,8 +18,7 @@ public class TestingForEquip : MonoBehaviour
         {
             if (GameManager.instance.getMainFireKeyUp())
             {
-                Debug.Log("fetching...");
-                player.equip("Armor", itemToEquip);
+                blondie.equip("RightHand", "Dagger");
             }
         }
     }
@@ -28,9 +28,6 @@ public class TestingForEquip : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            if (player == null)
-            player = other.gameObject.GetComponent<PlayableCharacterEntity>();
-            
             inZone = true;
         }
     }
@@ -38,10 +35,7 @@ public class TestingForEquip : MonoBehaviour
     private void OnTriggerExit2D(Collider2D  other)
     {
         if (other.gameObject.CompareTag("Player"))
-        {
-            if (player == null)
-            player = other.gameObject.GetComponent<PlayableCharacterEntity>();
-            
+        {            
             inZone = false;
         }
     }

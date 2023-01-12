@@ -196,9 +196,32 @@ public class PlayableCharacterEntity : ControllableEntity, IEquippable
 
     
     // Equip
-    public void equip(string slotHandle, EquipmentObject item)
+    public void equip(string slotHandle, string itemHandle, InventoryObject inventory = null)
     {
+        // get inventory. party inventory is default inventory
+        if (inventory == null)
+        {
+            inventory = GameManager.instance.partyInventory;
+        }
+
+        if (inventory == null)
+        {
+            Debug.Log("ERROR: Inventory not found.");
+            return;
+        }
+
+        // get item from handle in inventory
+        var item = (EquipmentObject) inventory.getItemByHandle(itemHandle);
+        
+        // check if item exists in inventory
+        if (item == null)
+        {
+            Debug.Log("ERROR: No such item: " + itemHandle + " could be found in inventory.");
+            return;
+        }
+        
         var itemIsEquippable = false;
+        
         
         // determine if item can be equipped
         if (item.equipmentSubType.Count > 0)
@@ -211,6 +234,11 @@ public class PlayableCharacterEntity : ControllableEntity, IEquippable
                     break;
                 }
             }
+
+            if (!itemIsEquippable)
+            {
+                Debug.Log("ERROR: This item isn't able to be equipped by this individual.");
+            }
         }
         else
         {
@@ -221,21 +249,38 @@ public class PlayableCharacterEntity : ControllableEntity, IEquippable
         // do not go further if item can't be equipped
         if (!itemIsEquippable) return;
         
-        // add item to outfit
+        // check if outfit is available
         if (equipmentOutfit == null)
         {
             Debug.Log("ERROR: Equipment Outfit not found. To equip, entity must have an Equipment Outfit.");
             return;
         }
-
-        if (equipmentOutfit.addItem(item, slotHandle, this))
+        
+        // check to see if slot exists and is free
+        var targetSlot = equipmentOutfit.getSlotByHandle(slotHandle);
+        if (targetSlot == null)
         {
+            Debug.Log("No slot with the handle: " + slotHandle + " could be found in the outfit.");
+            return;
+        }
+        
+        if (targetSlot.item != null)
+        {
+            Debug.Log("Slot: " + slotHandle + " is taken.");
+            return;
+        }
+
+        
+        if (equipmentOutfit.addItem(item, targetSlot, this, inventory))
+        {
+            Debug.Log("Equip Success!");
             // add bonuses to player
             currentAttackPower += item.attackBonus;
             currentDefense += item.defenseBonus;
             currentSpeed -= item.speedCost;
         }   
     }
+
 
     public void unEquip(string slotHandle)
     {

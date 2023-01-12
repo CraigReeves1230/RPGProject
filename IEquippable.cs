@@ -4,7 +4,7 @@ using UnityEngine;
 
 public interface IEquippable
 {
-    void equip(string slotHandle, EquipmentObject item);
+    void equip(string slotHandle, string itemHandle, InventoryObject inventory = null);
 
     void unEquip(string slotHandle);
 

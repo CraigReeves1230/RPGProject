@@ -6,20 +6,25 @@ public class GiveItem : EventCutscene
 {
     public ItemObject item;
     public int amount = 1;
+    public bool message = true;
     
     protected override void doCutscene()
     {
         giveItem(item.name, amount);
-        if (amount != 1)
+
+        if (message)
         {
-            msg("Received " + amount + " " + item.name);
+            if (amount != 1)
+            {
+                msg("Received " + amount + " " + item.name);
+            }
+            else
+            {
+                msg("Received " + item.name);
+            }
+            
+            wait();
+            msgCls();
         }
-        else
-        {
-            msg("Received " + item.name);
-        }
-        
-        wait();
-        msgCls();
     }
 }
