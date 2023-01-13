@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using Cache = UnityEngine.Cache;
 
@@ -282,11 +283,36 @@ public class PlayableCharacterEntity : ControllableEntity, IEquippable
     }
 
 
-    public void unEquip(string slotHandle)
+    public void unEquip(string slotHandle, InventoryObject inventory = null)
     {
-        throw new NotImplementedException();
+        if (inventory == null)
+        {
+            inventory = GameManager.instance.partyInventory;
+        }
+        
+        // find slot
+        var slot = equipmentOutfit.getSlotByHandle(slotHandle);
+
+        // check if slot is already empty
+        if (slot.item == null)
+        {
+            Debug.Log("ERROR: Slot is already empty.");
+            return;
+        }
+
+        var itemBeingRemoved = slot.item;
+        
+        // remove item from slot
+        if (equipmentOutfit.removeItem(slot, this, inventory))
+        {
+            // remove bonuses from player
+            currentAttackPower -= itemBeingRemoved.attackBonus;
+            currentDefense -= itemBeingRemoved.defenseBonus;
+            currentSpeed += itemBeingRemoved.speedCost;
+        }
     }
 
+    
     public void setAttribute(string attribute, int setting)
     {
         throw new NotImplementedException();

@@ -1,11 +1,8 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Mathematics;
-using Unity.VisualScripting;
 using UnityEngine;
 
-public class TestingForEquip : MonoBehaviour
+public class TestingUnequip : MonoBehaviour
 {
     public EquipmentObject itemToEquip;
     private bool inZone;
@@ -18,7 +15,7 @@ public class TestingForEquip : MonoBehaviour
         {
             if (GameManager.instance.getMainFireKeyUp())
             {
-                blondie.equip("RightHand", "Shotgun");
+                blondie.unEquip("RightHand");
             }
         }
     }

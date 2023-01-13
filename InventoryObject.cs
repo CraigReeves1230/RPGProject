@@ -101,6 +101,21 @@ public class InventoryObject : ScriptableObject
         return foundObject;
     }
 
+    public InventorySlot findSlot(ItemObject item)
+    {
+        InventorySlot foundSlot = null;
+        foreach (var slot in container)
+        {
+            if (slot.item == item)
+            {
+                foundSlot = slot;
+                break;
+            }
+        }
+
+        return foundSlot;
+    }
+
     public int amountInInventory(ItemObject item)
     {
         int amount = 0;

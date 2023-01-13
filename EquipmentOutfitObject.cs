@@ -113,7 +113,7 @@ public class EquipmentOutfitObject : ScriptableObject
                                 equipmentSlot.item = item;
                                 
                                 // run onEquip
-                                onEquip(item, equipTarget);
+                                onEquip(item, equipTarget, inventory);
                                                                
                                 // add to equipped
                                 invSlot.equippedBy.Add(this);                                
@@ -134,9 +134,88 @@ public class EquipmentOutfitObject : ScriptableObject
         return ableToAdd;
     }
 
-    void onEquip(EquipmentObject item, IEquippable equipTarget)
-    {
+    public bool removeItem(OutfitSlot slot, IEquippable target, InventoryObject inventory = null)
+    {        
+        // get item being removed
+        var itemBeingRemoved = slot.item;
         
+        // get inventory
+        if (inventory == null)
+        {
+            inventory = GameManager.instance.partyInventory;
+        }
+
+        if (inventory == null)
+        {
+            Debug.Log("ERROR: Inventory could not be found.");
+            return false;
+        }
+
+        if (itemBeingRemoved == null)
+        {
+            Debug.Log("ERROR: Item cannot be identified.");
+            return false;
+        }
+        
+        // find item being removed
+        var invSlot = inventory.findSlot(itemBeingRemoved);
+        if (invSlot == null)
+        {
+            Debug.Log("ERROR: Item does not exist in inventory. How was this even equipped???");
+            return false;
+        }
+        
+        
+        // remove blocked slots where item may be equipped
+        foreach (var equipmentSlot in container)
+        {
+            if (equipmentSlot.isBlocked && equipmentSlot.item == itemBeingRemoved)
+            {
+                equipmentSlot.item = null;
+                equipmentSlot.isBlocked = false;
+            }
+        }
+        
+        // remove item
+        slot.item = null;
+        
+        // remove target from the list of equippedBy for that item
+        for (int i = 0; i < invSlot.equippedBy.Count; i++)
+        {
+            if (invSlot.equippedBy[i] == this)
+            {
+                invSlot.equippedBy.RemoveAt(i);
+                break;
+            }
+        }
+        
+        // run unEquip
+        onUnEquip(itemBeingRemoved, target, inventory);
+        
+        Debug.Log("UnEquip Successful!");
+        return true;
+    }
+
+    void onEquip(EquipmentObject item, IEquippable equipTarget, InventoryObject inventory)
+    {
+        switch (item.handle)
+        {
+            case "Shotgun":
+                var player = (PlayableCharacterEntity) equipTarget;
+                player.moveSpeed = player.moveSpeed * 2;
+                break;
+        }
+    }
+    
+    void onUnEquip(EquipmentObject item, IEquippable unEquipTarget, InventoryObject inventory)
+    {
+        switch (item.handle)
+        {
+            case "Shotgun":
+                var player = (PlayableCharacterEntity) unEquipTarget;
+                player.moveSpeed = player.moveSpeed / 2;
+                break;
+        }
     }
 
     public OutfitSlot getSlotByHandle(string slotHandle)
