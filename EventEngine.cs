@@ -365,6 +365,23 @@ public class EventEngine : MonoBehaviour
             var fogIntensity = command.getFloatParameters()[1];
             return setFog(setting, fogTransitionSpeed, fogIntensity);
         }
+
+        if (commandName == "equipItem")
+        {
+            var equipTarget = command.getEquipTargetParam();
+            var slotHandle = command.getStringParameters()[0];
+            var itemHandle = command.getStringParameters()[1];
+            var inventory = command.getInventoryObjectParams()[0];
+            return equipItem(equipTarget, slotHandle, itemHandle, inventory);
+        }
+        
+        if (commandName == "unEquipItem")
+        {
+            var equipTarget = command.getEquipTargetParam();
+            var slotHandle = command.getStringParameters()[0];
+            var inventory = command.getInventoryObjectParams()[0];
+            return unEquipItem(equipTarget, slotHandle, inventory);
+        }
         
         if (commandName == "setDarkness")
         {
@@ -743,6 +760,18 @@ public class EventEngine : MonoBehaviour
         gameObject.GetComponent<MovingEntity>().setHorizontalMov(0f);
         gameObject.GetComponent<MovingEntity>().setVerticalMov(0f);
         worker.pauseNow();
+        return true;
+    }
+
+    private bool equipItem(IEquippable equipTarget, string slotHandle, string itemHandle, InventoryObject inventory)
+    {
+        equipTarget.equip(slotHandle, itemHandle, inventory);
+        return true;
+    }
+    
+    private bool unEquipItem(IEquippable equipTarget, string slotHandle, InventoryObject inventory)
+    {
+        equipTarget.unEquip(slotHandle, inventory);
         return true;
     }
 

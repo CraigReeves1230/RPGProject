@@ -5,38 +5,13 @@ using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class TestingForEquip : MonoBehaviour
+public class TestingForEquip : EventCutscene
 {
-    public EquipmentObject itemToEquip;
-    private bool inZone;
-    public PlayableCharacterEntity baldman;
-    public PlayableCharacterEntity blondie;
-    
-    void Update()
+    protected override void doCutscene()
     {
-        if (inZone)
-        {
-            if (GameManager.instance.getMainFireKeyUp())
-            {
-                blondie.equip("RightHand", "Shotgun");
-            }
-        }
-    }
-
-
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.gameObject.CompareTag("Player"))
-        {
-            inZone = true;
-        }
-    }
-
-    private void OnTriggerExit2D(Collider2D  other)
-    {
-        if (other.gameObject.CompareTag("Player"))
-        {            
-            inZone = false;
-        }
+        msg(":name Blondie :face 1", "Let's equip!");
+        wait();
+        msgCls();
+        equipItem(GameManager.instance.partyLead(), "RightHand", "Dagger");
     }
 }

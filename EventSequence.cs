@@ -457,6 +457,26 @@ public abstract class EventSequence : MonoBehaviour
         eventWorker.storeInQueue(command);
     }
 
+    protected void equipItem(IEquippable target, string slotHandle, string itemHandle, InventoryObject inventory = null)
+    {
+        var command = newCom();
+        command.setName("equipItem");
+        command.setEquipTargetParam(target);
+        command.setStringParams(slotHandle, itemHandle);
+        command.setInventoryObjectParams(inventory);
+        eventWorker.storeInQueue(command);
+    }
+    
+    protected void unEquipItem(IEquippable target, string slotHandle, InventoryObject inventory = null)
+    {
+        var command = newCom();
+        command.setName("unEquipItem");
+        command.setEquipTargetParam(target);
+        command.setStringParams(slotHandle);
+        command.setInventoryObjectParams(inventory);
+        eventWorker.storeInQueue(command);
+    }
+
     public void turnToFace(MovingEntity character, GameObject target)
     {
         var command = newCom();

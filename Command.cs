@@ -19,6 +19,7 @@ public class Command : ScriptableObject
     private Scene sceneParam;
     private EventSequence.PromptCallback callbackParam;
     private InventoryObject[] inventoryObjectParams;
+    private IEquippable equipTargetParam;
 
     public void setName(string inName)
     {
@@ -59,6 +60,16 @@ public class Command : ScriptableObject
         {
             playerParameters[i] = parameters[i];
         }
+    }
+
+    public void setEquipTargetParam(IEquippable target)
+    {
+        equipTargetParam = target;
+    }
+    
+    public IEquippable getEquipTargetParam()
+    {
+        return equipTargetParam;
     }
 
     public MovingEntity[] getPlayerParams()

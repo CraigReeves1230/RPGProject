@@ -198,24 +198,12 @@ public class EquipmentOutfitObject : ScriptableObject
 
     void onEquip(EquipmentObject item, IEquippable equipTarget, InventoryObject inventory)
     {
-        switch (item.handle)
-        {
-            case "Shotgun":
-                var player = (PlayableCharacterEntity) equipTarget;
-                player.moveSpeed = player.moveSpeed * 2;
-                break;
-        }
+        
     }
     
     void onUnEquip(EquipmentObject item, IEquippable unEquipTarget, InventoryObject inventory)
     {
-        switch (item.handle)
-        {
-            case "Shotgun":
-                var player = (PlayableCharacterEntity) unEquipTarget;
-                player.moveSpeed = player.moveSpeed / 2;
-                break;
-        }
+        
     }
 
     public OutfitSlot getSlotByHandle(string slotHandle)
