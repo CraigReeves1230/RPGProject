@@ -60,13 +60,14 @@ public class DialogManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
-
+        
         // typing speed
         waitTime = 0.02f;
         
         // have inactive by default
         nameBox.SetActive(false);
         faceBox.SetActive(false);
+       
 
         // get animator component and initialize
         anim = GetComponent<Animator>();
@@ -91,6 +92,16 @@ public class DialogManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // get faces
+        if (GameManager.instance.getIfUsingFaces())
+        {
+            if (faces.Length < 1)
+            {
+                faces = GameManager.instance.getFaces();
+            }
+        }
+        
+        
         // in traditional display mode, if user hits fire again, quit typing and just show the line
         if (displayStyle == DisplayStyleOptions.Traditional)
         {
@@ -237,7 +248,7 @@ public class DialogManager : MonoBehaviour
                         var next=  int.Parse(lineExplode[i + 1]);
                         if (faces.Length < 1 || faces[next] == null)
                         {
-                            GameManager.instance.errorMsg("Face image not found. Make sure face is added to the Dialog Manager or that it is accessible.");
+                            GameManager.instance.errorMsg("Face image not found. Make sure face is added to the Game Database or that it is accessible.");
                         }
                         else
                         {
@@ -267,9 +278,4 @@ public class DialogManager : MonoBehaviour
         faceBox.SetActive(false);
         dialogOpen = false;
     }
-    
-   
-
-    // getting and setters
-    public bool getIsTyping() => typing;
 }

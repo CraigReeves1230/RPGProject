@@ -16,14 +16,20 @@ public class GameManager : MonoBehaviour
     private Vector2 camBottomLeftLimit;
     private Vector2 camTopRightLimit;
 
-    public int maxLevel = 99;
+    public GameData gameDatabase;
+    
+    [System.NonSerialized]
+    public int maxLevel;
+    
     public bool mapScene = true;
 
     private ControllableEntity lastControlled;
 
     public PlayableCharacterEntity[] party;
     
-    public int followLeaderLimit = 2;
+    [System.NonSerialized]
+    public int followLeaderLimit = 3;
+    
     private bool redoFollowTheLeaderScheduled;
     private bool returnControlScheduled;
     
@@ -46,6 +52,8 @@ public class GameManager : MonoBehaviour
 
     private string nextScene;
 
+    private bool usesFaces = true;
+
     private bool positionPartyScheduled;
 
     private bool itemDatabaseFilled;
@@ -58,6 +66,8 @@ public class GameManager : MonoBehaviour
     private Vector2 nextPosition;
     private string nextSceneToLoad;
     private bool fadeInScheduled;
+
+    private Sprite[] faces;    // message window faces
     
     private bool nextRain;
     private bool nextSnow;
@@ -65,8 +75,9 @@ public class GameManager : MonoBehaviour
     private bool nextDarkness;
 
     // Items and inventory
-    public ItemObject[] allItems;
     public Dictionary<string, ItemObject> itemsDatabase = new Dictionary<string, ItemObject>();
+    
+    [System.NonSerialized]
     public InventoryObject partyInventory;
 
     // Start is called before the first frame update
@@ -89,12 +100,24 @@ public class GameManager : MonoBehaviour
         exitsEnabled = true;
         nextAreaEntrance = null;
         userControl = true;
+        maxLevel = gameDatabase.maxLevel;
         
         // intialize inventory
-        foreach (var item in allItems)
+        partyInventory = gameDatabase.defaultInventory;
+        foreach (var item in gameDatabase.allItems)
         {
             itemsDatabase[item.name] = item;
         }
+        
+        // add main currency
+        if (gameDatabase.mainCurrency != null)
+        {
+            itemsDatabase[gameDatabase.mainCurrency.name] = gameDatabase.mainCurrency;
+        }
+        
+        // message window faces
+        faces = gameDatabase.faces;
+        usesFaces = faces.Length > 0;
         
         // initialize party 
         for (int i = 0; i < party.Length; i++)
@@ -329,6 +352,7 @@ public class GameManager : MonoBehaviour
     // getters and setters
 
     public bool getIsEventSequenceRunning() => eventSequenceRunning;
+    public bool getIfUsingFaces() => usesFaces;
     public void setIsEventSequenceRunning(bool setting) => eventSequenceRunning = setting;
     public bool getAutoReturnControl() => autoReturnControl;
     public void setAutoReturnControl(bool setting) => autoReturnControl = setting;
@@ -338,6 +362,7 @@ public class GameManager : MonoBehaviour
     public void setNextScene(string scn) => nextScene = scn;
     public void scheduleFadeIn() => fadeInScheduled = true;
     public bool hasControl() => userControl;
+    public Sprite[] getFaces() => faces;
     
     public bool isControlTarget(ControllableEntity entity) => entity == controlTarget;
     public bool isControlTarget(GameObject entityObj) => entityObj == controlTarget.gameObject;

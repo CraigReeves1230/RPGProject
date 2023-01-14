@@ -11,9 +11,8 @@ public class SampleNPCDialog : NPCDialog
         wait();
         msg("Have a nice day!");
         wait();
+        msg(":name Baldman :face 0", "You too, sir!");
+        wait();
         msgCls();
     }
-
-    
-    
 }
