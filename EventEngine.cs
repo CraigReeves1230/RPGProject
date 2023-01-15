@@ -134,6 +134,26 @@ public class EventEngine : MonoBehaviour
             return remoteRunSeq(eventSequence);
         }
 
+        if (commandName == "addGameWorldVariable")
+        {
+            var _name = command.getStringParameters()[0];
+            var _value = command.getIntParameters()[0];
+            return addGameWorldVariable(_name, _value);
+        }
+        
+        if (commandName == "removeGameWorldVariable")
+        {
+            var _name = command.getStringParameters()[0];
+            return removeGameWorldVariable(_name);
+        }
+        
+        if (commandName == "setGameWorldVariable")
+        {
+            var _name = command.getStringParameters()[0];
+            var _value = command.getIntParameters()[0];
+            return setGameWorldVariable(_name, _value);
+        }
+        
         if (commandName == "msg")
         {   
             var lines = command.getStringParameters();
@@ -821,6 +841,24 @@ public class EventEngine : MonoBehaviour
         }
         
         GameManager.instance.GoToScene(sceneName, x, y, partOfSequence, es, ew);
+        return true;
+    }
+
+    private bool addGameWorldVariable(string _name, int _val)
+    {
+        GameManager.instance.addGameWorldVariable(_name, _val);
+        return true;
+    }
+
+    private bool setGameWorldVariable(string _name, int _value)
+    {
+        GameManager.instance.gameWorldVariableValue(_name, _value);
+        return true;
+    }
+    
+    private bool removeGameWorldVariable(string _name)
+    {
+        GameManager.instance.removeGameWorldVariable(_name);
         return true;
     }
 

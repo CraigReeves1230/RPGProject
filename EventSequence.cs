@@ -477,6 +477,37 @@ public abstract class EventSequence : MonoBehaviour
         eventWorker.storeInQueue(command);
     }
 
+    public void addGameWorldVar(string name, int value)
+    {
+        var command = newCom();
+        command.setName("addGameWorldVariable");
+        command.setStringParams(name);
+        command.setIntParams(value);
+        eventWorker.storeInQueue(command);
+    }
+    
+    public int getGameWorldVar(string name)
+    {
+        return GameManager.instance.gameWorldVariableValue(name);
+    }
+    
+    public void setGameWorldVar(string name, int value)
+    {
+        var command = newCom();
+        command.setName("setGameWorldVariable");
+        command.setStringParams(name);
+        command.setIntParams(value);
+        eventWorker.storeInQueue(command);
+    }
+    
+    public void removeGameWorldVar(string name)
+    {
+        var command = newCom();
+        command.setName("removeGameWorldVariable");
+        command.setStringParams(name);
+        eventWorker.storeInQueue(command);
+    }
+    
     public void turnToFace(MovingEntity character, GameObject target)
     {
         var command = newCom();

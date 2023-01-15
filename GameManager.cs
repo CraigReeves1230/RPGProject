@@ -139,6 +139,12 @@ public class GameManager : MonoBehaviour
         // weather overrides
         weatherOverrides = new Dictionary<string, bool[]>();
         
+        // hydrate game variable dictionary
+        for (int i = 0; i < gameDatabase.gameWorldVariables.Count; i++)
+        {
+            gameDatabase.gameWorldVariableIndices[gameDatabase.gameWorldVariables[i].name] = i;
+        }
+        
         // initialize follow the leader
         initializeFollowTheLeader();
     }
@@ -347,6 +353,42 @@ public class GameManager : MonoBehaviour
         }
         
         nextScene = sceneName;
+    }
+
+    public void addGameWorldVariable(string _name, int _value)
+    {
+        if (gameDatabase == null)
+        {
+            Debug.Log("Game database not found.");
+            return;
+        }
+        gameDatabase.addGameWorldVariable(_name, _value);
+    }
+    
+    public int gameWorldVariableValue(string _name)
+    {
+        if (gameDatabase == null)
+        {
+            Debug.Log("Game database not found.");
+            return 0;
+        }
+        return gameDatabase.gameWorldVariableValue(_name);
+    }
+    
+    public void gameWorldVariableValue(string _name, int _value)
+    {
+        gameDatabase.gameWorldVariableValue(_name, _value);
+    }
+    
+    
+    public void removeGameWorldVariable(string _name)
+    {
+        if (gameDatabase == null)
+        {
+            Debug.Log("Game database not found.");
+            return;
+        }
+        gameDatabase.removeGameWorldVariable(_name);
     }
 
     // getters and setters

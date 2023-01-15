@@ -33,7 +33,7 @@ public class DialogManager : MonoBehaviour
         Traditional
     }
 
-    public DisplayStyleOptions displayStyle;
+    private DisplayStyleOptions displayStyle;
 
     // dialog box positions
     private float dialogDownPosition;
@@ -81,6 +81,9 @@ public class DialogManager : MonoBehaviour
 
         // dialog is closed by default
         dialogOpen = false;
+        
+        // get display style
+        displayStyle = GameManager.instance.gameDatabase.messageWindowStyle;
         
         // up position
         dialogUpPosition = dialogDownPosition * 4.57f;
@@ -245,16 +248,24 @@ public class DialogManager : MonoBehaviour
                         }           
                         break;
                     case ":face":
-                        var next=  int.Parse(lineExplode[i + 1]);
-                        if (faces.Length < 1 || faces[next] == null)
+                        if (string.Equals(lineExplode[i + 1], "none", StringComparison.OrdinalIgnoreCase))
                         {
-                            GameManager.instance.errorMsg("Face image not found. Make sure face is added to the Game Database or that it is accessible.");
+                            faceBox.SetActive(false);
                         }
                         else
                         {
-                            faceBox.SetActive(true);
-                            faceBoxImage.sprite = faces[next];
+                            var next = int.Parse(lineExplode[i + 1]);
+                            if (faces.Length < 1 || faces[next] == null)
+                            {
+                                GameManager.instance.errorMsg("Face image not found. Make sure face is added to the Game Database or that it is accessible.");
+                            }
+                            else
+                            {
+                                faceBox.SetActive(true);
+                                faceBoxImage.sprite = faces[next];
+                            } 
                         }
+                             
                         break;
                     case ":close":
                         closeDialog();
