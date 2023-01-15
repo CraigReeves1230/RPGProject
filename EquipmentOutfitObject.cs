@@ -15,7 +15,7 @@ public class EquipmentOutfitObject : ScriptableObject
     {
         // the inventory is the party inventory by default
         if (inventory == null)
-            inventory = GameManager.instance.partyInventory;
+            inventory = GameManager.instance.gameDatabase.defaultInventory;
         
         var ableToAdd = false;
         
@@ -142,7 +142,7 @@ public class EquipmentOutfitObject : ScriptableObject
         // get inventory
         if (inventory == null)
         {
-            inventory = GameManager.instance.partyInventory;
+            inventory = GameManager.instance.gameDatabase.defaultInventory;
         }
 
         if (inventory == null)

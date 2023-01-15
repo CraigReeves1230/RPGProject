@@ -70,9 +70,6 @@ public class GameManager : MonoBehaviour
 
     // Items and inventory
     public Dictionary<string, ItemObject> itemsDatabase = new Dictionary<string, ItemObject>();
-    
-    [System.NonSerialized]
-    public InventoryObject partyInventory;
 
     // Start is called before the first frame update
     void Start()
@@ -95,8 +92,7 @@ public class GameManager : MonoBehaviour
         nextAreaEntrance = null;
         userControl = true;
         
-        // intialize inventory
-        partyInventory = gameDatabase.defaultInventory;
+        // intialize in-game inventory dictionary
         foreach (var item in gameDatabase.allItems)
         {
             itemsDatabase[item.name] = item;

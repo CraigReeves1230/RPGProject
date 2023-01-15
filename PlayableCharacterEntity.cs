@@ -202,7 +202,7 @@ public class PlayableCharacterEntity : ControllableEntity, IEquippable
         // get inventory. party inventory is default inventory
         if (inventory == null)
         {
-            inventory = GameManager.instance.partyInventory;
+            inventory = GameManager.instance.gameDatabase.defaultInventory;
         }
 
         if (inventory == null)
@@ -287,7 +287,7 @@ public class PlayableCharacterEntity : ControllableEntity, IEquippable
     {
         if (inventory == null)
         {
-            inventory = GameManager.instance.partyInventory;
+            inventory = GameManager.instance.gameDatabase.defaultInventory;
         }
         
         // find slot

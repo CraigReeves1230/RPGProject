@@ -1007,7 +1007,7 @@ public class EventEngine : MonoBehaviour
         // by default, give to party inventory
         if (inventoryObj == null)
         {
-            GameManager.instance.partyInventory.addItem(item, amountToGive);
+            GameManager.instance.gameDatabase.defaultInventory.addItem(item, amountToGive);
             return true;
         }
         
@@ -1030,7 +1030,7 @@ public class EventEngine : MonoBehaviour
         // by default, give to party inventory
         if (inventoryObj == null)
         {
-            GameManager.instance.partyInventory.removeItem(item, amountToRemove);
+            GameManager.instance.gameDatabase.defaultInventory.removeItem(item, amountToRemove);
             return true;
         }
         
