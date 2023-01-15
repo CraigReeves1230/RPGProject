@@ -488,7 +488,7 @@ public abstract class EventSequence : MonoBehaviour
     
     public int getGameWorldVar(string name)
     {
-        return GameManager.instance.gameWorldVariableValue(name);
+        return GameManager.instance.gameDatabase.gameWorldVariableValue(name);
     }
     
     public void setGameWorldVar(string name, int value)

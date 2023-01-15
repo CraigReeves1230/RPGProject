@@ -6,6 +6,8 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
+    public GameData gameDatabase;
+    
     private string nextAreaEntrance;
     private bool exitsEnabled;
     
@@ -16,10 +18,6 @@ public class GameManager : MonoBehaviour
     private Vector2 camBottomLeftLimit;
     private Vector2 camTopRightLimit;
 
-    public GameData gameDatabase;
-    
-    [System.NonSerialized]
-    public int maxLevel;
     
     public bool mapScene = true;
 
@@ -52,8 +50,6 @@ public class GameManager : MonoBehaviour
 
     private string nextScene;
 
-    private bool usesFaces = true;
-
     private bool positionPartyScheduled;
 
     private bool itemDatabaseFilled;
@@ -66,8 +62,6 @@ public class GameManager : MonoBehaviour
     private Vector2 nextPosition;
     private string nextSceneToLoad;
     private bool fadeInScheduled;
-
-    private Sprite[] faces;    // message window faces
     
     private bool nextRain;
     private bool nextSnow;
@@ -100,7 +94,6 @@ public class GameManager : MonoBehaviour
         exitsEnabled = true;
         nextAreaEntrance = null;
         userControl = true;
-        maxLevel = gameDatabase.maxLevel;
         
         // intialize inventory
         partyInventory = gameDatabase.defaultInventory;
@@ -114,10 +107,7 @@ public class GameManager : MonoBehaviour
         {
             itemsDatabase[gameDatabase.mainCurrency.name] = gameDatabase.mainCurrency;
         }
-        
-        // message window faces
-        faces = gameDatabase.faces;
-        usesFaces = faces.Length > 0;
+                
         
         // initialize party 
         for (int i = 0; i < party.Length; i++)
@@ -165,6 +155,7 @@ public class GameManager : MonoBehaviour
                 errorMsg("Error: Top right marker is missing.");
             }
 
+            // Make sure party is loaded
             if (!isParty)
             {
                 errorMsg("Error: No party leader. Add party members in Game Manager.");
@@ -216,7 +207,7 @@ public class GameManager : MonoBehaviour
                 nextScene = null;
             }
             
-            // if this event was triggered from another scene, destroy it in the current scene once it's done
+            // if an event was triggered from another scene, destroy it in the current scene once it's completed
             if (destroyEventSequenceScheduled != null)
             {
                 if (destroyEventWorkerScheduled.numberOfEventsInQueue() < 1)
@@ -227,7 +218,7 @@ public class GameManager : MonoBehaviour
                 }
             }
 
-            // manage fade in
+            // manage fading in
             if (fadeInScheduled)
             {
                 UIFade.instance.FadeFromBlack();
@@ -355,46 +346,10 @@ public class GameManager : MonoBehaviour
         nextScene = sceneName;
     }
 
-    public void addGameWorldVariable(string _name, int _value)
-    {
-        if (gameDatabase == null)
-        {
-            Debug.Log("Game database not found.");
-            return;
-        }
-        gameDatabase.addGameWorldVariable(_name, _value);
-    }
     
-    public int gameWorldVariableValue(string _name)
-    {
-        if (gameDatabase == null)
-        {
-            Debug.Log("Game database not found.");
-            return 0;
-        }
-        return gameDatabase.gameWorldVariableValue(_name);
-    }
-    
-    public void gameWorldVariableValue(string _name, int _value)
-    {
-        gameDatabase.gameWorldVariableValue(_name, _value);
-    }
-    
-    
-    public void removeGameWorldVariable(string _name)
-    {
-        if (gameDatabase == null)
-        {
-            Debug.Log("Game database not found.");
-            return;
-        }
-        gameDatabase.removeGameWorldVariable(_name);
-    }
-
     // getters and setters
 
     public bool getIsEventSequenceRunning() => eventSequenceRunning;
-    public bool getIfUsingFaces() => usesFaces;
     public void setIsEventSequenceRunning(bool setting) => eventSequenceRunning = setting;
     public bool getAutoReturnControl() => autoReturnControl;
     public void setAutoReturnControl(bool setting) => autoReturnControl = setting;
@@ -404,7 +359,6 @@ public class GameManager : MonoBehaviour
     public void setNextScene(string scn) => nextScene = scn;
     public void scheduleFadeIn() => fadeInScheduled = true;
     public bool hasControl() => userControl;
-    public Sprite[] getFaces() => faces;
     
     public bool isControlTarget(ControllableEntity entity) => entity == controlTarget;
     public bool isControlTarget(GameObject entityObj) => entityObj == controlTarget.gameObject;

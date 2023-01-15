@@ -20,8 +20,6 @@ public class DialogManager : MonoBehaviour
 
     private bool dialogOpen;
 
-    public Sprite[] faces;
-
     private string[] dialogLines;
 
     private int currentLine;
@@ -95,15 +93,6 @@ public class DialogManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // get faces
-        if (GameManager.instance.getIfUsingFaces())
-        {
-            if (faces.Length < 1)
-            {
-                faces = GameManager.instance.getFaces();
-            }
-        }
-        
         
         // in traditional display mode, if user hits fire again, quit typing and just show the line
         if (displayStyle == DisplayStyleOptions.Traditional)
@@ -225,6 +214,8 @@ public class DialogManager : MonoBehaviour
         // if there are special commands, treat as a command line
         if (specialCommands)
         {
+            var faces = GameManager.instance.gameDatabase.faces;
+            
             var lineExplode = dialogLines[currentLine].Split(" ");
             for (int i = 0; i < lineExplode.Length; i++) 
             {

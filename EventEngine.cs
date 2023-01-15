@@ -846,19 +846,19 @@ public class EventEngine : MonoBehaviour
 
     private bool addGameWorldVariable(string _name, int _val)
     {
-        GameManager.instance.addGameWorldVariable(_name, _val);
+        GameManager.instance.gameDatabase.addGameWorldVariable(_name, _val);
         return true;
     }
 
     private bool setGameWorldVariable(string _name, int _value)
     {
-        GameManager.instance.gameWorldVariableValue(_name, _value);
+        GameManager.instance.gameDatabase.gameWorldVariableValue(_name, _value);
         return true;
     }
     
     private bool removeGameWorldVariable(string _name)
     {
-        GameManager.instance.removeGameWorldVariable(_name);
+        GameManager.instance.gameDatabase.removeGameWorldVariable(_name);
         return true;
     }
 

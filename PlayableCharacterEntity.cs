@@ -67,8 +67,8 @@ public class PlayableCharacterEntity : ControllableEntity, IEquippable
     {
         DontDestroyOnLoad(gameObject);
         
-        // get max level determined by game manager
-        maxLevel = GameManager.instance.maxLevel == 0 ? 99 : GameManager.instance.maxLevel;
+        // get max level determined by game database
+        maxLevel = GameManager.instance.gameDatabase.maxLevel == 0 ? 99 : GameManager.instance.gameDatabase.maxLevel;
         
         // calculate exp to next level for each level
         expToNextLevel = new int[maxLevel];

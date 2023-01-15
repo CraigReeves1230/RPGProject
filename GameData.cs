@@ -3,20 +3,26 @@ using System.Collections.Generic;
 using Mono.CompilerServices.SymbolWriter;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 using UnityEngine.UIElements;
 
 [CreateAssetMenu(fileName = "New Game Database", menuName = "Game Database")]
 public class GameData : ScriptableObject
 {    
-    public Sprite[] faces;
-    public CurrencyObject mainCurrency;
-    public ItemObject[] allItems;    
-    public int maxLevel = 99;
+    [Header("Message Window")]
     public DialogManager.DisplayStyleOptions messageWindowStyle;
+    public Sprite[] faces;
+    
+    [Header("Items, Inventory and Currency")]
+    public CurrencyObject mainCurrency;
     public InventoryObject defaultInventory;
+    public ItemObject[] allItems;   
+    
+    [Header("Game World")]
+    public int maxLevel = 99;
     public List<gameWorldVariable> gameWorldVariables;
     public Dictionary<string, int> gameWorldVariableIndices = new Dictionary<string, int>();
-
+    
     
     public void addGameWorldVariable(string _name, int _value)
     {
