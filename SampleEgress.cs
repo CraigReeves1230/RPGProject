@@ -10,7 +10,7 @@ public class SampleEgress : EventCutscene
         var blondie = GameManager.instance.partyLead();
         var baldman = GameManager.instance.party[1];
 
-        switch (getGameWorldVar("sampleEgress"))
+        switch (getGameWorldInt("sampleEgress"))
         {
             case 0:
                 stopAllFollowing();
@@ -50,7 +50,7 @@ public class SampleEgress : EventCutscene
                 msg(":name Blondie :face 1", "Alright, Baldman, I'm glad to see you're back in good spirits, but let's try to remember the mission.");
                 wait();
                 msgCls();
-                setGameWorldVar("sampleEgress", 1);
+                setGameWorldInt("sampleEgress", 1);
                 followTheLeader(false);
                 break;
             

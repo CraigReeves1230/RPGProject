@@ -477,33 +477,33 @@ public abstract class EventSequence : MonoBehaviour
         eventWorker.storeInQueue(command);
     }
 
-    public void addGameWorldVar(string name, int value)
+    public void addGameWorldInt(string name, int value)
     {
         var command = newCom();
-        command.setName("addGameWorldVariable");
+        command.setName("addGameWorldInteger");
         command.setStringParams(name);
         command.setIntParams(value);
         eventWorker.storeInQueue(command);
     }
     
-    public int getGameWorldVar(string name)
+    public int getGameWorldInt(string name)
     {
-        return GameManager.instance.gameDatabase.gameWorldVariableValue(name);
+        return GameManager.instance.gameDatabase.GameWorldIntegerValue(name);
     }
     
-    public void setGameWorldVar(string name, int value)
+    public void setGameWorldInt(string name, int value)
     {
         var command = newCom();
-        command.setName("setGameWorldVariable");
+        command.setName("setGameWorldInteger");
         command.setStringParams(name);
         command.setIntParams(value);
         eventWorker.storeInQueue(command);
     }
     
-    public void removeGameWorldVar(string name)
+    public void removeGameWorldInt(string name)
     {
         var command = newCom();
-        command.setName("removeGameWorldVariable");
+        command.setName("removeGameWorldInteger");
         command.setStringParams(name);
         eventWorker.storeInQueue(command);
     }

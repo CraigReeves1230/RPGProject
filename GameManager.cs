@@ -126,9 +126,9 @@ public class GameManager : MonoBehaviour
         weatherOverrides = new Dictionary<string, bool[]>();
         
         // hydrate game variable dictionary
-        for (int i = 0; i < gameDatabase.gameWorldVariables.Count; i++)
+        for (int i = 0; i < gameDatabase.GameWorldIntegers.Count; i++)
         {
-            gameDatabase.gameWorldVariableIndices[gameDatabase.gameWorldVariables[i].name] = i;
+            gameDatabase.GameWorldIntegerIndices[gameDatabase.GameWorldIntegers[i].name] = i;
         }
         
         // initialize follow the leader

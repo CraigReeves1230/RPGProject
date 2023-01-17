@@ -20,41 +20,41 @@ public class GameData : ScriptableObject
     
     [Header("Game World")]
     public int maxLevel = 99;
-    public List<gameWorldVariable> gameWorldVariables;
-    public Dictionary<string, int> gameWorldVariableIndices = new Dictionary<string, int>();
+    public List<GameWorldInteger> GameWorldIntegers;
+    public Dictionary<string, int> GameWorldIntegerIndices = new Dictionary<string, int>();
     
     
-    public void addGameWorldVariable(string _name, int _value)
+    public void addGameWorldInteger(string _name, int _value)
     {
         // if game variable already exists, change existing value
-        if (gameWorldVariableIndices.ContainsKey(_name))
+        if (GameWorldIntegerIndices.ContainsKey(_name))
         {
-            var i = gameWorldVariableIndices[_name];
-            gameWorldVariables[i].value = _value;
+            var i = GameWorldIntegerIndices[_name];
+            GameWorldIntegers[i].value = _value;
             return;
         }
         
-        var newVar = new gameWorldVariable(_name, _value);
-        var currIndex = gameWorldVariables.Count < 1 ? 0 : gameWorldVariables.Count;
+        var newVar = new GameWorldInteger(_name, _value);
+        var currIndex = GameWorldIntegers.Count < 1 ? 0 : GameWorldIntegers.Count;
         Debug.Log("Current Index: " + currIndex);
-        gameWorldVariables.Add(newVar);
-        gameWorldVariableIndices.Add(_name, currIndex);
+        GameWorldIntegers.Add(newVar);
+        GameWorldIntegerIndices.Add(_name, currIndex);
     }
     
-    public void removeGameWorldVariable(string _name)
+    public void removeGameWorldInteger(string _name)
     {
-        var gameVariableIdx = gameWorldVariableIndices[_name];
-        gameWorldVariables.RemoveAt(gameVariableIdx);
-        gameWorldVariableIndices.Remove(_name);
+        var gameVariableIdx = GameWorldIntegerIndices[_name];
+        GameWorldIntegers.RemoveAt(gameVariableIdx);
+        GameWorldIntegerIndices.Remove(_name);
     }
 
-    public int gameWorldVariableValue(string _name)
+    public int GameWorldIntegerValue(string _name)
     {
         // if game variable doesn't exist, return 0
-        if (!gameWorldVariableIndices.ContainsKey(_name)) return 0;
+        if (!GameWorldIntegerIndices.ContainsKey(_name)) return 0;
         
-        var gameVariableIdx = gameWorldVariableIndices[_name];
-        var theGameVar = gameWorldVariables[gameVariableIdx];
+        var gameVariableIdx = GameWorldIntegerIndices[_name];
+        var theGameVar = GameWorldIntegers[gameVariableIdx];
 
         if (theGameVar == null)
         {
@@ -64,30 +64,30 @@ public class GameData : ScriptableObject
         return theGameVar.value;
     }
     
-    public void gameWorldVariableValue(string _name, int _value)
+    public void GameWorldIntegerValue(string _name, int _value)
     {
         // if variable doesn't exist, create it
-        if (!gameWorldVariableIndices.ContainsKey(_name))
+        if (!GameWorldIntegerIndices.ContainsKey(_name))
         {
-            addGameWorldVariable(_name, _value);
+            addGameWorldInteger(_name, _value);
             return;
         }
         
-        var gameWorldVarIdx = gameWorldVariableIndices[_name];
+        var gameWorldVarIdx = GameWorldIntegerIndices[_name];
 
-        gameWorldVariables[gameWorldVarIdx].value = _value;
+        GameWorldIntegers[gameWorldVarIdx].value = _value;
     }
     
 }
 
 [System.Serializable]
-public class gameWorldVariable
+public class GameWorldInteger
 {
     public string name;
     public int value;
 
     // constructor
-    public gameWorldVariable(string _name, int _value)
+    public GameWorldInteger(string _name, int _value)
     {
         name = _name;
         value = _value;

@@ -134,24 +134,24 @@ public class EventEngine : MonoBehaviour
             return remoteRunSeq(eventSequence);
         }
 
-        if (commandName == "addGameWorldVariable")
+        if (commandName == "addGameWorldInteger")
         {
             var _name = command.getStringParameters()[0];
             var _value = command.getIntParameters()[0];
-            return addGameWorldVariable(_name, _value);
+            return addGameWorldInteger(_name, _value);
         }
         
-        if (commandName == "removeGameWorldVariable")
+        if (commandName == "removeGameWorldInteger")
         {
             var _name = command.getStringParameters()[0];
-            return removeGameWorldVariable(_name);
+            return removeGameWorldInteger(_name);
         }
         
-        if (commandName == "setGameWorldVariable")
+        if (commandName == "setGameWorldInteger")
         {
             var _name = command.getStringParameters()[0];
             var _value = command.getIntParameters()[0];
-            return setGameWorldVariable(_name, _value);
+            return setGameWorldInteger(_name, _value);
         }
         
         if (commandName == "msg")
@@ -844,21 +844,21 @@ public class EventEngine : MonoBehaviour
         return true;
     }
 
-    private bool addGameWorldVariable(string _name, int _val)
+    private bool addGameWorldInteger(string _name, int _val)
     {
-        GameManager.instance.gameDatabase.addGameWorldVariable(_name, _val);
+        GameManager.instance.gameDatabase.addGameWorldInteger(_name, _val);
         return true;
     }
 
-    private bool setGameWorldVariable(string _name, int _value)
+    private bool setGameWorldInteger(string _name, int _value)
     {
-        GameManager.instance.gameDatabase.gameWorldVariableValue(_name, _value);
+        GameManager.instance.gameDatabase.GameWorldIntegerValue(_name, _value);
         return true;
     }
     
-    private bool removeGameWorldVariable(string _name)
+    private bool removeGameWorldInteger(string _name)
     {
-        GameManager.instance.gameDatabase.removeGameWorldVariable(_name);
+        GameManager.instance.gameDatabase.removeGameWorldInteger(_name);
         return true;
     }
 
