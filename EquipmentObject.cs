@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "New Equipment", menuName = "Inventory System/Items/Equipment")]
@@ -23,5 +24,6 @@ public class EquipmentObject : ItemObject
         }
 
         numberOfSlotsFilled = 1;
+        GameManager.instance.gameDatabase.allItems.Add(this);
     }
 }

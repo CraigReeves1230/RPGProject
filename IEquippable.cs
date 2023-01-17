@@ -4,10 +4,7 @@ using UnityEngine;
 
 public interface IEquippable
 {
-    void equip(string slotHandle, string itemHandle, InventoryObject inventory = null);
+    void equip(string slotHandle, string itemHandle, InventoryObject inventory = null, bool forRefresh = false);
 
-    void unEquip(string slotHandle, InventoryObject inventory = null);
-
-    void setAttribute(string attribute, int setting);
-    int getAttribute(string attribute);
+    void unEquip(string slotHandle, InventoryObject inventory = null, bool forRefresh = false);
 }

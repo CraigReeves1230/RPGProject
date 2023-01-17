@@ -16,7 +16,7 @@ public class GameData : ScriptableObject
     [Header("Items, Inventory and Currency")]
     public CurrencyObject mainCurrency;
     public InventoryObject defaultInventory;
-    public ItemObject[] allItems;   
+    public List<ItemObject> allItems;   
     
     [Header("Game World")]
     public int maxLevel = 99;

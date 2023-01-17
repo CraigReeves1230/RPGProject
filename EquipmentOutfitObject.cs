@@ -11,7 +11,7 @@ public class EquipmentOutfitObject : ScriptableObject
     public string name;
     public List<OutfitSlot> container = new List<OutfitSlot>();
     
-    public bool addItem(EquipmentObject item, OutfitSlot slot, IEquippable equipTarget, InventoryObject inventory = null)
+    public bool addItem(EquipmentObject item, OutfitSlot slot, IEquippable equipTarget, InventoryObject inventory = null, bool forRefresh = false)
     {
         // the inventory is the party inventory by default
         if (inventory == null)
@@ -24,7 +24,7 @@ public class EquipmentOutfitObject : ScriptableObject
         // make sure item exists
         if (item == null)
         {
-            Debug.Log("ERROR: Item does not exist");
+            GameManager.instance.errorMsg("ERROR: Item does not exist");
         }
         else
         {
@@ -41,7 +41,7 @@ public class EquipmentOutfitObject : ScriptableObject
             // make sure item is in inventory
             if (invSlot == null)
             {
-                Debug.Log("ERROR: Item does not exist in inventory.");
+                GameManager.instance.errorMsg("ERROR: Item does not exist in inventory.");
                 return false;
             }
             
@@ -77,7 +77,8 @@ public class EquipmentOutfitObject : ScriptableObject
                                 // if there aren't enough additional slots, do not equip item at all
                                 if ((additionalAvailableSlots.Count + 1) < item.numberOfSlotsFilled) 
                                 {
-                                    Debug.Log("ERROR: Not enough compatible free slots for this item in outfit.");
+                                    GameManager.instance.errorMsg("ERROR: Not enough compatible free slots for this item in outfit.");
+                                    slot.item = null;
                                 }
                                 else
                                 {
@@ -116,25 +117,30 @@ public class EquipmentOutfitObject : ScriptableObject
                                 onEquip(item, equipTarget, inventory);
                                                                
                                 // add to equipped
-                                invSlot.equippedBy.Add(this);                                
+                                if (!forRefresh)
+                                {
+                                    invSlot.equippedBy.Add(this); 
+                                }                                                       
                             }
                         }
                         else
                         {
-                            Debug.Log("ERROR: Slot is incompatible with this item.");
+                            GameManager.instance.errorMsg("ERROR: Slot is incompatible with this item.");
+                            slot.item = null;
                         }
                     }
                 }
             }
             else
             {
-                Debug.Log("ERROR: Item is already equipped by someone else.");
+                GameManager.instance.errorMsg("ERROR: Item is already equipped by someone else.");
+                slot.item = null;
             }
         }
         return ableToAdd;
     }
 
-    public bool removeItem(OutfitSlot slot, IEquippable target, InventoryObject inventory = null)
+    public bool removeItem(OutfitSlot slot, IEquippable target, InventoryObject inventory = null, bool forRefresh = false)
     {        
         // get item being removed
         var itemBeingRemoved = slot.item;
@@ -147,13 +153,15 @@ public class EquipmentOutfitObject : ScriptableObject
 
         if (inventory == null)
         {
-            Debug.Log("ERROR: Inventory could not be found.");
+            GameManager.instance.errorMsg("ERROR: Inventory could not be found.");
+            slot.item = null;
             return false;
         }
 
         if (itemBeingRemoved == null)
         {
-            Debug.Log("ERROR: Item cannot be identified.");
+            GameManager.instance.errorMsg("ERROR: Item cannot be identified.");
+            slot.item = null;
             return false;
         }
         
@@ -161,7 +169,8 @@ public class EquipmentOutfitObject : ScriptableObject
         var invSlot = inventory.findSlot(itemBeingRemoved);
         if (invSlot == null)
         {
-            Debug.Log("ERROR: Item does not exist in inventory. How was this even equipped???");
+            GameManager.instance.errorMsg("ERROR: Item does not exist in inventory. How was this even equipped???");
+            slot.item = null;
             return false;
         }
         
@@ -178,21 +187,25 @@ public class EquipmentOutfitObject : ScriptableObject
         
         // remove item
         slot.item = null;
+        slot.isBlocked = false;
         
         // remove target from the list of equippedBy for that item
-        for (int i = 0; i < invSlot.equippedBy.Count; i++)
+        if (!forRefresh)
         {
-            if (invSlot.equippedBy[i] == this)
+            for (int i = 0; i < invSlot.equippedBy.Count; i++)
             {
-                invSlot.equippedBy.RemoveAt(i);
-                break;
-            }
+                if (invSlot.equippedBy[i] == this)
+                {
+                    invSlot.equippedBy.RemoveAt(i);
+                    break;
+                }
+            } 
         }
+        
         
         // run unEquip
         onUnEquip(itemBeingRemoved, target, inventory);
         
-        Debug.Log("UnEquip Successful!");
         return true;
     }
 

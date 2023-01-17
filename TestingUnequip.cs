@@ -9,6 +9,6 @@ public class TestingUnequip : EventCutscene
         msg(":face 0 :name Baldman", "Alright, Blondie. Let's un-equip!");
         wait();
         msgCls();
-        unEquipItem(GameManager.instance.partyLead(), "RightHand");
+        unEquipItem(GameManager.instance.partyLead().player, "RightHand");
     }
 }

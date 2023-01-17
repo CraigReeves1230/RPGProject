@@ -12,6 +12,6 @@ public class TestingForEquip : EventCutscene
         msg(":name Blondie :face 1", "Let's equip!");
         wait();
         msgCls();
-        equipItem(GameManager.instance.partyLead(), "RightHand", "Dagger");
+        equipItem(GameManager.instance.partyLead().player, "RightHand", "Dagger");
     }
 }
