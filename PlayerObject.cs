@@ -9,6 +9,10 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Player", menuName = "Player")]
 public class PlayerObject : ScriptableObject, IEquippable
 {        
+    // graphics
+    public Sprite sprite;
+    public AnimatorOverrideController animator;
+    
     // character stats
     public string charName;
     public string defaultName;

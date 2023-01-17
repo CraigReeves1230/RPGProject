@@ -14,6 +14,13 @@ public class PlayableCharacterEntity : ControllableEntity
     {
         base.Start();
         
+        // create graphics
+        if (player.sprite != null)
+        spriteRenderer.sprite = player.sprite;
+        
+        if (player.animator != null)
+        anim.runtimeAnimatorController = player.animator;
+        
         // may have to be called during game, which is why it is a separate function
         init();
     }

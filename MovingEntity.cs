@@ -7,9 +7,9 @@ using UnityEngine;
 public abstract class MovingEntity : MonoBehaviour
 {       
     private bool stayInBounds = true;    
-    private Animator anim;
+    protected Animator anim;
     private Rigidbody2D rigidBody;
-    private SpriteRenderer spriteRenderer;
+    protected SpriteRenderer spriteRenderer;
     private float height;
     private float width;
     protected float horizontalMov;
@@ -27,7 +27,7 @@ public abstract class MovingEntity : MonoBehaviour
     private Vector2 targetPos;
     
     // moving speeds
-    public float moveSpeed = 3f;
+    public float moveSpeed = 4f;
     public float runningSpeed = 6f; 
     protected bool isRunning;
     private float currentMoveSpeed;
