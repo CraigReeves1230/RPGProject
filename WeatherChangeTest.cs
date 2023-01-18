@@ -12,14 +12,14 @@ public class WeatherChangeTest : EventCutscene
 
         if (!Weather.instance.getIsRaining())
         {
-            setGameWorldInt("formerTalkedToWizardVar", getGameWorldInt("talkedToWizard"));
-            setGameWorldInt("talkedToWizard", 3);
+            setGameWorldString("formerTalkedToWizardVar", getGameWorldString("talkedToWizard"));
+            setGameWorldString("talkedToWizard", "rain");
         }
         else
         {
-            if (getGameWorldInt("talkedToWizard") == 3)
+            if (getGameWorldString("talkedToWizard") == "rain")
             {
-                setGameWorldInt("talkedToWizard", getGameWorldInt("formerTalkedToWizardVar"));
+                setGameWorldString("talkedToWizard", getGameWorldString("formerTalkedToWizardVar"));
             }
         }
         

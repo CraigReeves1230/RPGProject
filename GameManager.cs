@@ -131,6 +131,11 @@ public class GameManager : MonoBehaviour
             gameDatabase.GameWorldIntegerIndices[gameDatabase.GameWorldIntegers[i].name] = i;
         }
         
+        for (int i = 0; i < gameDatabase.GameWorldStringIndices.Count; i++)
+        {
+            gameDatabase.GameWorldStringIndices[gameDatabase.GameWorldStrings[i].name] = i;
+        }
+        
         // initialize follow the leader
         initializeFollowTheLeader();
     }

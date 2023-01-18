@@ -154,6 +154,26 @@ public class EventEngine : MonoBehaviour
             return setGameWorldInteger(_name, _value);
         }
         
+        if (commandName == "addGameWorldString")
+        {
+            var _name = command.getStringParameters()[0];
+            var _value = command.getStringParameters()[1];
+            return addGameWorldString(_name, _value);
+        }
+        
+        if (commandName == "removeGameWorldString")
+        {
+            var _name = command.getStringParameters()[0];
+            return removeGameWorldString(_name);
+        }
+        
+        if (commandName == "setGameWorldString")
+        {
+            var _name = command.getStringParameters()[0];
+            var _value = command.getStringParameters()[1];
+            return setGameWorldString(_name, _value);
+        }
+        
         if (commandName == "msg")
         {   
             var lines = command.getStringParameters();
@@ -841,6 +861,24 @@ public class EventEngine : MonoBehaviour
         }
         
         GameManager.instance.GoToScene(sceneName, x, y, partOfSequence, es, ew);
+        return true;
+    }
+
+    private bool addGameWorldString(string _name, string _val)
+    {
+        GameManager.instance.gameDatabase.addGameWorldString(_name, _val);
+        return true;
+    }
+    
+    private bool removeGameWorldString(string _name)
+    {
+        GameManager.instance.gameDatabase.removeGameWorldString(_name);
+        return true;
+    }
+    
+    private bool setGameWorldString(string _name, string _value)
+    {
+        GameManager.instance.gameDatabase.GameWorldStringValue(_name, _value);
         return true;
     }
 

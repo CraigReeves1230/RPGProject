@@ -7,7 +7,7 @@ public class SampleNPCDialog : NPCDialog
    
     protected override void doDialog()
     {
-        if (getGameWorldInt("talkedToWizard") == 0)
+        if (getGameWorldString("talkedToWizard") == null)
         {
             msg(":name Wizard", "I am an NPC. This is sample dialog.");
             wait();
@@ -16,16 +16,16 @@ public class SampleNPCDialog : NPCDialog
             msg(":name Baldman :face 0", "You too, sir!");
             wait();
             msgCls();
-            setGameWorldInt("talkedToWizard", 1);
+            setGameWorldString("talkedToWizard", "true");
         }
-        else if (getGameWorldInt("talkedToWizard") == 1)
+        else if (getGameWorldString("talkedToWizard") == "true")
         {
             msg(":name Baldman :face 0", "We already spoke, sir.");
             wait();
             msgCls();
-            setGameWorldInt("talkedToWizard", 2);
+            setGameWorldString("talkedToWizard", "mad");
         }
-        else if (getGameWorldInt("talkedToWizard") == 2)
+        else if (getGameWorldString("talkedToWizard") == "mad")
         {
             msg(":name Blondie :face 1", "Dude, how many times do we have to--");
             delay(1f);
@@ -38,8 +38,8 @@ public class SampleNPCDialog : NPCDialog
             msg(":name Wizard :face none", "Oh no, you're not bothering me, haha.");
             wait();
             msgCls();
-            removeGameWorldInt("talkedToWizard");
-        } else if (getGameWorldInt("talkedToWizard") == 3)
+            removeGameWorldString("talkedToWizard");
+        } else if (getGameWorldString("talkedToWizard") == "rain")
         {
             msg(":name Wizard :face none", "Bro, how did you make it rain!?");
             wait();
