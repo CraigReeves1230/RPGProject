@@ -20,6 +20,7 @@ public class Command : ScriptableObject
     private EventSequence.PromptCallback callbackParam;
     private InventoryObject[] inventoryObjectParams;
     private IEquippable equipTargetParam;
+    private PlayerObject playerObject;
 
     public void setName(string inName)
     {
@@ -118,6 +119,16 @@ public class Command : ScriptableObject
         {
             intParameters[i] = parameters[i];
         }
+    }
+
+    public void setPlayerObjectParam(PlayerObject _playerObject)
+    {
+        playerObject = _playerObject;
+    }
+
+    public PlayerObject getPlayerObjectParam()
+    {
+        return playerObject;
     }
 
     public void setEventSequenceParam(EventSequence es)

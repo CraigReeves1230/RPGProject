@@ -486,15 +486,40 @@ public abstract class EventSequence : MonoBehaviour
         eventWorker.storeInQueue(command);
     }
     
+    public void addPlayerCustomInt(PlayerObject playerObject, string name, int value)
+    {
+        var command = newCom();
+        command.setName("addPlayerCustomInteger");
+        command.setPlayerObjectParam(playerObject);
+        command.setStringParams(name);
+        command.setIntParams(value);
+        eventWorker.storeInQueue(command);
+    }
+    
     public int getGameWorldInt(string name)
     {
         return GameManager.instance.gameDatabase.GameWorldIntegerValue(name);
+    }
+    
+    public int getPlayerCustomInt(PlayerObject playerObject, string name)
+    {
+        return playerObject.PlayerCustomIntegerValue(name);
     }
     
     public void setGameWorldInt(string name, int value)
     {
         var command = newCom();
         command.setName("setGameWorldInteger");
+        command.setStringParams(name);
+        command.setIntParams(value);
+        eventWorker.storeInQueue(command);
+    }
+    
+    public void setPlayerCustomInt(PlayerObject playerObject, string name, int value)
+    {
+        var command = newCom();
+        command.setName("setPlayerCustomInteger");
+        command.setPlayerObjectParam(playerObject);
         command.setStringParams(name);
         command.setIntParams(value);
         eventWorker.storeInQueue(command);
@@ -508,6 +533,15 @@ public abstract class EventSequence : MonoBehaviour
         eventWorker.storeInQueue(command);
     }
     
+    public void removePlayerCustomInt(PlayerObject playerObject, string name)
+    {
+        var command = newCom();
+        command.setPlayerObjectParam(playerObject);
+        command.setName("removePlayerCustomInteger");
+        command.setStringParams(name);
+        eventWorker.storeInQueue(command);
+    }
+    
     public void addGameWorldString(string name, string value)
     {
         var command = newCom();
@@ -516,9 +550,23 @@ public abstract class EventSequence : MonoBehaviour
         eventWorker.storeInQueue(command);
     }
     
+    public void addPlayerCustomString(PlayerObject playerObject, string name, string value)
+    {
+        var command = newCom();
+        command.setName("addPlayerCustomString");
+        command.setPlayerObjectParam(playerObject);
+        command.setStringParams(name, value);
+        eventWorker.storeInQueue(command);
+    }
+    
     public string getGameWorldString(string name)
     {
         return GameManager.instance.gameDatabase.GameWorldStringValue(name);
+    }
+    
+    public string getPlayerCustomString(PlayerObject playerObject, string name)
+    {
+        return playerObject.PlayerCustomStringValue(name);
     }
     
     public void setGameWorldString(string name, string value)
@@ -529,10 +577,28 @@ public abstract class EventSequence : MonoBehaviour
         eventWorker.storeInQueue(command);
     }
     
+    public void setPlayerCustomString(PlayerObject playerObject, string name, string value)
+    {
+        var command = newCom();
+        command.setName("setPlayerCustomString");
+        command.setPlayerObjectParam(playerObject);
+        command.setStringParams(name, value);
+        eventWorker.storeInQueue(command);
+    }
+    
     public void removeGameWorldString(string name)
     {
         var command = newCom();
-        command.setName("removeGameWorldString");
+        command.setName("removePlayerCustomString");
+        command.setStringParams(name);
+        eventWorker.storeInQueue(command);
+    }
+    
+    public void removePlayerCustomString(PlayerObject playerObject, string name)
+    {
+        var command = newCom();
+        command.setName("removePlayerCustomString");
+        command.setPlayerObjectParam(playerObject);
         command.setStringParams(name);
         eventWorker.storeInQueue(command);
     }

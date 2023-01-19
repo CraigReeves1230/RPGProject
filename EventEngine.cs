@@ -154,6 +154,29 @@ public class EventEngine : MonoBehaviour
             return setGameWorldInteger(_name, _value);
         }
         
+        if (commandName == "addPlayerCustomInteger")
+        {
+            var _name = command.getStringParameters()[0];
+            var _value = command.getIntParameters()[0];
+            var _playerObject = command.getPlayerObjectParam();
+            return addPlayerCustomInteger(_playerObject, _name, _value);
+        }
+        
+        if (commandName == "removePlayerCustomInteger")
+        {
+            var _name = command.getStringParameters()[0];
+            var _playerObject = command.getPlayerObjectParam();
+            return removePlayerCustomInteger(_playerObject, _name);
+        }
+        
+        if (commandName == "setPlayerCustomInteger")
+        {
+            var _name = command.getStringParameters()[0];
+            var _value = command.getIntParameters()[0];
+            var _playerObject = command.getPlayerObjectParam();
+            return setPlayerCustomInteger(_playerObject, _name, _value);
+        }
+        
         if (commandName == "addGameWorldString")
         {
             var _name = command.getStringParameters()[0];
@@ -172,6 +195,29 @@ public class EventEngine : MonoBehaviour
             var _name = command.getStringParameters()[0];
             var _value = command.getStringParameters()[1];
             return setGameWorldString(_name, _value);
+        }
+        
+        if (commandName == "addPlayerCustomString")
+        {
+            var _name = command.getStringParameters()[0];
+            var _value = command.getStringParameters()[1];
+            var _playerObject = command.getPlayerObjectParam();
+            return addPlayerCustomString(_playerObject, _name, _value);
+        }
+        
+        if (commandName == "removePlayerCustomString")
+        {
+            var _name = command.getStringParameters()[0];
+            var _playerObject = command.getPlayerObjectParam();
+            return removePlayerCustomString(_playerObject, _name);
+        }
+        
+        if (commandName == "setPlayerCustomString")
+        {
+            var _name = command.getStringParameters()[0];
+            var _value = command.getStringParameters()[1];
+            var _playerObject = command.getPlayerObjectParam();
+            return setPlayerCustomString(_playerObject, _name, _value);
         }
         
         if (commandName == "msg")
@@ -881,6 +927,24 @@ public class EventEngine : MonoBehaviour
         GameManager.instance.gameDatabase.GameWorldStringValue(_name, _value);
         return true;
     }
+    
+    private bool setPlayerCustomString(PlayerObject playerObject, string _name, string _value)
+    {
+        playerObject.PlayerCustomStringValue(_name, _value);
+        return true;
+    }
+    
+    private bool addPlayerCustomString(PlayerObject playerObject, string _name, string _val)
+    {
+        playerObject.addPlayerCustomString(_name, _val);
+        return true;
+    }
+    
+    private bool removePlayerCustomString(PlayerObject playerObject, string _name)
+    {
+        playerObject.removePlayerCustomString(_name);
+        return true;
+    }
 
     private bool addGameWorldInteger(string _name, int _val)
     {
@@ -897,6 +961,24 @@ public class EventEngine : MonoBehaviour
     private bool removeGameWorldInteger(string _name)
     {
         GameManager.instance.gameDatabase.removeGameWorldInteger(_name);
+        return true;
+    }
+    
+    private bool addPlayerCustomInteger(PlayerObject playerObject, string _name, int _val)
+    {
+        playerObject.addPlayerCustomInteger(_name, _val);
+        return true;
+    }
+
+    private bool setPlayerCustomInteger(PlayerObject playerObject, string _name, int _value)
+    {
+        playerObject.PlayerCustomIntegerValue(_name, _value);
+        return true;
+    }
+    
+    private bool removePlayerCustomInteger(PlayerObject playerObject, string _name)
+    {
+        playerObject.removePlayerCustomInteger(_name);
         return true;
     }
 

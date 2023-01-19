@@ -10,10 +10,12 @@ using UnityEngine;
 public class PlayerObject : ScriptableObject, IEquippable
 {        
     // graphics
+    [Header("Player Graphics")]
     public Sprite sprite;
     public AnimatorOverrideController animator;
     
     // character stats
+    [Header("Player Stats")]
     public string charName;
     public string defaultName;
     
@@ -58,8 +60,16 @@ public class PlayerObject : ScriptableObject, IEquippable
     private int EXPLeftUntilNextLevel;
         
     // Equipment
+    [Header("Equipment Settings")]
     public List<EquipmentSubType> canEquip;
     public EquipmentOutfitObject equipmentOutfit;
+    
+    // custom variables
+    [Header("Custom Variables/Stats")]
+    public List<PlayerCustomInteger> customIntegers;
+    public List<PlayerCustomString> customStrings;
+    public Dictionary<string, int> PlayerCustomStringIndices = new Dictionary<string, int>();
+    public Dictionary<string, int> PlayerCustomIntegerIndices = new Dictionary<string, int>();
 
     
     void Awake()
@@ -137,7 +147,7 @@ public class PlayerObject : ScriptableObject, IEquippable
         refreshEquipmentAndInventory();
 
     }
-    
+        
     
     public void AddEXP(int expToAdd)
     {
@@ -395,6 +405,143 @@ public class PlayerObject : ScriptableObject, IEquippable
             }
         }
     }
+    
+    /*/////////////////////////////////////////// PLAYER CUSTOM INTEGERS  ///////////////////////////////////////////*/
+    
+    public void addPlayerCustomInteger(string _name, int _value)
+    {
+        // if game variable already exists, change existing value
+        if (PlayerCustomIntegerIndices.ContainsKey(_name))
+        {
+            var i = PlayerCustomIntegerIndices[_name];
+            customIntegers[i].value = _value;
+            return;
+        }
+        
+        var newVar = new PlayerCustomInteger(_name, _value);
+        var currIndex = customIntegers.Count < 1 ? 0 : customIntegers.Count;
+        customIntegers.Add(newVar);
+        PlayerCustomIntegerIndices.Add(_name, currIndex);
+    }
+    
+    public void removePlayerCustomInteger(string _name)
+    {
+        var gameVariableIdx = PlayerCustomIntegerIndices[_name];
+        customIntegers.RemoveAt(gameVariableIdx);
+        PlayerCustomIntegerIndices.Remove(_name);
+    }
+
+    public int PlayerCustomIntegerValue(string _name)
+    {
+        // if game variable doesn't exist, return 0
+        if (!PlayerCustomIntegerIndices.ContainsKey(_name)) return 0;
+        
+        var gameVariableIdx = PlayerCustomIntegerIndices[_name];
+        var theGameVar = customIntegers[gameVariableIdx];
+
+        if (theGameVar == null)
+        {
+            return 0;
+        }
+
+        return theGameVar.value;
+    }
+    
+    public void PlayerCustomIntegerValue(string _name, int _value)
+    {
+        // if game integer doesn't exist, create it
+        if (!PlayerCustomIntegerIndices.ContainsKey(_name))
+        {
+            addPlayerCustomInteger(_name, _value);
+            return;
+        }
+        
+        var gameWorldVarIdx = PlayerCustomIntegerIndices[_name];
+
+        customIntegers[gameWorldVarIdx].value = _value;
+    }
+    
+  
+    
+    /*/////////////////////////////////////////// PLAYER CUSTOM STRINGS  ///////////////////////////////////////////*/
+    
+    public void addPlayerCustomString(string _name, string _value)
+    {
+        // if game string already exists, change existing value
+        if (PlayerCustomStringIndices.ContainsKey(_name))
+        {
+            var i = PlayerCustomStringIndices[_name];
+            customStrings[i].value = _value;
+            return;
+        }
+        
+        var newVar = new PlayerCustomString(_name, _value);
+        var currIndex = customStrings.Count < 1 ? 0 : customStrings.Count;
+        customStrings.Add(newVar);
+        PlayerCustomStringIndices.Add(_name, currIndex);
+    }
+    
+    public void removePlayerCustomString(string _name)
+    {
+        var gameVariableIdx = PlayerCustomStringIndices[_name];
+        customStrings.RemoveAt(gameVariableIdx);
+        PlayerCustomStringIndices.Remove(_name);
+    }
+    
+    public string PlayerCustomStringValue(string _name)
+    {
+        // if game variable doesn't exist, return 0
+        if (!PlayerCustomStringIndices.ContainsKey(_name)) return null;
+        
+        var gameVariableIdx = PlayerCustomStringIndices[_name];
+        var theGameVar = customStrings[gameVariableIdx];
+
+        
+        return theGameVar.value;
+    }
+    
+    public void PlayerCustomStringValue(string _name, string _value)
+    {
+        // if game integer doesn't exist, create it
+        if (!PlayerCustomStringIndices.ContainsKey(_name))
+        {
+            addPlayerCustomString(_name, _value);
+            return;
+        }
+        
+        var gameWorldVarIdx = PlayerCustomStringIndices[_name];
+
+        customStrings[gameWorldVarIdx].value = _value;
+    }
+    
+    /*//////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
 }
 
+[System.Serializable]
+public class PlayerCustomInteger
+{
+    public string name;
+    public int value;
+
+    // constructor
+    public PlayerCustomInteger(string _name, int _value)
+    {
+        name = _name;
+        value = _value;
+    }
+}
+
+[System.Serializable]
+public class PlayerCustomString
+{
+    public string name;
+    public string value;
+
+    // constructor
+    public PlayerCustomString(string _name, string _value)
+    {
+        name = _name;
+        value = _value;
+    }
+}
 
