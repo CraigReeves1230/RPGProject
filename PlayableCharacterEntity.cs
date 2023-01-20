@@ -1,12 +1,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
+using Sirenix.OdinInspector;
 using UnityEngine;
-using Cache = UnityEngine.Cache;
 
 public class PlayableCharacterEntity : ControllableEntity
 {
+    [Required]
     public PlayerObject player;
     
     // Start is called before the first frame update
@@ -37,7 +37,7 @@ public class PlayableCharacterEntity : ControllableEntity
         base.Update();
         
         // only characters in party are active
-        gameObject.SetActive(Array.Exists(GameManager.instance.party, element => element == this));  
+        gameObject.SetActive(GameManager.instance.party.Contains(this));  
         
         // run button
         if (GameManager.instance.hasControl())

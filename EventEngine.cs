@@ -226,6 +226,24 @@ public class EventEngine : MonoBehaviour
             return msg(lines);
         }
         
+        if (commandName == "pmsg")
+        {
+            var player = command.getPlayerObjectParam();
+            var lines = command.getStringParameters();
+            lines[0] = lines[0] + " :name " + player.defaultName;
+            return msg(lines);
+        }
+        
+        if (commandName == "pfmsg")
+        {
+            var player = command.getPlayerObjectParam();
+            var line = command.getStringParameters()[0];
+
+            var revLines = new[] {":name " + player.defaultName + " :partyface " + player.defaultName, line};
+            
+            return msg(revLines);
+        }
+        
         if (commandName == "msgCls")
         {   
             return msgCls();

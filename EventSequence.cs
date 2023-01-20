@@ -760,6 +760,24 @@ public abstract class EventSequence : MonoBehaviour
         eventWorker.storeInQueue(command);
     }
     
+    protected void pmsg(PlayerObject player, params string[] lines)
+    {
+        Command command = newCom();
+        command.setName("pmsg");
+        command.setPlayerObjectParam(player);
+        command.setStringParams(lines);
+        eventWorker.storeInQueue(command);
+    }
+    
+    protected void pfmsg(PlayerObject player, string line)
+    {
+        Command command = newCom();
+        command.setName("pfmsg");
+        command.setPlayerObjectParam(player);
+        command.setStringParams(line);
+        eventWorker.storeInQueue(command);
+    }
+    
     protected void msgCls()
     {
         Command command = newCom();

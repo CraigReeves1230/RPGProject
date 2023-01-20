@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
+[InlineEditor()]
 public abstract class ItemObject : ScriptableObject
 {    
     protected ItemType type;

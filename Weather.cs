@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Sirenix.OdinInspector;
+using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.Tilemaps;
 
@@ -8,6 +9,8 @@ public class Weather : MonoBehaviour
     public ParticleSystem rain;
     public ParticleSystem snow;
     public ParticleSystem fog;
+    
+    [Required]
     public string sceneName;
     private bool weatherSet;
     

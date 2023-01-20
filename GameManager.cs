@@ -1,11 +1,15 @@
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+[Required]
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
+    
+    [Required, PropertySpace(SpaceBefore = 5, SpaceAfter = 5)]
     public GameData gameDatabase;
     
     private string nextAreaEntrance;
@@ -18,12 +22,14 @@ public class GameManager : MonoBehaviour
     private Vector2 camBottomLeftLimit;
     private Vector2 camTopRightLimit;
 
-    
+    [PropertySpace(SpaceAfter = 5)]
     public bool mapScene = true;
 
     private ControllableEntity lastControlled;
 
-    public PlayableCharacterEntity[] party;
+    [Required]
+    public List<PlayableCharacterEntity> party;
+    public Dictionary<string, Sprite> partyFaces = new Dictionary<string, Sprite>();
     
     [System.NonSerialized]
     public int followLeaderLimit = 3;
@@ -91,6 +97,7 @@ public class GameManager : MonoBehaviour
         exitsEnabled = true;
         nextAreaEntrance = null;
         userControl = true;
+        followLeaderLimit = gameDatabase.followLeaderLimit;
         
         // intialize in-game inventory dictionary
         foreach (var item in gameDatabase.allItems)
@@ -106,7 +113,7 @@ public class GameManager : MonoBehaviour
                 
         
         // initialize party 
-        for (int i = 0; i < party.Length; i++)
+        for (int i = 0; i < party.Count; i++)
         {
             party[i].init();
             isParty = true;
@@ -134,6 +141,13 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < gameDatabase.GameWorldStringIndices.Count; i++)
         {
             gameDatabase.GameWorldStringIndices[gameDatabase.GameWorldStrings[i].name] = i;
+        }
+        
+        // store party faces
+        foreach (var member in party)
+        {
+            if (member.player.face != null)
+            partyFaces[member.player.defaultName] = member.player.face;
         }
         
         // initialize follow the leader
@@ -232,7 +246,7 @@ public class GameManager : MonoBehaviour
     {
         if (!inVehicle)
         {
-            var limit = party.Length < (followLeaderLimit+1) ? party.Length : (followLeaderLimit+1);
+            var limit = party.Count < (followLeaderLimit+1) ? party.Count : (followLeaderLimit+1);
                 
             ControllableEntity lastPlayer = null;
             for (int i = 0; i < limit; i++)
@@ -255,6 +269,20 @@ public class GameManager : MonoBehaviour
                 lastPlayer = party[i];
             }
         }
+    }
+    
+    // Find player by default name
+    public PlayableCharacterEntity findByDefName(string searchName)
+    {
+        foreach (var member in party)
+        {
+            if (member.player.defaultName == searchName)
+            {
+                return member;
+            }
+        }
+
+        return null;
     }
     
     

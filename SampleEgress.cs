@@ -7,20 +7,22 @@ public class SampleEgress : EventCutscene
     
     protected override void doCutscene()
     {
-        var blondie = GameManager.instance.partyLead();
-        var baldman = GameManager.instance.party[1];
+        var vanessa_mv = GameManager.instance.partyLead();
+        var reggie_mv = GameManager.instance.party[1];
+        var reggie = reggie_mv.player;
+        var vanessa = vanessa_mv.player;
 
         switch (getGameWorldInt("sampleEgress"))
         {
             case 0:
                 stopAllFollowing();
-                walkSouth(baldman, .5f);
-                turnToFace(blondie, baldman.gameObject);
+                walkSouth(reggie_mv, .5f);
+                turnToFace(vanessa_mv, reggie_mv.gameObject);
                 delay(.5f);
-                msg(":face 0 :name Baldman", "Here we go...");
+                pfmsg(reggie, "Here we go...");
                 wait();
                 msgCls();
-                msg(":face 1 :name Blondie", "We're in this together, alright?");
+                pfmsg(vanessa, "We're in this together, alright?");
                 wait();
                 msg("Believe in yourself...");
                 wait();
@@ -28,26 +30,26 @@ public class SampleEgress : EventCutscene
                 wait();
                 msgCls();
                 delay(1f);
-                turnToFace(baldman, blondie.gameObject);
+                turnToFace(reggie_mv, vanessa_mv.gameObject);
                 delay(.5f);
-                msg(":face 0 :name Baldman", "Alright, Blondie.");
+                pfmsg(reggie, "Alright, " + vanessa_mv.player.charName + ".");
                 wait();
                 msg("Whatever happens in there, just know that I will always love you.");
                 wait();
                 msgCls();
                 delay(.5f);
                 fadeToScene("Cave2", true);
-                positionCharacter(blondie, 43.21f, 4.46f);
-                positionCharacter(baldman, 43.21f, 3.46f);
-                turnToFace(baldman, blondie.gameObject);
-                turnToFace(blondie, baldman.gameObject);
+                positionCharacter(vanessa_mv, 43.21f, 4.46f);
+                positionCharacter(reggie_mv, 43.21f, 3.46f);
+                turnToFace(reggie_mv, vanessa_mv.gameObject);
+                turnToFace(vanessa_mv, reggie_mv.gameObject);
                 delay(2f);
-                msg(":name Baldman :face 0", "We still here, daddy!");
+                pfmsg(reggie, "We still here, daddy!");
                 wait();
                 msg("We in this and we the ones!");
                 wait();
                 msgCls();
-                msg(":name Blondie :face 1", "Alright, Baldman, I'm glad to see you're back in good spirits, but let's try to remember the mission.");
+                pfmsg(vanessa, "Alright, "+ reggie_mv.player.charName +", I'm glad to see you're back in good spirits, but let's try to remember the mission.");
                 wait();
                 msgCls();
                 setGameWorldInt("sampleEgress", 1);
@@ -55,7 +57,7 @@ public class SampleEgress : EventCutscene
                 break;
             
             case 1:
-                msg(":name blondie :face 1", "Off to the forest!");
+                pfmsg(vanessa, "Off to the forest!");
                 wait();
                 msgCls();
                 break;

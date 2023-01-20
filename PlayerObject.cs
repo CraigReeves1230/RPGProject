@@ -3,19 +3,39 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using UnityEditor;
+using Sirenix.OdinInspector;
 using UnityEngine;
+using Object = System.Object;
 
-[CreateAssetMenu(fileName = "New Player", menuName = "Player")]
+[CreateAssetMenu(fileName = "New Player", menuName = "Player"), InlineEditor()]
 public class PlayerObject : ScriptableObject, IEquippable
-{        
+{
+    public enum ColliderShape
+    {
+        Box, Circle, Polygon, None
+    }
+
+    public enum PlayerType
+    {
+        PlayableCharacter, Enemy, Other
+    }
+    
+    // basic info
+    [Title("Basic Information", TitleAlignment = TitleAlignments.Centered)]
+    public PlayerType playerType;
+    
     // graphics
-    [Header("Player Graphics")]
+    [Title("Player Graphics and Collision", TitleAlignment = TitleAlignments.Centered), Required, PreviewField(Sirenix.OdinInspector.ObjectFieldAlignment.Left)]
     public Sprite sprite;
     public AnimatorOverrideController animator;
+    [PropertySpace(SpaceAfter = 0, SpaceBefore = 5)]
+    public ColliderShape colliderType;
+
+    [PropertySpace(SpaceAfter = 5, SpaceBefore = 5), PreviewField(Sirenix.OdinInspector.ObjectFieldAlignment.Left)]
+    public Sprite face;
     
     // character stats
-    [Header("Player Stats")]
+    [Title("Player Stats", TitleAlignment = TitleAlignments.Centered)]
     public string charName;
     public string defaultName;
     
@@ -50,6 +70,7 @@ public class PlayerObject : ScriptableObject, IEquippable
     public float attackPowerPercentGrowthRate;
     public float magicPowerPercentGrowthRate;
     public float defensePercentGrowthRate;
+    
     public float speedPercentGrowthRate;
     
     // handling exp
@@ -60,12 +81,12 @@ public class PlayerObject : ScriptableObject, IEquippable
     private int EXPLeftUntilNextLevel;
         
     // Equipment
-    [Header("Equipment Settings")]
+    [Title("Equipment Settings", TitleAlignment = TitleAlignments.Centered)]
     public List<EquipmentSubType> canEquip;
     public EquipmentOutfitObject equipmentOutfit;
     
     // custom variables
-    [Header("Custom Variables/Stats")]
+    [Title("Custom Variables/Stats", TitleAlignment = TitleAlignments.Centered)]
     public List<PlayerCustomInteger> customIntegers;
     public List<PlayerCustomString> customStrings;
     public Dictionary<string, int> PlayerCustomStringIndices = new Dictionary<string, int>();
@@ -89,6 +110,51 @@ public class PlayerObject : ScriptableObject, IEquippable
         defensePercentGrowthRate = 7;
         speedPercentGrowthRate = 7f;
         baseEXPToNext = 1000;
+    }
+
+    [Button, PropertySpace(SpaceBefore = 10, SpaceAfter = 10)]
+    public void CreatePlayer()
+    {
+        // sprite is required
+        if (sprite == null)
+        {
+            GameManager.instance.errorMsg("Sprite is required.");
+            return;
+        }
+        
+        var newObject = new GameObject(this.name);       
+        
+        var anim = newObject.AddComponent<Animator>();
+        if (animator != null)
+        {
+            anim.runtimeAnimatorController = animator; 
+        }
+        
+        var sr = newObject.AddComponent<SpriteRenderer>();
+        sr.sprite = sprite;
+        sr.sortingLayerName = "Sprites";
+        var rb = newObject.AddComponent<Rigidbody2D>();
+        rb.gravityScale = 0f;
+        rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+
+        if (colliderType == ColliderShape.Box)
+        {
+            newObject.AddComponent<BoxCollider2D>();
+        } else if (colliderType == ColliderShape.Circle)
+        {
+            newObject.AddComponent<CircleCollider2D>();
+        }
+        else if (colliderType == ColliderShape.Polygon)
+        {
+            newObject.AddComponent<PolygonCollider2D>();
+        }
+        
+        if (playerType == PlayerType.PlayableCharacter)
+        {
+            var pce = newObject.AddComponent<PlayableCharacterEntity>();
+            pce.player = this;
+            GameManager.instance.party.Add(pce);
+        } 
     }
     
     public void init()
@@ -144,8 +210,10 @@ public class PlayerObject : ScriptableObject, IEquippable
         currentMP = currentMaxMP;
         
         // check for initially equipped items and refresh equip
-        refreshEquipmentAndInventory();
-
+        if (equipmentOutfit != null)
+        {
+            refreshEquipmentAndInventory();
+        }
     }
         
     

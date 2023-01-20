@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.UI;
 using Image = UnityEngine.UI.Image;
@@ -12,6 +13,8 @@ public class DialogManager : MonoBehaviour
     public GameObject dialogBox;
     public GameObject nameBox;
     public GameObject faceBox;
+    
+    [Required]
     public Image faceBoxImage;
     private bool typing;
     private float waitTime;
@@ -249,6 +252,7 @@ public class DialogManager : MonoBehaviour
                             if (faces.Length < 1 || faces[next] == null)
                             {
                                 GameManager.instance.errorMsg("Face image not found. Make sure face is added to the Game Database or that it is accessible.");
+                                faceBox.SetActive(false);
                             }
                             else
                             {
@@ -257,6 +261,28 @@ public class DialogManager : MonoBehaviour
                             } 
                         }
                              
+                        break;
+                    case ":partyface":
+                        
+                        if (string.Equals(lineExplode[i + 1], "none", StringComparison.OrdinalIgnoreCase))
+                        {
+                            faceBox.SetActive(false);
+                        }
+                        else
+                        {
+                            var name = lineExplode[i + 1];
+                            if (GameManager.instance.partyFaces.Count < 1 || GameManager.instance.partyFaces[name] == null)
+                            {
+                                GameManager.instance.errorMsg("Face image not found. Make sure face is added to the Plauer Object.");
+                                faceBox.SetActive(false);
+                            }
+                            else
+                            {
+                                faceBox.SetActive(true);
+                                faceBoxImage.sprite = GameManager.instance.partyFaces[name];
+                            } 
+                        }
+                        
                         break;
                     case ":close":
                         closeDialog();

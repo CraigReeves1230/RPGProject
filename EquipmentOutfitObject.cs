@@ -2,12 +2,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using Sirenix.OdinInspector;
 using Unity.VisualScripting.Dependencies.NCalc;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Equipment Outfit", menuName = "Inventory System/EquipmentOutfit")]
+[CreateAssetMenu(fileName = "New Equipment Outfit", menuName = "Inventory System/EquipmentOutfit"), InlineEditor()]
 public class EquipmentOutfitObject : ScriptableObject
 {
+    [PropertySpace(SpaceBefore = 5, SpaceAfter = 5)]
     public string name;
     public List<OutfitSlot> container = new List<OutfitSlot>();
     
@@ -237,9 +239,12 @@ public class EquipmentOutfitObject : ScriptableObject
 [System.Serializable]
 public class OutfitSlot
 {
+    [PropertySpace(SpaceBefore = 10, SpaceAfter = 5)]
     public string handle;
     public EquipmentCategory equipmentCategory;
+    [PropertySpace(SpaceBefore = 0, SpaceAfter = 10)]
     public EquipmentObject item;
+    [PropertySpace(SpaceBefore = 0, SpaceAfter = 10)]
     public bool isBlocked;
 }
 

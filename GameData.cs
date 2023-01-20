@@ -1,28 +1,39 @@
 using System.Collections;
 using System.Collections.Generic;
 using Mono.CompilerServices.SymbolWriter;
-using UnityEditor;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.TextCore.Text;
 using UnityEngine.UIElements;
 
-[CreateAssetMenu(fileName = "New Game Database", menuName = "Game Database")]
+[CreateAssetMenu(fileName = "New Game Database", menuName = "Game Database"), InlineEditor()]
 public class GameData : ScriptableObject
 {    
-    [Header("Message Window")]
+    [BoxGroup("Message Window"), PropertySpace(SpaceBefore = 10, SpaceAfter = 0)]
     public DialogManager.DisplayStyleOptions messageWindowStyle;
+    [BoxGroup("Message Window"), PropertySpace(SpaceAfter = 10, SpaceBefore = 5)]
     public Sprite[] faces;
     
-    [Header("Items, Inventory and Currency")]
+    [BoxGroup("Items, Inventory and Currency"), InlineEditor(), PropertySpace(SpaceBefore = 10, SpaceAfter = 0)]
     public CurrencyObject mainCurrency;
+    [BoxGroup("Items, Inventory and Currency"), InlineEditor(), PropertySpace(SpaceAfter = 5, SpaceBefore = 0)]
     public InventoryObject defaultInventory;
-    public List<ItemObject> allItems;   
+    [BoxGroup("Items, Inventory and Currency"), PropertySpace(SpaceAfter = 10, SpaceBefore = 5)]
+    public List<ItemObject> allItems;
     
-    [Header("Game World")]
+    [BoxGroup("Game World"), PropertySpace(SpaceAfter = 10, SpaceBefore = 5)]
     public int maxLevel = 99;
+    [BoxGroup("Game World"), PropertySpace(SpaceAfter = 5, SpaceBefore = 0)]
+    public int followLeaderLimit = 3;
+    [BoxGroup("Game World")]
     public List<GameWorldInteger> GameWorldIntegers;
+    [BoxGroup("Game World"), PropertySpace(SpaceAfter = 10, SpaceBefore = 0)]
     public List<GameWorldString> GameWorldStrings;
+    
+    [DictionaryDrawerSettings(KeyLabel = "Name", ValueLabel = "Index"), PropertySpace(SpaceBefore = 10, SpaceAfter = 0)]
     public Dictionary<string, int> GameWorldIntegerIndices = new Dictionary<string, int>();
+    
+    [DictionaryDrawerSettings(KeyLabel = "Name", ValueLabel = "Index"), PropertySpace(SpaceBefore = 0, SpaceAfter = 10)]
     public Dictionary<string, int> GameWorldStringIndices = new Dictionary<string, int>();
     
     

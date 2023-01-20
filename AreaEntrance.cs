@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 public class AreaEntrance : MonoBehaviour
 {
@@ -37,7 +36,7 @@ public class AreaEntrance : MonoBehaviour
             
             // new entity positions
             var party = GameManager.instance.party;
-            for (int i = 0; i < party.Length; i++)
+            for (int i = 0; i < party.Count; i++)
             {
                 party[i].gameObject.transform.position = new Vector2(newX, newY);
                 
