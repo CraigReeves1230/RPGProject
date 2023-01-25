@@ -51,6 +51,10 @@ public class PlayableCharacterEntity : ControllableEntity
                 isRunning = false;
             }
         }
+        
+        // deal with sprite and animator changes   
+        spriteRenderer.sprite = player.sprite;
+        anim.runtimeAnimatorController = player.animator;        
     }
 
     private void OnCollisionEnter2D(Collision2D other)

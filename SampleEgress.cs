@@ -12,7 +12,7 @@ public class SampleEgress : EventCutscene
         var reggie = reggie_mv.player;
         var vanessa = vanessa_mv.player;
 
-        switch (getGameWorldInt("sampleEgress"))
+        switch (getCustomInt(GameManager.instance.gameDatabase.customVariables, "sampleEgress"))
         {
             case 0:
                 stopAllFollowing();
@@ -52,7 +52,7 @@ public class SampleEgress : EventCutscene
                 pfmsg(vanessa, "Alright, "+ reggie_mv.player.charName +", I'm glad to see you're back in good spirits, but let's try to remember the mission.");
                 wait();
                 msgCls();
-                setGameWorldInt("sampleEgress", 1);
+                setCustomInt(GameManager.instance.gameDatabase.customVariables, "sampleEgress", 1);
                 followTheLeader(false);
                 break;
             

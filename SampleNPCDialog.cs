@@ -9,7 +9,7 @@ public class SampleNPCDialog : NPCDialog
     {
         PlayerObject lead = GameManager.instance.partyLead().player;
         
-        if (getPlayerCustomInt(lead, "talkedToWizard") == 0)
+        if (getCustomInt(lead.customVariables, "talkedToWizard") == 0)
         {
             msg(":name Wizard", "I am an NPC. This is sample dialog.");
             wait();
@@ -18,16 +18,16 @@ public class SampleNPCDialog : NPCDialog
             msg(":name Baldman :face 0", "You too, sir!");
             wait();
             msgCls();
-            setPlayerCustomInt(lead, "talkedToWizard", 1);
+            setCustomInt(lead.customVariables, "talkedToWizard", 1);
         }
-        else if (getPlayerCustomInt(lead, "talkedToWizard") == 1)
+        else if (getCustomInt(lead.customVariables, "talkedToWizard") == 1)
         {
             msg(":name Baldman :face 0", "We already spoke, sir.");
             wait();
             msgCls();
-            setPlayerCustomInt(lead, "talkedToWizard", 2);
+            setCustomInt(lead.customVariables, "talkedToWizard", 2);
         }
-        else if (getPlayerCustomInt(lead, "talkedToWizard") == 2)
+        else if (getCustomInt(lead.customVariables, "talkedToWizard") == 2)
         {
             msg(":name Blondie :face 1", "Dude, how many times do we have to--");
             delay(1f);
@@ -40,8 +40,8 @@ public class SampleNPCDialog : NPCDialog
             msg(":name Wizard :face none", "Oh no, you're not bothering me, haha.");
             wait();
             msgCls();
-            removePlayerCustomInt(lead, "talkedToWizard");
-        } else if (getPlayerCustomInt(lead, "talkedToWizard") == 3)
+            removeCustomInt(lead.customVariables, "talkedToWizard");
+        } else if (getCustomInt(lead.customVariables, "talkedToWizard") == 3)
         {
             msg(":name Wizard :face none", "Bro, how did you make it rain!?");
             wait();

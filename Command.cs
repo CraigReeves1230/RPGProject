@@ -21,6 +21,8 @@ public class Command : ScriptableObject
     private InventoryObject[] inventoryObjectParams;
     private IEquippable equipTargetParam;
     private PlayerObject playerObject;
+    private CustomVariables customVariablesParameter;
+    
 
     public void setName(string inName)
     {
@@ -129,6 +131,16 @@ public class Command : ScriptableObject
     public PlayerObject getPlayerObjectParam()
     {
         return playerObject;
+    }
+    
+    public CustomVariables getCustomVariableParam()
+    {
+        return customVariablesParameter;
+    }
+    
+    public void setCustomVariableParam(CustomVariables cv)
+    {
+        customVariablesParameter = cv;
     }
 
     public void setEventSequenceParam(EventSequence es)

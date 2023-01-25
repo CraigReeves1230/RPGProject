@@ -39,6 +39,8 @@ public class GameManager : MonoBehaviour
     
     private bool isParty;
 
+    private bool varHydrationCheck;
+    
     private string currentScene;
 
     public Dictionary<string, bool[]> weatherOverrides;
@@ -102,6 +104,11 @@ public class GameManager : MonoBehaviour
         // intialize in-game inventory dictionary
         foreach (var item in gameDatabase.allItems)
         {
+            if (item.customVariables != null)
+            {
+                CustomVariables.hydrateDictionaries(item.customVariables);
+            }
+            
             itemsDatabase[item.name] = item;
         }
         
@@ -132,17 +139,6 @@ public class GameManager : MonoBehaviour
         // weather overrides
         weatherOverrides = new Dictionary<string, bool[]>();
         
-        // hydrate game variable dictionary
-        for (int i = 0; i < gameDatabase.GameWorldIntegers.Count; i++)
-        {
-            gameDatabase.GameWorldIntegerIndices[gameDatabase.GameWorldIntegers[i].name] = i;
-        }
-        
-        for (int i = 0; i < gameDatabase.GameWorldStringIndices.Count; i++)
-        {
-            gameDatabase.GameWorldStringIndices[gameDatabase.GameWorldStrings[i].name] = i;
-        }
-        
         // store party faces
         foreach (var member in party)
         {
@@ -157,6 +153,18 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {        
+        // hydrate game variable dictionary
+        if (!varHydrationCheck)
+        {
+            if (gameDatabase.customVariables != null)
+            {
+                CustomVariables.hydrateDictionaries(gameDatabase.customVariables);
+            }
+
+            varHydrationCheck = true;
+        }
+        
+        
         if (mapScene)
         {
             // look for bounds

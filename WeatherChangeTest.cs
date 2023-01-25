@@ -9,17 +9,18 @@ public class WeatherChangeTest : EventCutscene
     {
         setDarkness(!Weather.instance.getIsDarkened(), 0.1f);
         setRain(!Weather.instance.getIsRaining(), 5f);
+        var vars = GameManager.instance.partyLead().player.customVariables;
 
         if (!Weather.instance.getIsRaining())
         {
-            setGameWorldString("formerTalkedToWizardVar", getGameWorldString("talkedToWizard"));
-            setGameWorldString("talkedToWizard", "rain");
+            setCustomInt(vars, "formerTalkedToWizardVar", getCustomInt(vars, "talkedToWizard"));
+            setCustomInt(vars, "talkedToWizard", 3);
         }
         else
         {
-            if (getGameWorldString("talkedToWizard") == "rain")
+            if (getCustomInt(vars, "talkedToWizard") == 3)
             {
-                setGameWorldString("talkedToWizard", getGameWorldString("formerTalkedToWizardVar"));
+                setCustomInt(vars, "talkedToWizard", getCustomInt(vars, "formerTalkedToWizardVar"));
             }
         }
         

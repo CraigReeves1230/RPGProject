@@ -477,128 +477,138 @@ public abstract class EventSequence : MonoBehaviour
         eventWorker.storeInQueue(command);
     }
 
-    public void addGameWorldInt(string name, int value)
+    public void addCustomInt(CustomVariables customVariables, string name, int value)
     {
         var command = newCom();
-        command.setName("addGameWorldInteger");
+        command.setName("addCustomInt");
+        command.setCustomVariableParam(customVariables);
         command.setStringParams(name);
         command.setIntParams(value);
         eventWorker.storeInQueue(command);
     }
     
-    public void addPlayerCustomInt(PlayerObject playerObject, string name, int value)
+    public void addCustomString(CustomVariables customVariables, string name, string value)
     {
         var command = newCom();
-        command.setName("addPlayerCustomInteger");
-        command.setPlayerObjectParam(playerObject);
+        command.setName("addCustomString");
+        command.setCustomVariableParam(customVariables);
+        command.setStringParams(name);
+        command.setStringParams(value);
+        eventWorker.storeInQueue(command);
+    }
+    
+    public void addCustomFloat(CustomVariables customVariables, string name, float value)
+    {
+        var command = newCom();
+        command.setName("addCustomFloat");
+        command.setCustomVariableParam(customVariables);
+        command.setStringParams(name);
+        command.setFloatParams(value);
+        eventWorker.storeInQueue(command);
+    }
+    
+    public void addCustomBoolean(CustomVariables customVariables, string name, bool value)
+    {
+        var command = newCom();
+        command.setName("addCustomBoolean");
+        command.setCustomVariableParam(customVariables);
+        command.setStringParams(name);
+        command.setBoolParams(value);
+        eventWorker.storeInQueue(command);
+    }
+    
+    public void setCustomInt(CustomVariables customVariables, string name, int value)
+    {
+        var command = newCom();
+        command.setName("setCustomInt");
+        command.setCustomVariableParam(customVariables);
         command.setStringParams(name);
         command.setIntParams(value);
         eventWorker.storeInQueue(command);
     }
     
-    public int getGameWorldInt(string name)
-    {
-        return GameManager.instance.gameDatabase.GameWorldIntegerValue(name);
-    }
-    
-    public int getPlayerCustomInt(PlayerObject playerObject, string name)
-    {
-        return playerObject.PlayerCustomIntegerValue(name);
-    }
-    
-    public void setGameWorldInt(string name, int value)
+    public void setCustomString(CustomVariables customVariables, string name, string value)
     {
         var command = newCom();
-        command.setName("setGameWorldInteger");
+        command.setName("setCustomString");
+        command.setCustomVariableParam(customVariables);
         command.setStringParams(name);
-        command.setIntParams(value);
+        command.setStringParams(value);
         eventWorker.storeInQueue(command);
     }
     
-    public void setPlayerCustomInt(PlayerObject playerObject, string name, int value)
+    public void setCustomFloat(CustomVariables customVariables, string name, float value)
     {
         var command = newCom();
-        command.setName("setPlayerCustomInteger");
-        command.setPlayerObjectParam(playerObject);
+        command.setName("setCustomFloat");
+        command.setCustomVariableParam(customVariables);
         command.setStringParams(name);
-        command.setIntParams(value);
+        command.setFloatParams(value);
         eventWorker.storeInQueue(command);
     }
     
-    public void removeGameWorldInt(string name)
+    public void setCustomBoolean(CustomVariables customVariables, string name, bool value)
     {
         var command = newCom();
-        command.setName("removeGameWorldInteger");
+        command.setName("setCustomBoolean");
+        command.setCustomVariableParam(customVariables);
         command.setStringParams(name);
+        command.setBoolParams(value);
         eventWorker.storeInQueue(command);
     }
     
-    public void removePlayerCustomInt(PlayerObject playerObject, string name)
+    public int getCustomInt(CustomVariables cv, string name)
+    {
+        return cv.customIntegerValue(name);
+    }
+    
+    public float getCustomFloat(CustomVariables cv, string name)
+    {
+        return cv.customFloatValue(name);
+    }
+    
+    public string getCustomString(CustomVariables cv, string name)
+    {
+        return cv.customStringValue(name);
+    }
+    
+    public bool getCustomBoolean(CustomVariables cv, string name)
+    {
+        return cv.customBooleanValue(name);
+    }
+    
+    public void removeCustomInt(CustomVariables cv, string name)
     {
         var command = newCom();
-        command.setPlayerObjectParam(playerObject);
-        command.setName("removePlayerCustomInteger");
-        command.setStringParams(name);
-        eventWorker.storeInQueue(command);
-    }
-    
-    public void addGameWorldString(string name, string value)
-    {
-        var command = newCom();
-        command.setName("addGameWorldString");
-        command.setStringParams(name, value);
-        eventWorker.storeInQueue(command);
-    }
-    
-    public void addPlayerCustomString(PlayerObject playerObject, string name, string value)
-    {
-        var command = newCom();
-        command.setName("addPlayerCustomString");
-        command.setPlayerObjectParam(playerObject);
-        command.setStringParams(name, value);
-        eventWorker.storeInQueue(command);
-    }
-    
-    public string getGameWorldString(string name)
-    {
-        return GameManager.instance.gameDatabase.GameWorldStringValue(name);
-    }
-    
-    public string getPlayerCustomString(PlayerObject playerObject, string name)
-    {
-        return playerObject.PlayerCustomStringValue(name);
-    }
-    
-    public void setGameWorldString(string name, string value)
-    {
-        var command = newCom();
-        command.setName("setGameWorldString");
-        command.setStringParams(name, value);
-        eventWorker.storeInQueue(command);
-    }
-    
-    public void setPlayerCustomString(PlayerObject playerObject, string name, string value)
-    {
-        var command = newCom();
-        command.setName("setPlayerCustomString");
-        command.setPlayerObjectParam(playerObject);
-        command.setStringParams(name, value);
-        eventWorker.storeInQueue(command);
-    }
-    
-    public void removeGameWorldString(string name)
-    {
-        var command = newCom();
-        command.setName("removePlayerCustomString");
+        command.setCustomVariableParam(cv);
+        command.setName("removeCustomInt");
         command.setStringParams(name);
         eventWorker.storeInQueue(command);
     }
     
-    public void removePlayerCustomString(PlayerObject playerObject, string name)
+    public void removeCustomString(CustomVariables cv, string name)
     {
         var command = newCom();
-        command.setName("removePlayerCustomString");
-        command.setPlayerObjectParam(playerObject);
+        command.setCustomVariableParam(cv);
+        command.setName("removeCustomString");
+        command.setStringParams(name);
+        eventWorker.storeInQueue(command);
+    }
+    
+    public void removeCustomFloat(CustomVariables cv, string name)
+    {
+        var command = newCom();
+        command.setCustomVariableParam(cv);
+        command.setName("removeCustomFloat");
+        command.setStringParams(name);
+        eventWorker.storeInQueue(command);
+    }
+    
+    public void removeCustomBoolean(CustomVariables cv, string name)
+    {
+        var command = newCom();
+        command.setCustomVariableParam(cv);
+        command.setName("removeCustomBoolean");
         command.setStringParams(name);
         eventWorker.storeInQueue(command);
     }

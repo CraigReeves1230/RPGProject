@@ -12,87 +12,101 @@ public class PlayerObject : ScriptableObject, IEquippable
 {
     public enum ColliderShape
     {
-        Box, Circle, Polygon, None
+        Box,
+        Circle,
+        Polygon,
+        None
     }
 
     public enum PlayerType
     {
-        PlayableCharacter, Enemy, Other
+        PlayableCharacter,
+        Enemy,
+        Other
     }
-    
+
     // basic info
     [Title("Basic Information", TitleAlignment = TitleAlignments.Centered)]
     public PlayerType playerType;
-    
+
     // graphics
-    [Title("Player Graphics and Collision", TitleAlignment = TitleAlignments.Centered), Required, PreviewField(Sirenix.OdinInspector.ObjectFieldAlignment.Left)]
+    [Title("Player Graphics and Collision", TitleAlignment = TitleAlignments.Centered), Required,
+     PreviewField(Sirenix.OdinInspector.ObjectFieldAlignment.Left)]
     public Sprite sprite;
+
     public AnimatorOverrideController animator;
+
     [PropertySpace(SpaceAfter = 0, SpaceBefore = 5)]
     public ColliderShape colliderType;
 
     [PropertySpace(SpaceAfter = 5, SpaceBefore = 5), PreviewField(Sirenix.OdinInspector.ObjectFieldAlignment.Left)]
     public Sprite face;
-    
+
     // character stats
     [Title("Player Stats", TitleAlignment = TitleAlignments.Centered)]
     public string charName;
+
     public string defaultName;
-    
+
     private int currentLevel;
     private bool invCleared;
-    
+
     public int startingLevel;
     private int totalEXP;
     private int currentHP;
     public int startingMaxHP;
 
     private int currentMaxHP;
-    
+
     private int currentMP;
     public int startingMaxMP;
-    
+
     private int currentMaxMP;
-    
+
     public int startingAttackPower;
     public int startingMagicPower;
     public int startingDefense;
     public int startingSpeed;
-    
+
     private int currentAttackPower;
     private int currentMagicPower;
     private int currentDefense;
-    private int currentSpeed; 
-    
+    private int currentSpeed;
+
     // growth rates
     public float maxHPPercentGrowthRate;
     public float maxMPPercentGrowthRate;
     public float attackPowerPercentGrowthRate;
     public float magicPowerPercentGrowthRate;
     public float defensePercentGrowthRate;
-    
+
     public float speedPercentGrowthRate;
-    
+
     // handling exp
     private int currentEXP;
     private int baseEXPToNext;
     private int[] expToNextLevel;
     private int maxLevel;
     private int EXPLeftUntilNextLevel;
-        
+
+    public LevelUpAction onLevelUp;
+
     // Equipment
     [Title("Equipment Settings", TitleAlignment = TitleAlignments.Centered)]
     public List<EquipmentSubType> canEquip;
+
     public EquipmentOutfitObject equipmentOutfit;
-    
+
     // custom variables
     [Title("Custom Variables/Stats", TitleAlignment = TitleAlignments.Centered)]
-    public List<PlayerCustomInteger> customIntegers;
-    public List<PlayerCustomString> customStrings;
-    public Dictionary<string, int> PlayerCustomStringIndices = new Dictionary<string, int>();
-    public Dictionary<string, int> PlayerCustomIntegerIndices = new Dictionary<string, int>();
-
+    public CustomVariables customVariables;
     
+
+    // skills and abilities
+    [Title("Skills/Abilities", TitleAlignment = TitleAlignments.Centered)]
+    public BattleCommandList commandList;
+
+
     void Awake()
     {
         startingMaxHP = 100;
@@ -121,15 +135,15 @@ public class PlayerObject : ScriptableObject, IEquippable
             GameManager.instance.errorMsg("Sprite is required.");
             return;
         }
-        
-        var newObject = new GameObject(this.name);       
-        
+
+        var newObject = new GameObject(this.name);
+
         var anim = newObject.AddComponent<Animator>();
         if (animator != null)
         {
-            anim.runtimeAnimatorController = animator; 
+            anim.runtimeAnimatorController = animator;
         }
-        
+
         var sr = newObject.AddComponent<SpriteRenderer>();
         sr.sprite = sprite;
         sr.sortingLayerName = "Sprites";
@@ -140,7 +154,8 @@ public class PlayerObject : ScriptableObject, IEquippable
         if (colliderType == ColliderShape.Box)
         {
             newObject.AddComponent<BoxCollider2D>();
-        } else if (colliderType == ColliderShape.Circle)
+        }
+        else if (colliderType == ColliderShape.Circle)
         {
             newObject.AddComponent<CircleCollider2D>();
         }
@@ -148,15 +163,15 @@ public class PlayerObject : ScriptableObject, IEquippable
         {
             newObject.AddComponent<PolygonCollider2D>();
         }
-        
+
         if (playerType == PlayerType.PlayableCharacter)
         {
             var pce = newObject.AddComponent<PlayableCharacterEntity>();
             pce.player = this;
             GameManager.instance.party.Add(pce);
-        } 
+        }
     }
-    
+
     public void init()
     {
         // reset stats
@@ -175,18 +190,24 @@ public class PlayerObject : ScriptableObject, IEquippable
         EXPLeftUntilNextLevel = 0;
         invCleared = false;
         
+        // hydrate custom variable dictionaries
+        if (customVariables != null)
+        {
+            CustomVariables.hydrateDictionaries(customVariables);
+        }
+
         // get max level determined by game database
         maxLevel = GameManager.instance.gameDatabase.maxLevel == 0 ? 99 : GameManager.instance.gameDatabase.maxLevel;
-        
+
         // calculate exp to next level for each level
         expToNextLevel = new int[maxLevel];
         expToNextLevel[1] = baseEXPToNext;
 
-        for(int i = 2; i < expToNextLevel.Length; i++)
+        for (int i = 2; i < expToNextLevel.Length; i++)
         {
             expToNextLevel[i] = Mathf.FloorToInt(expToNextLevel[i - 1] * 1.05f);
         }
-        
+
         // current metrics should be same as starting metrics since starting at level one
         currentAttackPower = startingAttackPower;
         currentDefense = startingDefense;
@@ -194,7 +215,7 @@ public class PlayerObject : ScriptableObject, IEquippable
         currentSpeed = startingSpeed;
         currentMaxHP = startingMaxHP;
         currentMaxMP = startingMaxMP;
-        
+
         // if player is not starting off in level 1, give sufficient experience and level ups to reach desired level
         if (startingLevel > currentLevel)
         {
@@ -204,19 +225,19 @@ public class PlayerObject : ScriptableObject, IEquippable
                 AddEXP(expToNextLevel[i]);
             }
         }
-        
+
         // start with full health and magic
         currentHP = currentMaxHP;
         currentMP = currentMaxMP;
-        
+
         // check for initially equipped items and refresh equip
         if (equipmentOutfit != null)
         {
             refreshEquipmentAndInventory();
         }
     }
-        
-    
+
+
     public void AddEXP(int expToAdd)
     {
         if (currentLevel < maxLevel)
@@ -224,15 +245,15 @@ public class PlayerObject : ScriptableObject, IEquippable
             // add to total and current exp
             currentEXP += expToAdd;
             totalEXP += expToAdd;
-        
-        
+
+
             var levelsToGain = 0;
-        
+
             // check if levels gained
             while (true)
             {
                 EXPLeftUntilNextLevel = expToNextLevel[(currentLevel + levelsToGain)] - currentEXP;
-            
+
                 // if there is none left over, gain level
                 if (EXPLeftUntilNextLevel <= 0)
                 {
@@ -244,7 +265,7 @@ public class PlayerObject : ScriptableObject, IEquippable
                     break;
                 }
             }
-        
+
             // add to current level however many levels gained from experience. 
             LevelUp(levelsToGain);
         }
@@ -274,12 +295,18 @@ public class PlayerObject : ScriptableObject, IEquippable
             currentMagicPower = tempMagPwr > 999 ? 999 : tempMagPwr;
             currentDefense = tempDef > 999 ? 999 : tempDef;
             currentSpeed = tempSpd > 999 ? 999 : tempSpd;
+
+            // run on level  up  action
+            if (onLevelUp != null)
+            {
+                onLevelUp.onLevelUp(this);
+            }
         }
 
         // return amount of levels gained
         return levels;
     }
-    
+
     public void equip(string slotHandle, string itemHandle, InventoryObject inventory = null, bool forRefresh = false)
     {
         // get inventory. party inventory is default inventory
@@ -296,17 +323,17 @@ public class PlayerObject : ScriptableObject, IEquippable
 
         // get item from handle in inventory
         var item = (EquipmentObject) inventory.getItemByHandle(itemHandle);
-        
+
         // check if item exists in inventory
         if (item == null)
         {
             GameManager.instance.errorMsg("ERROR: No such item: " + itemHandle + " could be found in inventory.");
             return;
         }
-        
+
         var itemIsEquippable = false;
-        
-        
+
+
         // determine if item can be equipped
         if (item.equipmentSubType.Count > 0)
         {
@@ -332,45 +359,47 @@ public class PlayerObject : ScriptableObject, IEquippable
 
         // do not go further if item can't be equipped
         if (!itemIsEquippable) return;
-        
+
         // check if outfit is available
         if (equipmentOutfit == null)
         {
-            GameManager.instance.errorMsg("ERROR: Equipment Outfit not found. To equip, entity must have an Equipment Outfit.");
+            GameManager.instance.errorMsg(
+                "ERROR: Equipment Outfit not found. To equip, entity must have an Equipment Outfit.");
             return;
         }
-        
+
         // check to see if slot exists and is free
         var targetSlot = equipmentOutfit.getSlotByHandle(slotHandle);
         if (targetSlot == null)
         {
-            GameManager.instance.errorMsg("ERROR: No slot with the handle: " + slotHandle + " could be found in the outfit.");
+            GameManager.instance.errorMsg("ERROR: No slot with the handle: " + slotHandle +
+                                          " could be found in the outfit.");
             return;
         }
-        
+
         if (targetSlot.item != null)
         {
             GameManager.instance.errorMsg("ERROR: Slot: " + slotHandle + " is taken.");
             return;
         }
 
-        
+
         if (equipmentOutfit.addItem(item, targetSlot, this, inventory, forRefresh))
         {
             // add bonuses to player
             currentAttackPower += item.attackBonus;
             currentDefense += item.defenseBonus;
             currentSpeed -= item.speedCost;
-        }   
+        }
     }
-    
+
     public void unEquip(string slotHandle, InventoryObject inventory = null, bool forRefresh = false)
     {
         if (inventory == null)
         {
             inventory = GameManager.instance.gameDatabase.defaultInventory;
         }
-        
+
         // find slot
         var slot = equipmentOutfit.getSlotByHandle(slotHandle);
 
@@ -382,7 +411,7 @@ public class PlayerObject : ScriptableObject, IEquippable
         }
 
         var itemBeingRemoved = slot.item;
-        
+
         // remove item from slot
         if (equipmentOutfit.removeItem(slot, this, inventory, forRefresh))
         {
@@ -392,7 +421,7 @@ public class PlayerObject : ScriptableObject, IEquippable
                 currentAttackPower -= itemBeingRemoved.attackBonus;
                 currentDefense -= itemBeingRemoved.defenseBonus;
                 currentSpeed += itemBeingRemoved.speedCost;
-            }   
+            }
         }
     }
 
@@ -411,14 +440,14 @@ public class PlayerObject : ScriptableObject, IEquippable
                         {
                             slot.equippedBy.RemoveAt(i);
                         }
-                        
+
                     }
                 }
             }
 
             invCleared = true;
         }
-        
+
         // unequip everything
         List<string[]> tempEquipped = new List<string[]>();
         foreach (var slot in equipmentOutfit.container)
@@ -429,12 +458,12 @@ public class PlayerObject : ScriptableObject, IEquippable
             {
                 var item = slot.item.handle;
                 var slotHandle = slot.handle;
-                tempEquipped.Add(new[]{slotHandle, item});
-                
+                tempEquipped.Add(new[] {slotHandle, item});
+
                 unEquip(slot.handle, null, true);
             }
         }
-        
+
         // re-equip everything
         foreach (var row in tempEquipped)
         {
@@ -454,7 +483,7 @@ public class PlayerObject : ScriptableObject, IEquippable
             else
             {
                 GameManager.instance.errorMsg("ERROR: Not enough left in inventory to be equipped.");
-                row[1] = null;    // item was never equipped
+                row[1] = null; // item was never equipped
             }
         }
 
@@ -468,148 +497,10 @@ public class PlayerObject : ScriptableObject, IEquippable
                     if (!invSlot.equippedBy.Contains(equipmentOutfit))
                     {
                         invSlot.equippedBy.Add(equipmentOutfit);
-                    }          
+                    }
                 }
             }
         }
-    }
-    
-    /*/////////////////////////////////////////// PLAYER CUSTOM INTEGERS  ///////////////////////////////////////////*/
-    
-    public void addPlayerCustomInteger(string _name, int _value)
-    {
-        // if game variable already exists, change existing value
-        if (PlayerCustomIntegerIndices.ContainsKey(_name))
-        {
-            var i = PlayerCustomIntegerIndices[_name];
-            customIntegers[i].value = _value;
-            return;
-        }
-        
-        var newVar = new PlayerCustomInteger(_name, _value);
-        var currIndex = customIntegers.Count < 1 ? 0 : customIntegers.Count;
-        customIntegers.Add(newVar);
-        PlayerCustomIntegerIndices.Add(_name, currIndex);
-    }
-    
-    public void removePlayerCustomInteger(string _name)
-    {
-        var gameVariableIdx = PlayerCustomIntegerIndices[_name];
-        customIntegers.RemoveAt(gameVariableIdx);
-        PlayerCustomIntegerIndices.Remove(_name);
-    }
-
-    public int PlayerCustomIntegerValue(string _name)
-    {
-        // if game variable doesn't exist, return 0
-        if (!PlayerCustomIntegerIndices.ContainsKey(_name)) return 0;
-        
-        var gameVariableIdx = PlayerCustomIntegerIndices[_name];
-        var theGameVar = customIntegers[gameVariableIdx];
-
-        if (theGameVar == null)
-        {
-            return 0;
-        }
-
-        return theGameVar.value;
-    }
-    
-    public void PlayerCustomIntegerValue(string _name, int _value)
-    {
-        // if game integer doesn't exist, create it
-        if (!PlayerCustomIntegerIndices.ContainsKey(_name))
-        {
-            addPlayerCustomInteger(_name, _value);
-            return;
-        }
-        
-        var gameWorldVarIdx = PlayerCustomIntegerIndices[_name];
-
-        customIntegers[gameWorldVarIdx].value = _value;
-    }
-    
-  
-    
-    /*/////////////////////////////////////////// PLAYER CUSTOM STRINGS  ///////////////////////////////////////////*/
-    
-    public void addPlayerCustomString(string _name, string _value)
-    {
-        // if game string already exists, change existing value
-        if (PlayerCustomStringIndices.ContainsKey(_name))
-        {
-            var i = PlayerCustomStringIndices[_name];
-            customStrings[i].value = _value;
-            return;
-        }
-        
-        var newVar = new PlayerCustomString(_name, _value);
-        var currIndex = customStrings.Count < 1 ? 0 : customStrings.Count;
-        customStrings.Add(newVar);
-        PlayerCustomStringIndices.Add(_name, currIndex);
-    }
-    
-    public void removePlayerCustomString(string _name)
-    {
-        var gameVariableIdx = PlayerCustomStringIndices[_name];
-        customStrings.RemoveAt(gameVariableIdx);
-        PlayerCustomStringIndices.Remove(_name);
-    }
-    
-    public string PlayerCustomStringValue(string _name)
-    {
-        // if game variable doesn't exist, return 0
-        if (!PlayerCustomStringIndices.ContainsKey(_name)) return null;
-        
-        var gameVariableIdx = PlayerCustomStringIndices[_name];
-        var theGameVar = customStrings[gameVariableIdx];
-
-        
-        return theGameVar.value;
-    }
-    
-    public void PlayerCustomStringValue(string _name, string _value)
-    {
-        // if game integer doesn't exist, create it
-        if (!PlayerCustomStringIndices.ContainsKey(_name))
-        {
-            addPlayerCustomString(_name, _value);
-            return;
-        }
-        
-        var gameWorldVarIdx = PlayerCustomStringIndices[_name];
-
-        customStrings[gameWorldVarIdx].value = _value;
-    }
-    
-    /*//////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
-}
-
-[System.Serializable]
-public class PlayerCustomInteger
-{
-    public string name;
-    public int value;
-
-    // constructor
-    public PlayerCustomInteger(string _name, int _value)
-    {
-        name = _name;
-        value = _value;
-    }
-}
-
-[System.Serializable]
-public class PlayerCustomString
-{
-    public string name;
-    public string value;
-
-    // constructor
-    public PlayerCustomString(string _name, string _value)
-    {
-        name = _name;
-        value = _value;
     }
 }
 

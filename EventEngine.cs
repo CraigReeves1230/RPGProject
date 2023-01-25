@@ -134,90 +134,75 @@ public class EventEngine : MonoBehaviour
             return remoteRunSeq(eventSequence);
         }
 
-        if (commandName == "addGameWorldInteger")
+        if (commandName == "addCustomInt")
         {
+            var _cv = command.getCustomVariableParam();
             var _name = command.getStringParameters()[0];
             var _value = command.getIntParameters()[0];
-            return addGameWorldInteger(_name, _value);
+            return addCustomInt(_cv, _name, _value);
         }
         
-        if (commandName == "removeGameWorldInteger")
+        if (commandName == "addCustomString")
         {
+            var _cv = command.getCustomVariableParam();
             var _name = command.getStringParameters()[0];
-            return removeGameWorldInteger(_name);
+            var _value = command.getStringParameters()[0];
+            return addCustomString(_cv, _name, _value);
         }
         
-        if (commandName == "setGameWorldInteger")
+        if (commandName == "addCustomFloat")
         {
+            var _cv = command.getCustomVariableParam();
             var _name = command.getStringParameters()[0];
-            var _value = command.getIntParameters()[0];
-            return setGameWorldInteger(_name, _value);
+            var _value = command.getFloatParameters()[0];
+            return addCustomFloat(_cv, _name, _value);
         }
         
-        if (commandName == "addPlayerCustomInteger")
+        if (commandName == "addCustomBoolean")
         {
+            var _cv = command.getCustomVariableParam();
             var _name = command.getStringParameters()[0];
-            var _value = command.getIntParameters()[0];
-            var _playerObject = command.getPlayerObjectParam();
-            return addPlayerCustomInteger(_playerObject, _name, _value);
+            var _value = command.getBoolParameters()[0];
+            return addCustomBoolean(_cv, _name, _value);
         }
         
-        if (commandName == "removePlayerCustomInteger")
+        if (commandName == "setCustomInt")
         {
-            var _name = command.getStringParameters()[0];
-            var _playerObject = command.getPlayerObjectParam();
-            return removePlayerCustomInteger(_playerObject, _name);
-        }
-        
-        if (commandName == "setPlayerCustomInteger")
-        {
+            var _cv = command.getCustomVariableParam();
             var _name = command.getStringParameters()[0];
             var _value = command.getIntParameters()[0];
-            var _playerObject = command.getPlayerObjectParam();
-            return setPlayerCustomInteger(_playerObject, _name, _value);
+            return setCustomInt(_cv, _name, _value);
         }
         
-        if (commandName == "addGameWorldString")
+        if (commandName == "setCustomString")
         {
+            var _cv = command.getCustomVariableParam();
             var _name = command.getStringParameters()[0];
-            var _value = command.getStringParameters()[1];
-            return addGameWorldString(_name, _value);
+            var _value = command.getStringParameters()[0];
+            return setCustomString(_cv, _name, _value);
         }
         
-        if (commandName == "removeGameWorldString")
+        if (commandName == "setCustomFloat")
         {
+            var _cv = command.getCustomVariableParam();
             var _name = command.getStringParameters()[0];
-            return removeGameWorldString(_name);
+            var _value = command.getFloatParameters()[0];
+            return setCustomFloat(_cv, _name, _value);
         }
         
-        if (commandName == "setGameWorldString")
+        if (commandName == "setCustomBoolean")
         {
+            var _cv = command.getCustomVariableParam();
             var _name = command.getStringParameters()[0];
-            var _value = command.getStringParameters()[1];
-            return setGameWorldString(_name, _value);
+            var _value = command.getBoolParameters()[0];
+            return setCustomBoolean(_cv, _name, _value);
         }
         
-        if (commandName == "addPlayerCustomString")
+        if (commandName == "removeCustomInt")
         {
+            var _cv = command.getCustomVariableParam();
             var _name = command.getStringParameters()[0];
-            var _value = command.getStringParameters()[1];
-            var _playerObject = command.getPlayerObjectParam();
-            return addPlayerCustomString(_playerObject, _name, _value);
-        }
-        
-        if (commandName == "removePlayerCustomString")
-        {
-            var _name = command.getStringParameters()[0];
-            var _playerObject = command.getPlayerObjectParam();
-            return removePlayerCustomString(_playerObject, _name);
-        }
-        
-        if (commandName == "setPlayerCustomString")
-        {
-            var _name = command.getStringParameters()[0];
-            var _value = command.getStringParameters()[1];
-            var _playerObject = command.getPlayerObjectParam();
-            return setPlayerCustomString(_playerObject, _name, _value);
+            return removeCustomInt(_cv, _name);
         }
         
         if (commandName == "msg")
@@ -256,7 +241,6 @@ public class EventEngine : MonoBehaviour
             return turnToFace(character, target);
         }
         
-
         if (commandName == "promptWin")
         {
             var headerText = command.getStringParameters()[0];
@@ -928,75 +912,75 @@ public class EventEngine : MonoBehaviour
         return true;
     }
 
-    private bool addGameWorldString(string _name, string _val)
+    private bool addCustomInt(CustomVariables cv, string _name, int _val)
     {
-        GameManager.instance.gameDatabase.addGameWorldString(_name, _val);
+        cv.addCustomInteger(_name, _val);
         return true;
     }
     
-    private bool removeGameWorldString(string _name)
+    private bool addCustomFloat(CustomVariables cv, string _name, float _val)
     {
-        GameManager.instance.gameDatabase.removeGameWorldString(_name);
+        cv.addCustomFloat(_name, _val);
         return true;
     }
     
-    private bool setGameWorldString(string _name, string _value)
+    private bool addCustomString(CustomVariables cv, string _name, string _val)
     {
-        GameManager.instance.gameDatabase.GameWorldStringValue(_name, _value);
+        cv.addCustomString(_name, _val);
         return true;
     }
     
-    private bool setPlayerCustomString(PlayerObject playerObject, string _name, string _value)
+    private bool addCustomBoolean(CustomVariables cv, string _name, bool _val)
     {
-        playerObject.PlayerCustomStringValue(_name, _value);
+        cv.addCustomBoolean(_name, _val);
         return true;
     }
     
-    private bool addPlayerCustomString(PlayerObject playerObject, string _name, string _val)
+    private bool setCustomInt(CustomVariables cv, string _name, int _val)
     {
-        playerObject.addPlayerCustomString(_name, _val);
+        cv.customIntegerValue(_name, _val);
         return true;
     }
     
-    private bool removePlayerCustomString(PlayerObject playerObject, string _name)
+    private bool setCustomFloat(CustomVariables cv, string _name, float _val)
     {
-        playerObject.removePlayerCustomString(_name);
-        return true;
-    }
-
-    private bool addGameWorldInteger(string _name, int _val)
-    {
-        GameManager.instance.gameDatabase.addGameWorldInteger(_name, _val);
-        return true;
-    }
-
-    private bool setGameWorldInteger(string _name, int _value)
-    {
-        GameManager.instance.gameDatabase.GameWorldIntegerValue(_name, _value);
+        cv.customFloatValue(_name, _val);
         return true;
     }
     
-    private bool removeGameWorldInteger(string _name)
+    private bool setCustomString(CustomVariables cv, string _name, string _val)
     {
-        GameManager.instance.gameDatabase.removeGameWorldInteger(_name);
+        cv.customStringValue(_name, _val);
         return true;
     }
     
-    private bool addPlayerCustomInteger(PlayerObject playerObject, string _name, int _val)
+    private bool removeCustomBoolean(CustomVariables cv, string _name)
     {
-        playerObject.addPlayerCustomInteger(_name, _val);
-        return true;
-    }
-
-    private bool setPlayerCustomInteger(PlayerObject playerObject, string _name, int _value)
-    {
-        playerObject.PlayerCustomIntegerValue(_name, _value);
+        cv.removeCustomBoolean(_name);
         return true;
     }
     
-    private bool removePlayerCustomInteger(PlayerObject playerObject, string _name)
+    private bool removeCustomInt(CustomVariables cv, string _name)
     {
-        playerObject.removePlayerCustomInteger(_name);
+        cv.removeCustomInteger(_name);
+        return true;
+    }
+    
+    private bool removeCustomFloat(CustomVariables cv, string _name)
+    {
+        cv.customFloatValue(_name);
+        return true;
+    }
+    
+    private bool removeCustomString(CustomVariables cv, string _name)
+    {
+        cv.removeCustomString(_name);
+        return true;
+    }
+    
+    private bool setCustomBoolean(CustomVariables cv, string _name, bool _val)
+    {
+        cv.customBooleanValue(_name, _val);
         return true;
     }
 
