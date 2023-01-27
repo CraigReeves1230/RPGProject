@@ -118,11 +118,15 @@ public class GameManager : MonoBehaviour
             itemsDatabase[gameDatabase.mainCurrency.name] = gameDatabase.mainCurrency;
         }
                 
+        // initialize players
+        foreach (var player in gameDatabase.allPlayers)
+        {
+            player.init();
+        }
         
         // initialize party 
         for (int i = 0; i < party.Count; i++)
         {
-            party[i].init();
             isParty = true;
             
             // by default, only party lead appears on screen (if not in a vehicle)

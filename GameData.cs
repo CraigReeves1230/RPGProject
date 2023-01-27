@@ -20,9 +20,15 @@ public class GameData : ScriptableObject
 
     [BoxGroup("Items, Inventory and Currency"), InlineEditor(), PropertySpace(SpaceAfter = 5, SpaceBefore = 0)]
     public InventoryObject defaultInventory;
+    
+    [BoxGroup("Items, Inventory and Currency"), InlineEditor(), PropertySpace(SpaceAfter = 5, SpaceBefore = 5)]
+    public List<InventoryObject> otherInventories;
 
     [BoxGroup("Items, Inventory and Currency"), PropertySpace(SpaceAfter = 10, SpaceBefore = 5)]
     public List<ItemObject> allItems;
+    
+    [BoxGroup("Players and Enemies"), PropertySpace(SpaceAfter = 10, SpaceBefore = 5)]
+    public List<PlayerObject> allPlayers;
 
     [BoxGroup("Game World"), PropertySpace(SpaceAfter = 10, SpaceBefore = 5)]
     public int maxLevel = 99;
