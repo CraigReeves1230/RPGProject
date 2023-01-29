@@ -15,6 +15,6 @@ public class Skill : ScriptableObject
 
     public BattleAction battleAction;
     public MenuAction menuAction;
-    
-    
+
+    public CustomVariables customVariables;
 }

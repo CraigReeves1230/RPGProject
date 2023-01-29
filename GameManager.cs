@@ -165,6 +165,17 @@ public class GameManager : MonoBehaviour
                 CustomVariables.hydrateDictionaries(gameDatabase.customVariables);
             }
 
+            if (gameDatabase.allSkills.Count > 0)
+            {
+                foreach (var skill in gameDatabase.allSkills)
+                {
+                    if (skill.customVariables != null)
+                    {
+                        CustomVariables.hydrateDictionaries(skill.customVariables);
+                    }     
+                }
+            }
+
             varHydrationCheck = true;
         }
         
