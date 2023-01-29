@@ -1,10 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
-using Mono.CompilerServices.SymbolWriter;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using UnityEngine.TextCore.Text;
-using UnityEngine.UIElements;
+
 
 [CreateAssetMenu(fileName = "New Game Database", menuName = "Game Database"), InlineEditor()]
 public class GameData : ScriptableObject
@@ -15,10 +12,10 @@ public class GameData : ScriptableObject
     [BoxGroup("Message Window"), PropertySpace(SpaceAfter = 10, SpaceBefore = 5)]
     public Sprite[] faces;
 
-    [BoxGroup("Items, Inventory and Currency"), InlineEditor(), PropertySpace(SpaceBefore = 10, SpaceAfter = 0)]
+    [BoxGroup("Items, Inventory and Currency"), InlineEditor(), PropertySpace(SpaceBefore = 10, SpaceAfter = 5)]
     public CurrencyObject mainCurrency;
 
-    [BoxGroup("Items, Inventory and Currency"), InlineEditor(), PropertySpace(SpaceAfter = 5, SpaceBefore = 0)]
+    [BoxGroup("Items, Inventory and Currency"), InlineEditor(), PropertySpace(SpaceAfter = 5, SpaceBefore = 5)]
     public InventoryObject defaultInventory;
     
     [BoxGroup("Items, Inventory and Currency"), InlineEditor(), PropertySpace(SpaceAfter = 5, SpaceBefore = 5)]
@@ -30,6 +27,12 @@ public class GameData : ScriptableObject
     [BoxGroup("Players and Enemies"), PropertySpace(SpaceAfter = 10, SpaceBefore = 5)]
     public List<PlayerObject> allPlayers;
 
+    [BoxGroup("Skills and Abilities"), PropertySpace(SpaceAfter = 5, SpaceBefore = 10)]
+    public List<Skill> allSkills;
+    
+    [BoxGroup("Skills and Abilities"), PropertySpace(SpaceAfter = 10, SpaceBefore = 5)]
+    public List<Skillset> allSkillSets;
+    
     [BoxGroup("Game World"), PropertySpace(SpaceAfter = 10, SpaceBefore = 5)]
     public int maxLevel = 99;
 

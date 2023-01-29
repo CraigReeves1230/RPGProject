@@ -1,18 +1,10 @@
-using System.Collections;
+
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
-public class Skillset : MonoBehaviour
+[CreateAssetMenu(fileName = "New Skillset", menuName = "Skills & Abilities/Skillset"), InlineEditor()]
+public class Skillset : ScriptableObject
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public List<Skill> container;
 }

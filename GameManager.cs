@@ -284,7 +284,7 @@ public class GameManager : MonoBehaviour
     }
     
     // Find player by default name
-    public PlayableCharacterEntity findByDefName(string searchName)
+    public PlayableCharacterEntity findByDefaultName(string searchName)
     {
         foreach (var member in party)
         {
