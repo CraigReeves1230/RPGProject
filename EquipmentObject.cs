@@ -17,7 +17,7 @@ public class EquipmentObject : ItemObject
     public List<EquipmentSubType> equipmentSubType;
     
     [Range(1, 99)]
-    public int numberOfSlotsFilled;
+    public int numberOfSlotsFilled = 1;
     
     public int attackBonus;
     public int defenseBonus;
@@ -26,6 +26,7 @@ public class EquipmentObject : ItemObject
     private void Awake()
     {
         inventoryLimit = 99;
+        numberOfSlotsFilled = 1;
 
         if (equipmentCategory.Count < 1)
         {

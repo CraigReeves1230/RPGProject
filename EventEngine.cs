@@ -490,10 +490,10 @@ public class EventEngine : MonoBehaviour
 
         if (commandName == "giveItem")
         {
-            var itemName = command.getStringParameters()[0];
+            var itemHandle = command.getStringParameters()[0];
             var amountToGive = command.getIntParameters()[0];
             var inventoryObj = command.getInventoryObjectParams()[0];
-            return giveItem(itemName, amountToGive, inventoryObj);
+            return giveItem(itemHandle, amountToGive, inventoryObj);
         }
         
         if (commandName == "takeItem")
@@ -1116,13 +1116,13 @@ public class EventEngine : MonoBehaviour
         return false;
     }
 
-    private bool giveItem(string itemName, int amountToGive = 1, InventoryObject inventoryObj = null)
+    private bool giveItem(string itemHandle, int amountToGive = 1, InventoryObject inventoryObj = null)
     {
-        var item = GameManager.instance.itemsDatabase[itemName];
+        var item = GameManager.instance.itemsDatabase[itemHandle];
 
         if (item == null)
         {
-            Debug.LogError("ERROR: Item " + name + "does not exist.");
+            Debug.LogError("ERROR: Item " + itemHandle + "does not exist.");
             return true;
         }
         

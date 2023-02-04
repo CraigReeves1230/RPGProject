@@ -10,7 +10,7 @@ public class GiveItem : EventCutscene
     
     protected override void doCutscene()
     {
-        giveItem(item.name, amount);
+        giveItem(item.handle, amount);
 
         if (message)
         {

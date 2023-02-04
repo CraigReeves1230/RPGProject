@@ -21,8 +21,11 @@ public class GameData : ScriptableObject
     [BoxGroup("Items, Inventory and Currency"), InlineEditor(), PropertySpace(SpaceAfter = 5, SpaceBefore = 5)]
     public List<InventoryObject> otherInventories;
 
-    [BoxGroup("Items, Inventory and Currency"), PropertySpace(SpaceAfter = 10, SpaceBefore = 5)]
+    [BoxGroup("Items, Inventory and Currency"), PropertySpace(SpaceAfter = 5, SpaceBefore = 5)]
     public List<ItemObject> allItems;
+    
+    [BoxGroup("Items, Inventory and Currency"), PropertySpace(SpaceAfter = 5, SpaceBefore = 5)]
+    public List<string> openedTreasureBoxes;
     
     [BoxGroup("Players and Enemies"), PropertySpace(SpaceAfter = 10, SpaceBefore = 5)]
     public List<PlayerObject> allPlayers;

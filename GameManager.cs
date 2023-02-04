@@ -109,13 +109,13 @@ public class GameManager : MonoBehaviour
                 CustomVariables.hydrateDictionaries(item.customVariables);
             }
             
-            itemsDatabase[item.name] = item;
+            itemsDatabase[item.handle] = item;
         }
         
         // add main currency
         if (gameDatabase.mainCurrency != null)
         {
-            itemsDatabase[gameDatabase.mainCurrency.name] = gameDatabase.mainCurrency;
+            itemsDatabase[gameDatabase.mainCurrency.handle] = gameDatabase.mainCurrency;
         }
                 
         // initialize players
